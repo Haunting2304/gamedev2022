@@ -4,21 +4,50 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
-        <title>basic-web-giorgio.html</title>
+        <title>Basic web stuff</title>
         <link rel="stylesheet" type="text/css" href="/style.css">
     </head>
     <body>
-        <header>
-            <nav>
-                <a class="navItem" class="cur" href="/gamedev2022/public"><div>Home</div></a>
-                <a class="navItem" class="cur"><div>Basic-Web</div></a>
-            </nav>
-        </header>
-        <h1>This page is empty</h1>
-        <div class="flexContainer">
-            <div>
-            </div>
-        </div>
-        <script type="text/javascript" src="/navbar.js"></script>
+        <h5>Version 0.0.1</h5>
+        
+        <a href="http://google.ca">Link to Google</a><br>
+        Plain Text <b> Bold </b> and <i> Italic </i> can you put them together<br>
+        <hr>
+        This is an image <br>
+        <img width=200 src="http://hairlesscatblog.com/wp-content/uploads/2014/02/types-of-hairless-cats.jpg"<br><br>
+        
+        Youtube Embedded video <br>
+        <iframe width="300" height="200" src="https://www.youtube.com/embed/kUTGTdc-qbg" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        <hr>
+        <div>This is a </div>
+        <div>div</div>
+        
+        <span>This is </span>
+        <span a span</span>
+        
+        <h3> Write about Ellis' 10 main areas of coding</h3>
+        
+        <input type=button value="0. Pseudo Code" onclick="{
+           document.getElementById('myDiv01').innerHTML = 'Hello don\'t world'
+        }">
+        
+        <input type=button value="1. Input/Output" onclick="{
+           document.getElementById('myDiv01').innerHTML = 'Input adffgdsfsgsdfdfh<br>' + 'sdfg<br>sdfg<br>output is...'
+        }">
+        
+        <input type=button value="4. Decisions" onclick="{
+           document.getElementById('myDiv01').innerHTML = `
+           Decisions use the if statement to make true
+           false variable decisions<br>
+           <pre>
+           if(hour < 18) {
+               greeting = \'Good day\';
+           }
+           </pre>
+        `}"><br>
+        You do: 2:variables, 3:loops, 5:functions, 6:events, 7:arrays, 8:objects, 9:classes<br>
+        |
+        
+        <div id="myDiv01">...</div>
     </body>
 </html>
