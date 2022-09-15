@@ -33,6 +33,11 @@ a {
     font-size: 24px;
 }
 
+#repo {
+    position: absolute;
+    top: 0;
+}
+
 .cur {
     cursor: default;
 }
