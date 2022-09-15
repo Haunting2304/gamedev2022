@@ -24,49 +24,13 @@ a {
     color: inherit;
 }
 
-.flexContainer {
-    display: flex;
-    justify-content: center;  
-}
-
-.flexContainer > div > div {
-    padding: 5px;
-    width: 200px;
-    text-align: center;
-    font-size: 24px;
-    margin: 0 30px 0 30px;
-}
-
 .link:hover {
     color: hsl(0, 0%, 70%);
 }
 
-nav {
-    height: 70px;
-    position: absolute;
-    top: 0;
-    left: 0;
-    text-align: center;
-    list-style-type: none;
-    background-color: #1f1f1f;
-    overflow: hidden;
-}
-
-.navItem {
-    position: absolute;
-    height: 100%;
-}
-
-.navItem > div {
-    position: absolute;
-    left: 0;
-    width: 100%;
-    font-size: 20px;
-}
-
-.navItem:hover {
-    background-color: #161616;
-    color: hsl(0, 0%, 75%);
+.links > div {
+    padding: 5px;
+    font-size: 24px;
 }
 
 .cur {
