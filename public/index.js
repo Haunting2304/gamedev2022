@@ -1,5 +1,5 @@
-document.querySelector("body").style.marginTop = `${document.getElementById("repo").offsetHeight}px`
-document.querySelector("body").style.minHeight = `calc(100vh - ${(document.querySelector("repo").offsetHeight)}px - 6em)`;
+document.querySelector("body").style.paddingTop = `${document.getElementById("repo").offsetHeight}px`;
+document.querySelector("body").style.minHeight = `100vh`;
 window.onresize = style;
 function style() {
     var repo = document.getElementById("repo"));
