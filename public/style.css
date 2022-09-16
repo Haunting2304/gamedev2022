@@ -36,12 +36,10 @@ a {
 #repo {
     position: absolute;
     top: 0;
+    padding: 2em;
+    padding-top: 4em;
 }
 
 .cur {
     cursor: default;
-}
-
-#repo {
-    padding: 32px;
 }
