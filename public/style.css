@@ -41,3 +41,7 @@ a {
 .cur {
     cursor: default;
 }
+
+#repo {
+    padding: 32px;
+}
