@@ -29,10 +29,10 @@
 
 Load an image and get it to move 10 pixels to the left using the button below<br>
 
-<image id="myImage01" src="" style="position:relative; left:0; top:0; width:50; height:50; "><br>
+<image id="myImage01" src="" style="position:relative; right:0; top:0; width:50; height:50; "><br>
   
 <input type=button value="Go left" onclick="{
-  document.getElementById('myImage01').style.left = `${parseInt(window.getComputedStyle(document.getElementById('myImage01'), null).getPropertyValue('left')) + 200}px`
+  document.getElementById('myImage01').style.left = `${parseInt(window.getComputedStyle(document.getElementById('myImage01'), null).getPropertyValue('left')) - 10}px`
   document.getElementById('myDiv01').innerHTML = 'It went left' 
 }">
   
