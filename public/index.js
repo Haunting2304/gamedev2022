@@ -1,4 +1,4 @@
-document.querySelector("body").style.paddingTop = `${document.getElementById("repo").offsetHeight}px`;
+document.querySelector("body").style.paddingTop = `${document.getElementById("repo").offsetHeight - window.getComputedStyle(document.querySelector("body"), null).getPropertyValue('padding-top')}px - window.getComputedStyle(document.querySelector("body"), null).getPropertyValue('padding-bottom')`;
 document.querySelector("body").style.minHeight = `100vh`;
 window.onresize = style;
 function style() {
