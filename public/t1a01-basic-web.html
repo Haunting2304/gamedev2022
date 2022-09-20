@@ -35,6 +35,28 @@
            document.getElementById('myDiv01').innerHTML = 'Input adffgdsfsgsdfdfh<br>' + 'sdfg<br>sdfg<br>output is...'
         }">
         
+        <input type=button value="2. Variables" onclick="{
+           document.getElementById('myDiv01').innerHTML = `
+           Variables<br>
+           <pre>
+           x = 5;
+           y = 6;
+           console.log(x + y);
+               
+           --> 11
+           </pre>
+        }">
+        
+        <input type=button value="3. Loops" onclick="{
+           document.getElementById('myDiv01').innerHTML = `
+           Loops<br>
+           <pre>
+           for(i=0;i<4;i++) {
+               console.log(`This is the ${i}th iteration`)
+           }
+           </pre>
+        }">
+        
         <input type=button value="4. Decisions" onclick="{
            document.getElementById('myDiv01').innerHTML = `
            Decisions use the if statement to make true
@@ -43,6 +65,65 @@
            if(hour < 18) {
                greeting = \'Good day\';
            }
+           </pre>
+        `}"><br>
+        
+        <input type=button value="5. Functions" onclick="{
+           document.getElementById('myDiv01').innerHTML = `
+           Functions<br>
+           <pre>
+           myFunction(a) {
+               console.log(a);
+           }
+           myFunction(5);
+                                                         
+           --> 5
+           </pre>
+        `}"><br>
+        
+        <input type=button value="6. Events" onclick="{
+           document.getElementById('myDiv01').innerHTML = `
+           Events<br>
+           <pre>
+           element.addEventListener("click", doThing);
+           </pre>
+        `}"><br>
+        
+        <input type=button value="7. Arrays" onclick="{
+           document.getElementById('myDiv01').innerHTML = `
+           Arrays<br>
+           <pre>
+           myArray = {"Car", "Plane", "Cat"};
+           console.log(myArray[0]);
+           console.log(myArray[2]);
+           
+           --> "Car"
+           --> "Cat"
+           </pre>
+        `}"><br>
+        
+        <input type=button value="8. Objects" onclick="{
+           document.getElementById('myDiv01').innerHTML = `
+           Objects<br>
+           <pre>
+           myObject = {
+               name : "Giorgio",
+               object : "Shark Plushie",
+               favColour : "Purple"
+           };
+           console.log(myObject.object);
+           console.log(myObject.favColour);
+           
+           --> "Shark Plushie"
+           --> "Purple"
+           </pre>
+        `}"><br>
+        
+        <input type=button value="9. Classes" onclick="{
+           document.getElementById('myDiv01').innerHTML = `
+           Classes<br>
+           <pre>
+           Classes are templates for creating objects.
            </pre>
         `}"><br>
         You do: 2:variables, 3:loops, 5:functions, 6:events, 7:arrays, 8:objects, 9:classes<br>
