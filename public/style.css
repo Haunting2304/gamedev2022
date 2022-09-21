@@ -24,6 +24,10 @@ h1 {
     color: inherit;
 }
 
+.showLink {
+    color: default;
+}
+
 .link:hover {
     color: hsl(0, 0%, 70%);
 }
