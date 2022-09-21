@@ -48,14 +48,14 @@
         `}">
         
         <input type=button value="3. Loops" onclick="{
-           document.getElementById('myDiv01').innerHTML = `
+           document.getElementById('myDiv01').innerHTML = '
            Loops<br>
            <pre>
            for(i=0;i<4;i++) {
                console.log(`This is the ${i}th iteration`)
            }
            </pre>
-        `}">
+        '}">
         
         <input type=button value="4. Decisions" onclick="{
            document.getElementById('myDiv01').innerHTML = `
@@ -81,16 +81,16 @@
            </pre>
         `}"><br>
         
-        <input type=button value="6. Events" onclick="{
-           document.getElementById('myDiv01').innerHTML = `
+        <input type=button value="6. Events" onclick='{
+           document.getElementById(`myDiv01`).innerHTML = `
            Events<br>
            <pre>
            element.addEventListener("click", doThing);
            </pre>
-        `}"><br>
+        `}'><br>
         
         <input type=button value="7. Arrays" onclick='{
-           document.getElementById('myDiv01').innerHTML = `
+           document.getElementById(`myDiv01`).innerHTML = `
            Arrays<br>
            <pre>
            myArray = {"Car", "Plane", "Cat"};
@@ -103,7 +103,7 @@
         `}'><br>
         
         <input type=button value="8. Objects" onclick='{
-           document.getElementById('myDiv01').innerHTML = `
+           document.getElementById(`myDiv01`).innerHTML = `
            Objects<br>
            <pre>
            myObject = {
