@@ -38,13 +38,14 @@ a {
     font-size: 24px;
 }
 
-/*#repo {
-    position: absolute;
+#repo {
+    margin-bottom: 2em;
+    /*position: absolute;
     top: 0;
     margin: 2em;
     margin-top: 1.5em;
-    padding: 5px;
-}*/
+    padding: 5px;*/
+}
 
 .cur {
     cursor: default;
