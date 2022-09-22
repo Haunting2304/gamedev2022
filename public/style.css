@@ -47,6 +47,10 @@ a {
     padding: 5px;*/
 }
 
+.heading {
+    margin-block-start: 0em;
+}
+
 .cur {
     cursor: default;
 }
