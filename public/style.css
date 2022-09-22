@@ -37,7 +37,7 @@ a:active {
   color: #FF0000;
 }
 
-.link {
+.link:link, .link:visited {
     color: inherit;
 }
 
