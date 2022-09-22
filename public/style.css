@@ -22,19 +22,19 @@ h1 {
 }
 
 a:link {
-    color: #0000FF;
+    color: #2277FF;
 }
 
 a:visited {
-  color: #800080;
+  color: #7744ff;
 }
 
 a:hover {
-  color: #0000FF;
+  color: #2277FF;
 }
 
 a:active {
-  color: #FF0000;
+  color: #FF3333;
 }
 
 .link:link, .link:visited {
