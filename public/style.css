@@ -13,7 +13,8 @@ body {
     line-height: 1.5;
     margin: 0 auto;
     max-width: 800px;
-    padding: 2em 2em 4em;
+    padding: 2em;
+    padding-bottom: 4em;
 }
 
 h1 {
