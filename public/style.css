@@ -21,8 +21,20 @@ h1 {
     text-align: center;
 }
 
-a {
-    
+a:link {
+    color: #0000FF;
+}
+
+a:visited {
+  color: #800080;
+}
+
+a:hover {
+  color: #0000FF;
+}
+
+a:active {
+  color: #FF0000;
 }
 
 .link {
