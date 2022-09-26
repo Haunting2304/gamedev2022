@@ -11,102 +11,36 @@
         <div id="back"><a href="/gamedev2022/public/" class="link">← Back to index (Giorgio)</a></div>
         <h1 align=center\>T1A04: CSS</h1>
 
-        Reference Link 
-        <a href="https://www.w3schools.com/cssref/default.asp">w3schools</a><br>
+        (Reference Link <a href="https://www.w3schools.com/cssref/default.asp">w3schools</a>)<br><br>
 
-        Properly done with a .css file listing all css commands for your
-        website<br>
-        Another way to do CSS (Cascading Style Sheets: determine colors 
-        locations extra effects on the tags on your web page)<br>
+        Cascading Style Sheets determine colors, locations, and extra effects on the tags on your web page.
+        CSS is properly done with a .css file listing all css commands for your website.<br>
+        I do CSS inside the tag. It overwrites all other methods.<br><br>
 
-        Here is  typical in document style
+        Here is typical in-document CSS
         <pre>
 b {
   color: #00ff00;
 }
-        </pre><br>
+        </pre>
+        
+        <hr>
 
-        I do CSS inside the tag. It overpowers all other methods<br>
-
-        <b > This is bold</b><br>
-        <b id="myB1" style="color:#00ff00; background-Color:blue; "> This is bold</b>
+        <b id="myB1" style="color:#00ff00; background-Color:blue;">This is bold</b>
         <input type=button value=Change onclick="{
             document.getElementById('myB1').style.color = 'red'
             document.getElementById('myB1').style.backgroundColor = 'yellow'
         }"><br>
 
 
-
-        <textarea style="position:relative; left:0; top:0; width:200; height:50; ">
-        Advanced see if you move this textarea
-        </textarea><br><br>
+        Advanced: See if you can move this textarea
+        <textarea id="textArea" style="position:relative; left:0; top:0; width:200; height:50;">
+        </textarea>
+        <input type=button value=Move onclick="{
+            document.getElementById('textArea').style.top = '10'
+        }"><br><br>
         
         Here is a CSS file used for this page as of writing:<br>
-        <pre>
-html {
-    background: #e6e9e9;
-    background-image: linear-gradient(270deg, rgb(18, 19, 19) 0%, rgb(10, 10, 10) 100%);
-    -webkit-font-smoothing: antialiased;
-}
-
-body {
-    background: #262626;
-    box-shadow: 0 0 2px rgba(0, 0, 0, 0.06);
-    color: #fff;
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-    font-size: 16px;
-    line-height: 1.5;
-    margin: 0 auto;
-    max-width: 800px;
-    padding: 2em;
-    padding-bottom: 4em;
-}
-
-h1 {
-    text-align: center;
-}
-
-a:link {
-    color: #2277FF;
-}
-
-a:visited {
-  color: #7744ff;
-}
-
-a:hover {
-  color: #4499FF;
-}
-
-a:active {
-  color: #FF3333;
-}
-
-.link:link, .link:visited {
-    color: inherit;
-}
-
-.link:hover {
-    color: hsl(0, 0%, 70%);
-}
-
-.links > div {
-    padding: 5px;
-    font-size: 24px;
-}
-
-#back {
-    margin-bottom: 1em;
-    /*position: absolute;
-    top: 0;
-    margin: 2em;
-    margin-top: 1.5em;
-    padding: 5px;*/
-}
-
-.cur {
-    cursor: default;
-}
-        </pre>
+        <a href="/gamedev2022/public/style.css">style.css</a>
     </body>
 </html>
