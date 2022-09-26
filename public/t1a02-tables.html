@@ -11,7 +11,6 @@
         <div id="back"><a href="/gamedev2022/public/" class="link">← Back to index (Giorgio)</a></div>
         <h1 align=center>T1A02: Lists and Tables</h1>
 
-        <hr>
         <h2>Lists</h2>
         
         Ordered list of fav foods (at least 5)<br>
@@ -54,16 +53,16 @@
         </ol>
 
         <hr>
-        <h2> Tables</h2>
+        <h2>Tables</h2>
 
         <b>Assignment</b> Make a 3 x 4 table, then make a link and image table with border = 0<br><br><br>
         
         <table border=0>
             <tr><td></td><td>Images</td><td>Links</td></tr>
-            <tr><td>Cats</td><td><img src="https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/cute-photos-of-cats-cleaning-1593202999.jpg"></td><td><a href="https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/cute-photos-of-cats-cleaning-1593202999.jpg">cute-photos-of-cats-cleaning-1593202999.jpg</a></td></tr>
+            <tr><td>Cats</td><td><img height=100 src="https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/cute-photos-of-cats-cleaning-1593202999.jpg"></td><td><a href="https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/cute-photos-of-cats-cleaning-1593202999.jpg">cute-photos-of-cats-cleaning-1593202999.jpg</a></td></tr>
             <tr><td>Dogs</td><td>img</td><td>link</td></tr>
             <tr><td>Capybara</td><td>img</td><td>link</td></tr>
-        </table><br>-
+        </table>
 
         <hr>
         <h2>Advanced</h2>
@@ -74,10 +73,10 @@
 
         <input type=button value="Go left" onclick="{
             document.getElementById('myImage01').style.left = `${parseInt(window.getComputedStyle(document.getElementById('myImage01'), null).getPropertyValue('left')) - 10}px`
-            document.getElementById('myDiv01').innerHTML = 'It went left' 
+            document.getElementById('myDiv01').innerHTML = 'It went left x${parseInt(window.getComputedStyle(document.getElementById('myImage01'), null).getPropertyValue('left') / 10}' 
         }">
 
 
-        <div id="myDiv01">...</div>
+        <div id="myDiv01"></div>
     </body>
 </html>
