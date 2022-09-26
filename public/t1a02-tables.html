@@ -73,7 +73,7 @@
 
         <input type=button value="Go left" onclick="{
             document.getElementById('myImage01').style.left = `${parseInt(window.getComputedStyle(document.getElementById('myImage01'), null).getPropertyValue('left')) - 10}px`
-            document.getElementById('myDiv01').innerHTML = 'It went left x${parseInt(window.getComputedStyle(document.getElementById('myImage01'), null).getPropertyValue('left')) / 10}' 
+            document.getElementById('myDiv01').innerHTML = `It went left x${parseInt(window.getComputedStyle(document.getElementById('myImage01'), null).getPropertyValue('left')) / 10}` 
         }">
 
 
