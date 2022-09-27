@@ -1,3 +1,7 @@
+if(localStorage.getItem('stylePref') == undefined) {
+    localStorage.setItem('stylePref', true);
+}
+darkMode = localStorage.getItem('stylePref')
 var darkMode = true;
 if(darkMode) {
     document.getElementById("styleMode").href="/gamedev2022/public/style.css";
@@ -8,9 +12,11 @@ else {
 function toggleStyle() {
     darkMode = !darkMode
     if(darkMode) {
+        localStorage.setItem('stylePref', true);
         document.getElementById("styleMode").href="/gamedev2022/public/style.css";
     }
     else {
+        localStorage.setItem('stylePref', false);
         document.getElementById("styleMode").href="/gamedev2022/public/styleLight.css";
     }
 }
