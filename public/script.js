@@ -5,7 +5,7 @@ if(darkMode) {
 else {
     document.getElementById("styleMode").href="/gamedev2022/public/styleLight.css";
 }
-toggleStyle() {
+function toggleStyle() {
     darkMode = !darkMode
     if(darkMode) {
         document.getElementById("styleMode").href="/gamedev2022/public/style.css";
