@@ -1,8 +1,7 @@
 if(localStorage.getItem('stylePref') == undefined) {
     localStorage.setItem('stylePref', true);
 }
-darkMode = localStorage.getItem('stylePref')
-var darkMode = true;
+var darkMode = localStorage.getItem('stylePref')
 if(darkMode) {
     document.getElementById("styleMode").href="/gamedev2022/public/style.css";
 }
