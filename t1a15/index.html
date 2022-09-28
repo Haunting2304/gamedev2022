@@ -572,5 +572,61 @@
             </textarea><br>
         <br><br><br>
         <hr><br><br><br><br>
+        <script>
+
+        myOnce123 = true    // so textareas are only clicked once
+        myOnce124 = true  
+        myOnce125 = true  
+        myOnce126 = true   
+        myOnce127 = true
+        myOnce128 = true  
+        myOnce129 = true  
+        myOnce130 = true  
+        myOnce131 = true  
+        myOnce132 = true  
+        myOnce133 = true  
+        myOnce134 = true  
+        myOnce135 = true  
+        myOnce136 = true  
+        myOnce137 = true  
+        myOnce138 = true  
+        myOnce139 = true  
+        myOnce140 = true  
+        myOnce141 = true  
+        myOnce142 = true  
+        myOnce143 = true  
+        myOnce144 = true  
+        myOnce145 = true  
+        myOnce146 = true  
+        myOnce147 = true  
+        myOnce148 = true  
+        myOnce149 = true  
+        myOnce150 = true  
+        myOnce151 = true  
+        myOnce152 = true  
+        myOnce153 = true      
+        myOnce154 = true      
+
+
+        function myTextGrow(myT, myB){
+           var myCursorStart = document.getElementById(myT).selectionStart
+           var myCursorEnd = document.getElementById(myT).selectionEnd
+
+           myDivName = myB.replace('Code','')
+           document.getElementById(myT).value = mySpecialVar  + document.getElementById(myB).innerHTML 
+           document.getElementById(myT).value += '<div id=\''+myDivName+'\'>...</div><br>'     
+           setTimeout(function() {
+              while (  document.getElementById(myT).clientHeight < document.getElementById(myT).scrollHeight){                                                                                                                                              
+                  document.getElementById(myT).rows += 3; 
+              } 
+           }, 100)
+
+          document.getElementById(myT).selectionStart = myCursorStart
+          document.getElementById(myT).selectionEnd = myCursorEnd
+
+        }  
+
+
+        </script>  
     </body>
 </html>
