@@ -49,13 +49,13 @@ input.height0 {
 }
 
 input.height1 {
-    background-color: #464646;
+    background-color: #363636;
     color: inherit;
     border-color: #565656;
 }
 
 input.height2 {
-    background-color: #363636;
+    background-color: #464646;
     color: inherit;
     border-color: #565656;
 }
