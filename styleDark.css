@@ -41,9 +41,23 @@ a:hover {
 a:active {
   color: #FF3333;
 }
-input {
+
+input.height0 {
+    background-color: #242424;
+    color: inherit;
+    border-color: #565656;
+}
+
+input.height1 {
+    background-color: #464646;
+    color: inherit;
+    border-color: #565656;
+}
+
+input.height2 {
     background-color: #363636;
     color: inherit;
+    border-color: #565656;
 }
 
 textarea {
