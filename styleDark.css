@@ -42,19 +42,19 @@ a:active {
   color: #FF3333;
 }
 
-input.height0 {
+input[type=text], input[type=number] {
     background-color: #242424;
     color: inherit;
     border-color: #565656;
 }
 
-input.height1 {
+div > input[type=text, number], input[type=button] {
     background-color: #363636;
     color: inherit;
     border-color: #565656;
 }
 
-input.height2 {
+div > input[type=button] {
     background-color: #464646;
     color: inherit;
     border-color: #565656;
