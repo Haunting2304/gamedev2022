@@ -1,0 +1,52 @@
+html {
+    background-image: linear-gradient(270deg, rgb(20, 21, 21) 0%, rgb(12, 12, 12) 100%);
+}
+
+body {
+    background: #262626;
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.06);
+    color: #fff;
+}
+
+.foreground1 {
+    background: #363636;
+    box-shadow: 5px 5px 5px #181818;
+    margin-bottom: 6px;
+}
+
+.foreground2 {
+    background: #464646;
+    box-shadow: 5px 5px 5px #282828;
+    margin-bottom: 6px;
+}
+
+.foreground3 {
+    background: #525252;
+    box-shadow: 5px 5px 5px #343434;
+    margin-bottom: 6px;
+}
+
+a:link {
+    color: #1166FF;
+}
+
+a:visited {
+  color: #7744ff;
+}
+
+a:hover {
+  color: #4499FF;
+}
+
+a:active {
+  color: #FF3333;
+}
+
+textarea {
+    background-color: #151515;
+    color: inherit;
+}
+
+.link:hover {
+    color: hsl(0, 0%, 70%);
+}

@@ -1,63 +1,31 @@
 html {
-    background: #ffffff;
-    -webkit-font-smoothing: antialiased;
+    background-image: linear-gradient(270deg, rgb(230, 233, 233) 0%, rgb(216, 221, 221) 100%);
 }
 
 body {
-    background: #262626;
+    background: #fff;
     box-shadow: 0 0 2px rgba(0, 0, 0, 0.06);
-    color: #fff;
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-    font-size: 16px;
-    line-height: 1.5;
-    margin: 0 auto;
-    max-width: 800px;
-    padding: 2em;
-    padding-bottom: 4em;
+    color: #000;
 }
 
-h1 {
-    text-align: center;
+.foreground1 {
+    background: #f1f1f1;
+    box-shadow: 5px 5px 5px #d5d5d5;
+    margin-bottom: 6px;
 }
 
-a:link {
-    color: #1166FF;
+.foreground2 {
+    background: #e3e3e3;
+    box-shadow: 5px 5px 5px #cacaca;
+    margin-bottom: 6px;
 }
 
-a:visited {
-  color: #7744ff;
-}
-
-a:hover {
-  color: #4499FF;
-}
-
-a:active {
-  color: #FF3333;
-}
-
-.link:link, .link:visited {
-    color: inherit;
+.foreground3 {
+    background: #cecece;
+    box-shadow: 5px 5px 5px #b2b2b2;
+    margin-bottom: 6px;
 }
 
 .link:hover {
-    color: hsl(0, 0%, 70%);
-}
-
-.links > div {
-    padding: 5px;
-    font-size: 24px;
-}
-
-#back {
-    margin-bottom: 1em;
-    /*position: absolute;
-    top: 0;
-    margin: 2em;
-    margin-top: 1.5em;
-    padding: 5px;*/
-}
-
-.cur {
-    cursor: default;
+    color: hsl(0, 0%, 45%);
 }
