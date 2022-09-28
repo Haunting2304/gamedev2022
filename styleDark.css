@@ -41,6 +41,10 @@ a:hover {
 a:active {
   color: #FF3333;
 }
+input {
+    background-color: #363636;
+    color: inherit;
+}
 
 textarea {
     background-color: #151515;
