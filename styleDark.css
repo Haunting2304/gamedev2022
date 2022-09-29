@@ -68,3 +68,15 @@ textarea {
 .link:hover {
     color: hsl(0, 0%, 70%);
 }
+
+::-webkit-scrollbar-track {
+  background: #363636;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #565656;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #666666;
+}
