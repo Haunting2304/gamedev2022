@@ -2,9 +2,9 @@ var settingsOpen = false;
 function toggleSettings() {
     settingsOpen = !settingsOpen
     if(settingsOpen) {
-        console.log("Open Settings")
+        document.getElementById("settingsMenu").style.visibility = "visible"
     }
     else {
-        console.log("Close Settings")
+        document.getElementById("settingsMenu").style.visibility = "hidden"
     }
 }
