@@ -1,29 +1,53 @@
 <!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta http-equiv="X-UA-Compatible" content="ie=edge">
-        <title>Gamedev 2022</title>
-        <!--<link rel="icon" href="/gamedev2022/ico/32.png" sizes="32x32">
-        <link rel="icon" href="/gamedev2022/ico/128.png" sizes="128x128">
-        <link rel="apple-touch-icon" href="/gamedev2022/ico/180.png" sizes="180x180">
-        <link rel="icon" href="/gamedev2022/ico/192.png" sizes="192x192">-->
-        <link rel="stylesheet" type="text/css" href="/gamedev2022/style.css">
-        <link id="styleMode" rel="stylesheet" type="text/css">
-        <script type="text/javascript" src="/gamedev2022/stylePref.js"></script>
-    </head>
-    <body>
-        <div id="back" style="float:left;"><a href="https://github.com/Haunting2304/gamedev2022" class="link">← Repository (Giorgio)</a></div>
-        <div style="float:right;"><a href="/gamedev2022/settings" class="link" style="text-decoration:none;">Settings</a></div>
-        <br><br>
-        <div class="links">
-            <div><a href="t1a01" class="link">T1A01: Basic web stuff</a></div>
-            <div><a href="t1a02" class="link">T1A02: Tables</a></div>
-            <div><a href="t1a03" class="link">T1A03: Forms</a></div>
-            <div><a href="t1a04" class="link">T1A04: CSS</a></div>
-            <div><a href="t1a15" class="link">T1A15: Review Coding</a></div>
-        </div>
-        <br><br>
-    </body>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Browser inference demo</title>
+
+    <style>
+        #features {
+            width: 50%;
+            font-size: 18px;
+        }
+
+        #results {
+            font-family: monospace;
+            white-space: pre;
+        }
+    </style>
+</head>
+<body>
+    <h1></h1>
+
+    <p>
+        <input type="text" id="features" placeholder="Paste your features here">
+    </p>
+    <p>
+        <button id="run-inference">Run inference</button>
+    </p>
+    <p id="results"></p>
+
+    <script src="edge-impulse-standalone.js"></script>
+    <script src="run-impulse.js"></script>
+    <script>
+        (async () => {
+            var classifier = new EdgeImpulseClassifier();
+            await classifier.init();
+
+            let project = classifier.getProjectInfo();
+            document.querySelector('h1').textContent = project.owner + ' / ' + project.name + ' (version ' + project.deploy_version + ')';
+
+            document.querySelector('#run-inference').onclick = () => {
+                try {
+                    let features = document.querySelector('#features').value.split(',').map(x => Number(x.trim()));
+                    let res = classifier.classify(features);
+                    document.querySelector('#results').textContent = JSON.stringify(res, null, 4);
+                }
+                catch (ex) {
+                    alert('Failed to classify: ' + (ex.message || ex.toString()));
+                }
+            };
+        })();
+    </script>
+</body>
 </html>
