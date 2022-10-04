@@ -5,64 +5,72 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
         <title>Settings</title>
-        <link id="styleMode" rel="stylesheet" type="text/css">
-        <script type="text/javascript" src="/gamedev2022/stylePref.js"></script>
+        <style>
+            html {
+                background: #262626;
+                color: #fff;
+            }
+            body {
+                background: hsla(0, 0%, 0%, 0)
+                color: #fff;
+            }
+        </style>
     </head>
-  <body>
-    <div id="main">
-        <canvas id="myGrowCanvas" style="position:absolute; left:0px; top:0px; width:1200px; height:600px; " ></canvas> <br>  
+    <body>
+        <div id="main">
+            <canvas id="myGrowCanvas" style="position:absolute; left:0px; top:0px; width:1200px; height:600px; " ></canvas> <br>  
 
-        <canvas id="myOverlap2" style="position:absolute; left:0px; top:0px; width:120px; height:600px; background:transparent;  " ></canvas>  
+            <canvas id="myOverlap2" style="position:absolute; left:0px; top:0px; width:120px; height:600px; background:transparent;  " ></canvas>  
 
-        <table border=1 style="position:absolute; left:800px; top:0px;  ">
-        <tr><td>
-
-
-        <div id="description">
-              <div id="description-title" style="font-size:30px">Demo Edge Impulse WASM</div>
+            <table border=1 style="position:absolute; left:800px; top:0px;  ">
+            <tr><td>
 
 
-
-
-              Frequency ms <input type=text id="myText01" value=130 onChange="{
-                   myFrequencyMs = this.value
-                   clearInterval(myTimer01)
-                  myTimer01 = setInterval(myPictureNow, myFrequencyMs);
-                }"><br>
-            (square) width/height: <input type=text value="96" size=5 id="myWidthHeight" READONLY>  <br>    
-
-
-
-              Stop Data Collection: <input type=checkbox id="myCheckbox01"><br>
-              Stop All Sounds <input type=checkbox id="myCheckbox02sounds" ><br>
-              Stop 0 (First) label sound: <input type=checkbox id="myCheckbox03lable0" checked=true><br>
-              <input type=button value="Width -" onclick="{
-                 document.getElementById('myGrowCanvas').style.width = parseInt(document.getElementById('myGrowCanvas').style.width) - 50                                                                                
-              }"><input type=button value="Width +" onclick="{
-                 document.getElementById('myGrowCanvas').style.width = parseInt(document.getElementById('myGrowCanvas').style.width) + 50         
-              }">    
-              <input type=button value="Height -" onclick="{
-                 document.getElementById('myGrowCanvas').style.height = parseInt(document.getElementById('myGrowCanvas').style.height) - 50                                                                              
-              }"><input type=button value="Height +" onclick="{
-                 document.getElementById('myGrowCanvas').style.height = parseInt(document.getElementById('myGrowCanvas').style.height) + 50          
-              }">   
-
-              <br>
-              Camera: <select id="mySelect" onChange="setupPage()"><option  value="user">Front Camera<option selected="selected" value="environment">Rear Camera</select><br>
-              Default is not mirrored:  see canvas: scaleX(-1);  transform: scaleX(-1);<br>
-              Default GRAYSCALE, Check to use Color <input type=checkbox id="myCheckboxColor"><br><br>
-
-              <div id="myDiv01" style="font-size:30px">...</div>
-             <textarea id="myTextArea01" style="display:none; " rows=10 cols=70>...</textarea> <br> <br> <br>
-             <div id="mySpecialDiv">...</div> 
-        </td></tr></table>
+            <div id="description">
+                  <div id="description-title" style="font-size:30px">Demo Edge Impulse WASM</div>
 
 
 
 
+                  Frequency ms <input type=text id="myText01" value=130 onChange="{
+                       myFrequencyMs = this.value
+                       clearInterval(myTimer01)
+                      myTimer01 = setInterval(myPictureNow, myFrequencyMs);
+                    }"><br>
+                (square) width/height: <input type=text value="96" size=5 id="myWidthHeight" READONLY>  <br>    
 
 
-        <!--   <video id="video" playsinline="" style="display:none; -webkit-transform: scaleX(1); transform: scaleX(1); width: auto; height: auto;"></video> -->
+
+                  Stop Data Collection: <input type=checkbox id="myCheckbox01"><br>
+                  Stop All Sounds <input type=checkbox id="myCheckbox02sounds" ><br>
+                  Stop 0 (First) label sound: <input type=checkbox id="myCheckbox03lable0" checked=true><br>
+                  <input type=button value="Width -" onclick="{
+                     document.getElementById('myGrowCanvas').style.width = parseInt(document.getElementById('myGrowCanvas').style.width) - 50                                                                                
+                  }"><input type=button value="Width +" onclick="{
+                     document.getElementById('myGrowCanvas').style.width = parseInt(document.getElementById('myGrowCanvas').style.width) + 50         
+                  }">    
+                  <input type=button value="Height -" onclick="{
+                     document.getElementById('myGrowCanvas').style.height = parseInt(document.getElementById('myGrowCanvas').style.height) - 50                                                                              
+                  }"><input type=button value="Height +" onclick="{
+                     document.getElementById('myGrowCanvas').style.height = parseInt(document.getElementById('myGrowCanvas').style.height) + 50          
+                  }">   
+
+                  <br>
+                  Camera: <select id="mySelect" onChange="setupPage()"><option  value="user">Front Camera<option selected="selected" value="environment">Rear Camera</select><br>
+                  Default is not mirrored:  see canvas: scaleX(-1);  transform: scaleX(-1);<br>
+                  Default GRAYSCALE, Check to use Color <input type=checkbox id="myCheckboxColor"><br><br>
+
+                  <div id="myDiv01" style="font-size:30px">...</div>
+                 <textarea id="myTextArea01" style="display:none; " rows=10 cols=70>...</textarea> <br> <br> <br>
+                 <div id="mySpecialDiv">...</div> 
+            </td></tr></table>
+
+
+
+
+
+
+            <!--   <video id="video" playsinline="" style="display:none; -webkit-transform: scaleX(1); transform: scaleX(1); width: auto; height: auto;"></video> -->
 
           <video id="video" playsinline="" style="display:none; -webkit-transform: scaleX(-1); transform: scaleX(-1); width: auto; height: auto;"></video>  
 
