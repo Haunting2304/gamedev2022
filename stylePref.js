@@ -14,7 +14,9 @@ if(localStorage.getItem('darkModePref') == undefined) {
     localStorage.setItem('darkModePref', true);
 }
 var darkMode = stringToBool(localStorage.getItem('darkModePref'))
-document.getElementById("darkModeButton").value = darkMode
+if(document.getElementById("darkModeButton") != undefined) {
+    document.getElementById("darkModeButton").value = darkMode
+}
 function updateTheme() {
     darkMode = document.getElementById("darkModeButton").value
     localStorage.setItem('darkModePref', darkMode)
