@@ -15,11 +15,11 @@ if(localStorage.getItem('darkModePref') == undefined) {
 }
 var darkMode = stringToBool(localStorage.getItem('darkModePref'))
 if(document.getElementById("darkModeButton") != undefined) {
-    document.getElementById("darkModeButton").value = darkMode
+    document.getElementById("darkModeButton").checked = darkMode
 }
 getThemeSheet()
 function updateTheme() {
-    darkMode = document.getElementById("darkModeButton").value
+    darkMode = document.getElementById("darkModeButton").checked
     localStorage.setItem('darkModePref', darkMode)
     getThemeSheet()
 }
