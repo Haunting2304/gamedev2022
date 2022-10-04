@@ -17,16 +17,13 @@ var darkMode = stringToBool(localStorage.getItem('darkModePref'))
 if(document.getElementById("darkModeButton") != undefined) {
     document.getElementById("darkModeButton").value = darkMode
 }
-if(darkMode) {
-    document.getElementById("styleMode").href="/gamedev2022/styleDark.css";
-}
-else {
-    document.getElementById("styleMode").href="/gamedev2022/styleLight.css";
-}
+getThemeSheet()
 function updateTheme() {
     darkMode = document.getElementById("darkModeButton").value
     localStorage.setItem('darkModePref', darkMode)
-    
+    getThemeSheet()
+}
+function getThemeSheet() {
     if(darkMode) {
     document.getElementById("styleMode").href="/gamedev2022/styleDark.css";
     }
