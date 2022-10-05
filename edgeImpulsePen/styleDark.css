@@ -1,0 +1,64 @@
+html {
+    background-image: linear-gradient(270deg, rgb(20, 21, 21) 0%, rgb(12, 12, 12) 100%);
+}
+
+.foreground1 {
+    background: #363636;
+    box-shadow: 5px 5px 5px #181818;
+    margin-bottom: 6px;
+}
+
+.foreground2 {
+    background: #464646;
+    box-shadow: 5px 5px 5px #282828;
+    margin-bottom: 6px;
+}
+
+.foreground3 {
+    background: #525252;
+    box-shadow: 5px 5px 5px #343434;
+    margin-bottom: 6px;
+}
+
+a:link {
+    color: #1166FF;
+}
+
+a:visited {
+  color: #7744ff;
+}
+
+a:hover {
+  color: #4499FF;
+}
+
+a:active {
+  color: #FF3333;
+}
+
+input[type=text], input[type=number] {
+    background-color: #242424;
+    color: inherit;
+    border-color: #565656;
+}
+
+div > input[type=text, number], input[type=button] {
+    background-color: #363636;
+    color: inherit;
+    border-color: #565656;
+}
+
+div > input[type=button] {
+    background-color: #464646;
+    color: inherit;
+    border-color: #565656;
+}
+
+textarea {
+    background-color: #151515;
+    color: inherit;
+}
+
+.link:hover {
+    color: hsl(0, 0%, 70%);
+}
