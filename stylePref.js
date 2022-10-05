@@ -9,7 +9,16 @@ function stringToBool(x) {
         return undefined
     }
 }
-
+var light
+var dark
+if(document.getElementById("customTheme") != undefined) {
+    light = document.getElementById("customThemeLight").innerHTML
+    dark = document.getElementById("customThemeDark").innerHTML
+}
+else {
+    light = "/gamedev2022/styleLight.css"
+    dark = "/gamedev2022/styleDark.css"
+}
 if(localStorage.getItem('darkModePref') == undefined) {
     localStorage.setItem('darkModePref', true);
 }
@@ -22,10 +31,10 @@ function updateTheme() {
 }
 function getThemeSheet() {
     if(darkMode) {
-    document.getElementById("styleMode").href="/gamedev2022/styleDark.css";
+    document.getElementById("styleMode").href = dark;
     }
     else {
-        document.getElementById("styleMode").href="/gamedev2022/styleLight.css";
+        document.getElementById("styleMode").href = light;
     }
 }
 function onPageLoad() {
