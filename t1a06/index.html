@@ -1,38 +1,48 @@
-Version 0.0.1
+<!DOCTYPE html>
+<html lang="en" id="html">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>T1A06: Varaibles</title>
+        <link rel="stylesheet" type="text/css" href="/gamedev2022/style.css">
+        <link id="styleMode" rel="stylesheet" type="text/css">
+        <script type="text/javascript" src="/gamedev2022/stylePref.js"></script>
+    </head>
+    <body>
+        <h2 align=center>T1A06: Varaibles</h2>
 
-<h2 align=center>t1a06-varaibles-by-Fred.html</h2>
+        <a href="">You Fix: Good reference to Variables in Javascript 
+        and other languages</a><br>
 
-<a href="">You Fix: Good reference to Variables in Javascript 
-and other languages</a><br>
+        Other Languages use: bool, int, float, char, string, 
+        int_8, int_16 etc<br>
 
-Other Languages use: bool, int, float, char, string, 
-int_8, int_16 etc<br>
-
-Note: Javascript does use var and let for local variables.<br>
-For Global variables Mr. Ellis prefers to use document.myVarName
-
-
-<h4> Example input output code</h4>
-<pre>
-    let myIn01 = document.getElementById('myText01').value
-    document.getElementById('myDiv01').innerHTML = myIn01 
-</pre>
-
-<h4> Example working code</h4>
-
-<input id="myText01" type=text value="The dog " ><br> 
-
-<input type=button value="Show Variable" onclick="{
-    let myIn01 = document.getElementById('myText01').value
-    document.getElementById('myDiv01').innerHTML = myIn01
-
-}"><br>
-
-<input type=button value="Using no variable" onclick="{
-   document.getElementById('myDiv01').innerHTML = 
-       document.getElementById('myText01').value
-}"><br>
-
-<div id="myDiv01">...</div>
+        Note: Javascript does use var and let for local variables.<br>
+        For Global variables Mr. Ellis prefers to use document.myVarName
 
 
+        <h4> Example input output code</h4>
+        <pre>
+            let myIn01 = document.getElementById('myText01').value
+            document.getElementById('myDiv01').innerHTML = myIn01 
+        </pre>
+
+        <h4> Example working code</h4>
+
+        <input id="myText01" type=text value="The dog " ><br> 
+
+        <input type=button value="Show Variable" onclick="{
+            let myIn01 = document.getElementById('myText01').value
+            document.getElementById('myDiv01').innerHTML = myIn01
+
+        }"><br>
+
+        <input type=button value="Using no variable" onclick="{
+           document.getElementById('myDiv01').innerHTML = 
+               document.getElementById('myText01').value
+        }"><br>
+
+        <div id="myDiv01">...</div>
+    </body>
+</html>
