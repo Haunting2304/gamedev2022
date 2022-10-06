@@ -1,1 +1,33 @@
-
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>T1A05: Input Output</title>
+        <link rel="stylesheet" type="text/css" href="/gamedev2022/style.css">
+        <link id="styleMode" rel="stylesheet" type="text/css">
+        <script type="text/javascript" src="/gamedev2022/stylePref.js"></script>
+    </head>
+    <body>
+        <div id="back"><a href="/gamedev2022" class="link">← Back to index (Giorgio)</a></div>
+        <h1>T1A05: Input Output</h1>
+        
+        <a href="https://www.w3schools.com/jsref/prop_html_innerhtml.asp">Reference to input output(w3schools)</a><br><br>
+        <h4>Example input output code</h4>
+        <pre>let myIn01 = document.getElementById("myNum01").value
+document.getElementById("myDiv01").innerHTML = `${myIn01} squared = ${myIn01 * myIn01}`</pre>
+        
+        <h4>Example working code</h4>
+        
+        <input id="myNum01" type=number value="4"><br>
+        
+        <input type=button value="myEvent squares" onclick='
+            let myIn01 = parseFloat(document.getElementById("myNum01").value)
+            let myAnswer = myIn01 * myIn01
+            document.getElementById("myDiv01").innerHTML = `${myIn01} squared = ${myAnswer}`
+        '><br>
+        
+        <div id="myDiv01">...</div>
+    </body>
+</html>
