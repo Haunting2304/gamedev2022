@@ -35,15 +35,20 @@ document.getElementById("myDiv01").innerHTML = `${myIn01} squared = ${myIn01 * m
         <h2>My Examples</h2>
         
         <h4>Here are some radio buttons</h4>
-        <input type=radio value="Button 1" onclick='
-            document.getElementById("myDiv02").innerHTML = `You pressed Option 1`
-        '>
-        <input type=radio value="Button 2" onclick='
-            document.getElementById("myDiv02").innerHTML = `You pressed Option 2`
-        '>
-        <input type=radio value="Button 3" onclick='
-            document.getElementById("myDiv02").innerHTML = `You pressed Option 3`
-        '><br>
+        <form>
+            <input type=radio id="button1" onclick='
+                document.getElementById("myDiv02").innerHTML = `You pressed Option 1`
+            '>
+            <label for="button1">Button 1</label><br>
+            <input type=radio id="button2" onclick='
+                document.getElementById("myDiv02").innerHTML = `You pressed Option 2`
+            '>
+            <label for="button2">Button 2</label><br>
+            <input type=radio id="button3" onclick='
+                document.getElementById("myDiv02").innerHTML = `You pressed Option 3`
+            '>
+            <label for="button3">Button 3</label><br>
+        </form>
         <div id="myDiv02">...</div><br><br>
         
         
@@ -59,8 +64,11 @@ document.getElementById("myDiv01").innerHTML = `${myIn01} squared = ${myIn01 * m
             document.getElementById("myDiv04").style.left = `${document.getElementById("myRange04").value}px`
         '>
         <input id="myVRange04" type="range" min="0" max="100" value="0" onchange='
-            document.getElementById("myDiv04").style.left = `${document.getElementById("myVRange04").value}px`
+            document.getElementById("myDiv04").style.top = `${document.getElementById("myVRange04").value}px`
         '>
         <div id="myDiv04" style="position: relative; left: 0px; top: 0px;">Move me all around</div><br><br>
+        
+        
+        <h4>My options page <a href="/gamedev2022/options">here</a> shows a case where I have used user input practically</h4>
     </body>
 </html>
