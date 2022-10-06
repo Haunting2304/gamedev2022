@@ -72,8 +72,9 @@ document.getElementById("myDiv01").innerHTML = `${myIn01} squared = ${myIn01 * m
         <h4>Pick a text color for the page</h4>
         <input id="myText05" type=text value="#fff" onchange='
             document.getElementById("body").style.color = document.getElementById("myText05").value
+            document.getElementById("myDiv05").innerHTML = `The text is now ${document.getElementById("myText05").value}!`
         '><br>
-        <div id="myDiv01">...</div><br><br>
+        <div id="myDiv05">...</div><br><br>
         
         <h4>My settings page <a href="/gamedev2022/settings">here</a> shows a case where I am using user input practically</h4>
     </body>
