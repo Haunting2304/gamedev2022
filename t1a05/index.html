@@ -18,6 +18,8 @@
         <pre>let myIn01 = document.getElementById("myNum01").value
 document.getElementById("myDiv01").innerHTML = `${myIn01} squared = ${myIn01 * myIn01}`</pre>
         
+        <hr>
+        
         <h4>Example working code</h4>
         
         <input id="myNum01" type=number value="4"><br>
@@ -30,6 +32,8 @@ document.getElementById("myDiv01").innerHTML = `${myIn01} squared = ${myIn01 * m
         
         <hr>
         
+        <h4>My Examples</h4>
+        
         <input type=button value="Button 1" onclick='
             document.getElementById("myDiv02").innerHTML = `You pressed Button 1`
         '>
@@ -39,6 +43,13 @@ document.getElementById("myDiv01").innerHTML = `${myIn01} squared = ${myIn01 * m
         <input type=button value="Button 3" onclick='
             document.getElementById("myDiv02").innerHTML = `You pressed Button 3`
         '><br>
-        <div id="myDiv02">...</div>
+        <div id="myDiv02">...</div><br><br>
+        
+        
+        <input id="myRange03" type="range" min="0" max="100" value="0" onchange='
+            document.getElementById("myDiv03").style.left = `${document.getElementById("myRange03").value}px`
+        '>
+
+        <div id="myDiv03" style="position: relative; left: 0px">Move me around</div><br><br>
     </body>
 </html>
