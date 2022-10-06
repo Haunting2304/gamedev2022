@@ -21,13 +21,24 @@ document.getElementById("myDiv01").innerHTML = `${myIn01} squared = ${myIn01 * m
         <h4>Example working code</h4>
         
         <input id="myNum01" type=number value="4"><br>
-        
         <input type=button value="myEvent squares" onclick='
             let myIn01 = parseFloat(document.getElementById("myNum01").value)
             let myAnswer = myIn01 * myIn01
             document.getElementById("myDiv01").innerHTML = `${myIn01} squared = ${myAnswer}`
         '><br>
-        
         <div id="myDiv01">...</div>
+        
+        <hr>
+        
+        <input type=button value="Button 1" onclick='
+            document.getElementById("myDiv02").innerHTML = `You pressed Button 1`
+        '>
+        <input type=button value="Button 2" onclick='
+            document.getElementById("myDiv02").innerHTML = `You pressed Button 2`
+        '>
+        <input type=button value="Button 3" onclick='
+            document.getElementById("myDiv02").innerHTML = `You pressed Button 3`
+        '><br>
+        <div id="myDiv02">...</div>
     </body>
 </html>
