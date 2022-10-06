@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" id="html">
+<html lang="en">
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,7 +9,7 @@
         <link id="styleMode" rel="stylesheet" type="text/css">
         <script type="text/javascript" src="/gamedev2022/stylePref.js"></script>
     </head>
-    <body>
+    <body id="body">
         <div id="back"><a href="/gamedev2022" class="link">← Back to index (Giorgio)</a></div>
         <h1>T1A05: Input Output</h1>
         
@@ -71,7 +71,7 @@ document.getElementById("myDiv01").innerHTML = `${myIn01} squared = ${myIn01 * m
         
         <h4>Pick a text color for the page</h4>
         <input id="myText05" type=text value="#fff" onchange='
-            document.getElementById("html").style.color = document.getElementById("myText05").value
+            document.getElementById("body").style.color = document.getElementById("myText05").value
         '><br>
         <div id="myDiv01">...</div><br><br>
         
