@@ -32,24 +32,35 @@ document.getElementById("myDiv01").innerHTML = `${myIn01} squared = ${myIn01 * m
         
         <hr>
         
-        <h4>My Examples</h4>
+        <h2>My Examples</h2>
         
-        <input type=button value="Button 1" onclick='
-            document.getElementById("myDiv02").innerHTML = `You pressed Button 1`
+        <h4>Here are some radio buttons</h4>
+        <input type=radio value="Button 1" onclick='
+            document.getElementById("myDiv02").innerHTML = `You pressed Option 1`
         '>
-        <input type=button value="Button 2" onclick='
-            document.getElementById("myDiv02").innerHTML = `You pressed Button 2`
+        <input type=radio value="Button 2" onclick='
+            document.getElementById("myDiv02").innerHTML = `You pressed Option 2`
         '>
-        <input type=button value="Button 3" onclick='
-            document.getElementById("myDiv02").innerHTML = `You pressed Button 3`
+        <input type=radio value="Button 3" onclick='
+            document.getElementById("myDiv02").innerHTML = `You pressed Option 3`
         '><br>
         <div id="myDiv02">...</div><br><br>
         
         
+        <h4>Change the slider to move the div</h4>
         <input id="myRange03" type="range" min="0" max="100" value="0" onchange='
             document.getElementById("myDiv03").style.left = `${document.getElementById("myRange03").value}px`
         '>
-
-        <div id="myDiv03" style="position: relative; left: 0px">Move me around</div><br><br>
+        <div id="myDiv03" style="position: relative; left: 0px">Move me left and right</div><br><br>
+        
+        
+        <h4>This one can move on more than one axis</h4>
+        <input id="myRange04" type="range" min="0" max="100" value="0" onchange='
+            document.getElementById("myDiv04").style.left = `${document.getElementById("myRange04").value}px`
+        '>
+        <input id="myVRange04" type="range" min="0" max="100" value="0" onchange='
+            document.getElementById("myDiv04").style.left = `${document.getElementById("myVRange04").value}px`
+        '>
+        <div id="myDiv04" style="position: relative; left: 0px; top: 0px;">Move me all around</div><br><br>
     </body>
 </html>
