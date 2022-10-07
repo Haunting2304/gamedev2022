@@ -28,7 +28,7 @@ document.getElementById("myDiv01").innerHTML = `${myIn01} squared = ${myIn01 * m
             let myAnswer = myIn01 * myIn01
             document.getElementById("myDiv01").innerHTML = `${myIn01} squared = ${myAnswer}`
         '><br>
-        <div id="myDiv01">...</div>
+        <div class="foreground1" id="myDiv01">...</div>
         
         <hr>
         
@@ -48,15 +48,15 @@ document.getElementById("myDiv01").innerHTML = `${myIn01} squared = ${myIn01 * m
                 document.getElementById("myDiv02").innerHTML = `You pressed Option 3`
             '>
             <label for="button3">Option 3</label><br>
-        </form>
-        <div id="myDiv02">...</div><br><br>
+        </form><br>
+        <div class="foreground1" id="myDiv02">...</div><br><br>
         
         
         <h4>Change the slider to move the div</h4>
         <input id="myRange03" type="range" min="0" max="100" value="0" onchange='
             document.getElementById("myDiv03").style.left = `${document.getElementById("myRange03").value}px`
-        '>
-        <div id="myDiv03" style="position: relative; left: 0px">Move me left and right</div><br><br>
+        '><br>
+        <div class="foreground1" id="myDiv03" style="position: relative; left: 0px">Move me left and right</div><br><br>
         
         
         <h4>This one can move on more than one axis</h4>
@@ -65,8 +65,8 @@ document.getElementById("myDiv01").innerHTML = `${myIn01} squared = ${myIn01 * m
         '>
         <input id="myVRange04" type="range" min="0" max="100" value="0" onchange='
             document.getElementById("myDiv04").style.top = `${document.getElementById("myVRange04").value}px`
-        '>
-        <div id="myDiv04" style="position: relative; left: 0px; top: 0px;">Move me all around</div><br><br><br>
+        '><br>
+        <div class="foreground1" id="myDiv04" style="position: relative; left: 0px; top: 0px;">Move me all around</div><br><br><br>
         
         
         <h4>Pick a text color for the page</h4>
@@ -74,7 +74,7 @@ document.getElementById("myDiv01").innerHTML = `${myIn01} squared = ${myIn01 * m
             document.getElementById("body").style.color = document.getElementById("myText05").value
             document.getElementById("myDiv05").innerHTML = `The text is now ${document.getElementById("myText05").value}!`
         '><br>
-        <div id="myDiv05">...</div><br><br>
+        <div class="foreground1" id="myDiv05">...</div><br><br>
         
         <!--
         <h4>My settings page <a href="/gamedev2022/settings">here</a> shows a case where I am using user input practically</h4>
