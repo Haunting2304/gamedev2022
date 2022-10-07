@@ -72,7 +72,7 @@ document.getElementById("myDiv01").innerHTML = `${myIn01} squared = ${myIn01 * m
         <h4>Pick a text color for the page</h4>
         <input id="myText05" type=text value="#fff" onchange='
             document.getElementById("body").style.color = document.getElementById("myText05").value
-            if(document.getElementById("myText05").value.length != 4 || document.getElementById("myText05").value.length != 7) {
+            if(document.getElementById("myText05").value.length != 4 && document.getElementById("myText05").value.length != 7) {
                 document.getElementById("myDiv05").innerHTML = `The text might be ${document.getElementById("myText05").value}. (Possibly invalid input)`
             }
             else {
