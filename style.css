@@ -27,16 +27,12 @@ h1 {
 .foreground1, .foreground2, .foreground3 {
     display: inline-block;
     padding: 6px;
+    margin: 6px;
     
 }
 
 #back {
     margin-bottom: 1em;
-    /*position: absolute;
-    top: 0;
-    margin: 2em;
-    margin-top: 1.5em;
-    padding: 5px;*/
 }
 
 .cur {
