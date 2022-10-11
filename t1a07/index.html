@@ -26,30 +26,60 @@ if (myHour < 18) {
 
         <input id="myNum01" type=number value="4" ><br> 
 
-        <input type=button value="Simple if Statement for Decision Making" onclick="{
+        <input type=button value="Simple if Statement for Decision Making" onclick="
             let myIn01 = parseFloat(document.getElementById('myNum01').value)
             if (myIn01 >= 3){
                 document.getElementById('myDiv01').innerHTML = myIn01 + ' is greater than or equal to 3'
             }
-        }">
+        ">
 
-        <input type=button value="if...else" onclick="{
+        <input type=button value="if...else" onclick="
             let myIn01 = parseFloat(document.getElementById('myNum01').value)
             if (myIn01 >= 3){
                 document.getElementById('myDiv01').innerHTML = myIn01 + ' is greater than or equal to 3'
             } else {
                 document.getElementById('myDiv01').innerHTML = myIn01 + ' is less than 3'}
-        }">
+        ">
 
-        <input type=button value="Complex if" onclick="{
+        <input type=button value="Complex if" onclick="
             let myIn01 = parseFloat(document.getElementById('myNum01').value)
             if ((myIn01 != 3 || myIn01 > -3)  && myIn01 <=100 ){ //(myIn01 != 3 || myIn01 > -3) is very redundant
                 document.getElementById('myDiv01').innerHTML = myIn01 + ' is complex'
             } else {
                 document.getElementById('myDiv01').innerHTML = myIn01 + ' is not complex'}
-        }">
+        ">
 
-
-        <div id="myDiv01">...</div>
+        <div class="foreground1" id="myDiv01">...</div><br>
+        
+        <h4>My Examples</h4><br>
+        
+        Makes comparisons to 5:
+        <input id="myNum02" type=number value="0" ><br>
+        <input type=button value="Compare" onclick="
+            let myIn02 = parseFloat(document.getElementById('myNum02').value)
+            if (myIn02 < 5)
+                document.getElementById('myDiv02').innerHTML = `${myIn02} is less than 5`
+            } 
+            else if (myIn02 > 5){
+                document.getElementById('myDiv02').innerHTML = `${myIn02} is more than 5`
+            }
+            else {
+                document.getElementById('myDiv02').innerHTML = `${myIn02} is equal to 5`
+            }
+        ">
+        <div class="foreground1" id="myDiv02">...</div><br>
+        
+        Give a statement and it will return if it is true or false:
+        <input id="myText03" type=text value="5 != 6" ><br>
+        <input type=button value="Complex if" onclick="
+            let myIn03 = document.getElementById('myNum03').value
+            if (myIn03) {
+                document.getElementById('myDiv03').innerHTML = `true`
+            }
+            else {
+               document.getElementById('myDiv03').innerHTML = `false`
+            }
+        ">
+        <div class="foreground1" id="myDiv03">...</div><br>
     </body>
 </html>
