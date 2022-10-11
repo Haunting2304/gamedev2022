@@ -32,15 +32,15 @@
 
         <input id="myText01" type=text value="The dog " ><br> 
 
-        <input type=button value="Show Variable" onclick="{
+        <input type=button value="Show Variable" onclick="
             let myIn01 = document.getElementById('myText01').value
             document.getElementById('myDiv01').innerHTML = myIn01
 
-        }"><br>
+        "><br>
 
-        <input type=button value="Using no variable" onclick="{
+        <input type=button value="Using no variable" onclick="
            document.getElementById('myDiv01').innerHTML = document.getElementById('myText01').value
-        }"><br>
+        "><br>
 
         <div class="foreground1" id="myDiv01">...</div>
         
@@ -50,19 +50,19 @@
         
         <input id="myText02" type=text value="Example" ><br> 
 
-        <input type=button value="Set Variable" onclick='{
+        <input type=button value="Set Variable" onclick='
             document.myIn02 = document.getElementById(`myText02`).value
             document.getElementById(`myDiv021`).innerHTML = `(Stored \"${document.getElementById(`myText02`).value}\")`
-        =}'><div id="myDiv021"></div>
+        '><div id="myDiv021"></div>
         <br>
 
-        <input type=button value="Show variable in div" onclick="{
+        <input type=button value="Show variable in div" onclick="
            document.getElementById('myDiv02').innerHTML = myIn02
-        }"><br>
+        "><br>
         
-        <input type=button value="Show input in div" onclick="{
+        <input type=button value="Show input in div" onclick="
            document.getElementById('myDiv02').innerHTML = document.getElementById('myText02').value
-        }"><br>
+        "><br>
 
         <div class="foreground1" id="myDiv02">...</div>
         
