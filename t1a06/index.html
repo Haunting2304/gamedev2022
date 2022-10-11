@@ -52,9 +52,8 @@
 
         <input type=button value="Set Variable" onclick='
             document.myIn02 = document.getElementById(`myText02`).value
-            document.getElementById(`myDiv021`).innerHTML = `(Stored \"${document.getElementById(`myText02`).value}\")`
-        '><div id="myDiv021"></div>
-        <br>
+            document.getElementById(`mySpan02`).innerHTML = `(Stored \"${document.getElementById(`myText02`).value}\")`
+        '><spam id="mySpan02" style="font-size: 16px;"></span><br>
 
         <input type=button value="Show variable in div" onclick="
            document.getElementById('myDiv02').innerHTML = myIn02
