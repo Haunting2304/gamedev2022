@@ -52,11 +52,16 @@
 
         <input type=button value="Set Variable" onclick="{
             document.myIn02 = document.getElementById('myText02').value
-
-        }"><br>
+            document.getElementById('myDiv021').innerHTML = `(Stored \"${document.getElementById('myText02').value}\")`
+        =}"><div id="myDiv021"></div>
+        <br>
 
         <input type=button value="Show variable in div" onclick="{
            document.getElementById('myDiv02').innerHTML = myIn02
+        }"><br>
+        
+        <input type=button value="Show input in div" onclick="{
+           document.getElementById('myDiv02').innerHTML = document.getElementById('myText02').value
         }"><br>
 
         <div class="foreground1" id="myDiv02">...</div>
