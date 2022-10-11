@@ -8,21 +8,27 @@ body {
     color: #000;
 }
 
+input {
+    background-color: #e0e0e0;
+    color: inherit;
+    border-color: #d0d0d0;
+}
+
 .foreground1 {
-    background: #f1f1f1;
-    box-shadow: 5px 5px 5px #d5d5d5;
+    background: #e0e0e0;
+    box-shadow: 5px 5px 5px #d0d0d0;
     margin-bottom: 6px;
 }
 
 .foreground2 {
-    background: #e3e3e3;
-    box-shadow: 5px 5px 5px #cacaca;
+    background: #d0d0d0;
+    box-shadow: 5px 5px 5px #c0c0c0;
     margin-bottom: 6px;
 }
 
 .foreground3 {
-    background: #cecece;
-    box-shadow: 5px 5px 5px #b2b2b2;
+    background: #c0c0c0;
+    box-shadow: 5px 5px 5px #b0b0b0;
     margin-bottom: 6px;
 }
 

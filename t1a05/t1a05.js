@@ -1,0 +1,1 @@
+document.getElementById("myText05").value = window.getComputedStyle(document.getElementById('myText05'), null).getPropertyValue('color')

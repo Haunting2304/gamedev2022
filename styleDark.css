@@ -48,13 +48,13 @@ input[type=text], input[type=number] {
     border-color: #565656;
 }
 
-div > input[type=text, number], input[type=button] {
+div.foreground1 input[type=text], div.foreground1 input[type=number], input[type=button] {
     background-color: #363636;
     color: inherit;
     border-color: #565656;
 }
 
-div > input[type=button] {
+div.foreground2 input[type=text], div.foreground2 input[type=number], div.foreground1 input[type=button] {
     background-color: #464646;
     color: inherit;
     border-color: #565656;
