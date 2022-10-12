@@ -83,4 +83,12 @@ document.getElementById("myDiv01").innerHTML = `${myIn01} squared = ${myIn01 * m
         <h4>My settings page <a href="/gamedev2022/settings">here</a> shows a case where I am using user input practically</h4>
         -->
     </body>
+    <script>
+        if(stringToBool(localStorage.getItem('darkModePref'))) {
+            document.getElementById("myText05").value = "#fff";
+        }
+        else {
+            document.getElementById("myText05").value = "#000";
+        }
+    </script>
 </html>

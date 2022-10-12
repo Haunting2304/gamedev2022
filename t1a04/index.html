@@ -8,6 +8,84 @@
         <link rel="stylesheet" type="text/css" href="/gamedev2022/style.css">
         <link id="styleMode" rel="stylesheet" type="text/css">
         <script type="text/javascript" src="/gamedev2022/stylePref.js"></script>
+        <style>
+            @keyframes animated {
+                0% {background-color: hsl(0, 100%, 50%)}
+                25% {background-color: hsl(90, 100%, 50%)}
+                50% {background-color: hsl(180, 100%, 50%)}
+                75% {background-color: hsl(270, 100%, 50%)}
+                100% {background-color: hsl(360, 100%, 50%)}
+                /*
+                0% {background-color: red;}
+                14% {background-color: orange;}
+                29% {background-color: yellow;}
+                43% {background-color: green;}
+                57% {background-color: blue;}
+                71% {background-color: indigo;}
+                86% {background-color: violet;}
+                100% {background-color: red;}
+                */
+            }
+            #animated {
+                width: 100px;
+                height: 100px;
+                animation-name: animated;
+                animation-duration: 4s;
+                animation-iteration-count: infinite;
+                animation-timing-function: linear;
+                background-color: red;
+            }
+            @keyframes animatedSpin {
+                0% {rotate: 0deg;}
+                100% {rotate: 360deg;}
+            }
+            #animatedSpin {
+                width: 100px;
+                height: 100px;
+                animation-name: animatedSpin;
+                animation-duration: 4s;
+                animation-iteration-count: infinite;
+                animation-timing-function: linear;
+                background: conic-gradient(
+                    hsl(360, 100%, 50%),
+                    hsl(315, 100%, 50%),
+                    hsl(270, 100%, 50%),
+                    hsl(225, 100%, 50%),
+                    hsl(180, 100%, 50%),
+                    hsl(135, 100%, 50%),
+                    hsl(90, 100%, 50%),
+                    hsl(45, 100%, 50%),
+                    hsl(0, 100%, 50%)
+                );
+                clip-path: circle(closest-side);
+            }
+            @keyframes animatedMoving {
+                0% {left: 0px;}
+                25% {left: 200px;}
+                25% {top: 0px;}
+                50% {top: 100px;}
+                50% {left: 200px;}
+                75% {left: 0px;}
+                75% {top: 100px;}
+                100% {top: 0px;}
+            }
+            .animatedMoving {
+                position: relative;
+                left: 0%;
+                top: 0%;
+                width: 100px;
+                height: 100px;
+                animation-name: animatedMoving;
+                animation-duration: 4s;
+                animation-iteration-count: infinite;
+                background-color: red;
+                animation-timing-function: ease-in-out;
+            }
+            #linear {
+                animation-name: animated, animatedMoving;
+                animation-timing-function: linear;
+            }
+        </style>
     </head>
     <body>
         <div id="back"><a href="/gamedev2022" class="link">← Back to index (Giorgio)</a></div>
@@ -37,7 +115,27 @@ color: #00ff00;
         <input type=button value=Move onclick="{
             document.getElementById('textArea').style.top = '30px'
         }"><br><br>
+
+        <hr>
+
+        <h2>My Examples</h2>
         
+        <h3>Css animations</h4>
+        <h4>Rainbow div</h2>
+        <div id="animated"></div><br><br>
+
+        <h4>Cool colour wheel</h4>
+        <div id="animatedSpin"></div><br><br>
+
+        <h4>Moving div with ease in out</h4>
+        <div class="animatedMoving"></div><br><br><br><br><br><br>
+
+        <h4>Moving rainbow div with linear transitions</h4>
+        <div class="animatedMoving" id="linear"></div><br><br><br><br>
+
+
+        <!--
         Here is a link to a CSS file used for this page: <a href="/gamedev2022/style.css">style.css</a>
+        -->
     </body>
 </html>
