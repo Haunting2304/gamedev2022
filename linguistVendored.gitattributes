@@ -1,2 +1,1 @@
-* linguist-vendored=true
-*.js linguist-vendored=false
+edgeImpulsePen/** linguist-vendored=true
