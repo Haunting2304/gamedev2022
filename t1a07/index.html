@@ -80,5 +80,59 @@ if (myHour < 18) {
             }
         "><br>
         <div class="foreground1" id="myDiv03">...</div><br><br>
+
+        <h4>Turns the button red if the number is even, otherwise turns the button to normal:</h4>
+        <input id="myNum04" type=number value="5" ><br>
+        <input id="myButton04" type=button value="Click me" onclick="
+            let myIn04 = document.getElementById('myNum04').value
+            if (myIn04 % 2 == 0) {
+                document.getElementById('myButton04').style.backgroundColor = `red`
+                document.getElementById('myButton04').style.borderColor = `#880000`
+            }
+            else {
+                document.getElementById('myButton04').style.backgroundColor = ``
+                document.getElementById('myButton04').style.borderColor = ``
+            }
+        "><br><br>
+
+        <h4>Pick a unit of time and it will tell your how many of that unit since January 1, 1970:</h4>
+        <select name="timeUnit" id="timeUnit">
+            <option value="milliseconds">Milliseconds</option>
+            <option value="seconds">Seconds</option>
+            <option value="minutes">Minutes</option>
+            <option value="hours">Hours</option>
+            <option value="days">Days</option>
+            <option value="years">Years</option>
+        </select><br>
+        <input type=button value="Get time" onclick="
+            let milliseconds = Date.now()
+            let seconds = milliseconds / 1000
+            let minutes = seconds / 60
+            let hours = minutes / 60
+            let days = hours / 24
+            let years = days / 365
+            let myIn05 = document.getElementById('timeUnit').value
+            switch(myIn05) {
+                case 'milliseconds':
+                    document.getElementById('myDiv05').innerHTML = milliseconds
+                    break;
+                case 'seconds':
+                    document.getElementById('myDiv05').innerHTML = seconds
+                    break;
+                case 'minutes':
+                    document.getElementById('myDiv05').innerHTML = minutes
+                    break;
+                case 'hours':
+                    document.getElementById('myDiv05').innerHTML = hours
+                    break;
+                case 'days':
+                    document.getElementById('myDiv05').innerHTML = days
+                    break;
+                case 'years':
+                    document.getElementById('myDiv05').innerHTML = years
+                    break;
+            }
+        "><br>
+        <div class="foreground1" id="myDiv05">...</div><br><br>
     </body>
 </html>
