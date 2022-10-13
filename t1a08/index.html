@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en" id="html">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>T1A08: Loops</title>
+        <link rel="stylesheet" type="text/css" href="/gamedev2022/style.css">
+        <link id="styleMode" rel="stylesheet" type="text/css">
+        <script type="text/javascript" src="/gamedev2022/stylePref.js"></script>
+    </head>
+    <body>
+        <div id="back"><a href="/gamedev2022" class="link">← Back to index (Giorgio)</a></div>
+        <h1>T1A08: Loops</h1>
+
+        <a href="https://www.w3schools.com/js/js_loop_for.asp">Good reference to Javascript Loops</a><br>
+
+        <h4> Example working code</h4>
+
+        Max loops: <input id="myNum01" type=number value="4" ><br> 
+
+        <input type=button value="Basic For loop with Decisions" onclick="{
+            document.getElementById('myDiv01').innerHTML = ''
+            let myTemp = ''
+
+            let myMax = parseInt(document.getElementById('myNum01').value)
+
+            for (let myLoop = 0; myLoop < myMax; myLoop++ ){
+
+            if (myLoop * 2 > myMax){
+                myTemp += ' cool '
+            }
+
+            myTemp += 'Loop number: ' + myLoop + '<br>'
+            }
+            document.getElementById('myDiv01').innerHTML = myTemp 
+        }">
+
+
+        <input type=button value="Basic For loop only" onclick="{
+            let myTemp = ''
+            let myMax = parseInt(document.getElementById('myNum01').value)
+            for (let myLoop = 0; myLoop < myMax; myLoop++ ){
+            myTemp += 'Loop number: ' + myLoop + '<br>'
+            }
+            document.getElementById('myDiv01').innerHTML = myTemp 
+        }">
+
+
+
+        <input type=button value="Even number identifier" onclick="{
+            document.getElementById('myDiv01').innerHTML = ''
+            let myTemp = ''
+
+            let myMax = parseInt(document.getElementById('myNum01').value)
+
+            for (let myLoop = 0; myLoop < myMax; myLoop++ ){
+
+            if (myLoop % 2 == 0){
+                myTemp += '<font style=\'color:green;\'> Even </font>'
+            }
+
+            myTemp += 'Loop number: ' + myLoop + '<br>'
+            }
+            document.getElementById('myDiv01').innerHTML = myTemp 
+        }">
+
+
+        <input type=button value="Odd number identifier" onclick="{
+            document.getElementById('myDiv01').innerHTML = ''
+            let myTemp = ''
+
+            let myMax = parseInt(document.getElementById('myNum01').value)
+
+            for (let myLoop = 0; myLoop < myMax; myLoop++ ){
+
+            if (myLoop % 2 == 1){
+                myTemp += '<font style=\'color:red;\'> Odd </font>'
+            }
+
+            myTemp += 'Loop number: ' + myLoop + '<br>'
+            }
+            document.getElementById('myDiv01').innerHTML = myTemp 
+        }"><br>
+
+        <div class="foreground1" id="myDiv01">...</div><br><br>
+
+        <hr>
+
+        <h2>My Examples</h2>
+    </body>
+</html>

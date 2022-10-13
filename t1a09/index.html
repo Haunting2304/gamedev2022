@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" id="html">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>T1A09: Functions</title>
+        <link rel="stylesheet" type="text/css" href="/gamedev2022/style.css">
+        <link id="styleMode" rel="stylesheet" type="text/css">
+        <script type="text/javascript" src="/gamedev2022/stylePref.js"></script>
+    </head>
+    <body>
+      <div id="back"><a href="/gamedev2022" class="link">← Back to index (Giorgio)</a></div>
+      <script>
+
+      function myExampleFunction(){
+         let myIn01 = parseInt(document.getElementById('myText01').value)
+         let mySum = myIn01 + myIn01
+         let myReply =  myIn01 + ' + ' + myIn01 + ' = ' + mySum
+         return myReply
+
+      }
+
+      </script>
+
+      <h1>T1A09: Functions</h1>
+
+      <a href="https://www.w3schools.com/js/js_functions.asp">Good reference to Javascript functions</a><br>
+
+      Functions are used to sensibly organzie code. Then they are "Called" elsewhere. 
+      Information can also be passed to functions (that's more advanced).
+
+      <h4> Example Functions code</h4>
+      <pre>function myGrabNumber(){
+   return parseInt(document.getElementById('myText01').value)
+}</pre>
+
+      <h4> Example working code</h4>
+
+
+      <input type=text id="myText01" value="3"><br>
+
+      <input type=button value="Function Example" onClick="{
+         document.getElementById('myDiv01').innerHTML =  myExampleFunction()
+      }"><br>
+
+      <div class="foreground1" id="myDiv01">...</div><br><br>
+
+      <hr>
+
+      <h2>My Examples</h2>
+   </body>
+</html>
