@@ -88,5 +88,46 @@
         <hr>
 
         <h2>My Examples</h2>
+
+        <h4>Input an array and it will loop through the array, adding 5 to each thing:</h4>
+        <input id="myText02" type=text value='["String", 2, 5, true, false]' ><br>
+        <input type=button value="Run" onclick="
+            var myIn02 = eval(document.getElementById('myText02').value);
+            var output = '';
+            for(i=0; i<myIn02.length; i++) {
+                output += `${myIn02[i] + 5}<br>`
+            }
+            document.getElementById('myDiv02').innerHTML = output
+        "><br>
+        <div class="foreground1" id="myDiv02">...</div><br><br>
+
+        <h4>Input an array and it will loop through the array, backwards:</h4>
+        <input id="myText03" type=text value='["String 1", 8, 15, "String 2"]' ><br>
+        <input type=button value="Run" onclick="
+            var myIn03 = eval(document.getElementById('myText03').value);
+            var output = '';
+            for(i=myIn03.length-1; i>=0; i--) {
+                output += `${myIn03[i]}<br>`
+            }
+            document.getElementById('myDiv03').innerHTML = output
+        "><br>
+        <div class="foreground1" id="myDiv03">...</div><br><br>
+
+        <h4>Input an array and it will loop through the array, evaluating each thing and returning true or false:</h4>
+        <input id="myText04" type=text value='[true, false, "true", 0, 5]' ><br>
+        <input type=button value="Run" onclick="
+            var myIn04 = eval(document.getElementById('myText04').value);
+            var output = '';
+            for(i=0; i<myIn04.length; i++) {
+                if(eval(myIn04[i])) {
+                    output += `true<br>`
+                }
+                else {
+                    output += `false<br>`
+                }
+            }
+            document.getElementById('myDiv04').innerHTML = output
+        "><br>
+        <div class="foreground1" id="myDiv04">...</div><br><br>
     </body>
 </html>
