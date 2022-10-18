@@ -129,5 +129,30 @@
             document.getElementById('myDiv04').innerHTML = output
         "><br>
         <div class="foreground1" id="myDiv04">...</div><br><br>
+
+        <h4>Will loop x times and some loops will be labelled:</h4>
+        <input id="myNum05" type=number value=10><br>
+        <input type=button value="Run" onclick="
+            var myIn05 = eval(document.getElementById('myNum05').value);
+            var output = '';
+            for(i=0; i<myIn05; i++) {
+                switch(i) {
+                    case 0://First Loop
+                        output += `First loop: ${i}<br>`
+                        break;
+                    case Math.floor(myIn05/2)://Halfway loop
+                        output += `Halfway loop: ${i}<br>`
+                        break;
+                    case myIn05-1://Last Loop
+                        output += `Last loop: ${i}<br>`
+                        break;
+                    default://Other Loops
+                        output += `Loop: ${i}<br>`
+                        break;
+                }
+            }
+            document.getElementById('myDiv05').innerHTML = output;
+        "><br>
+        <div class="foreground1" id="myDiv05">...</div>
     </body>
 </html>

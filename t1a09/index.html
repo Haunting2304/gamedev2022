@@ -18,7 +18,10 @@
          let mySum = myIn01 + myIn01
          let myReply =  myIn01 + ' + ' + myIn01 + ' = ' + mySum
          return myReply
+      }
 
+      function myFunction(thing){
+         return (thing * 2) + 5
       }
 
       </script>
@@ -49,5 +52,12 @@
       <hr>
 
       <h2>My Examples</h2>
+
+      <h4>Multiplies input by 2 then adds 5</h4>
+      <input id="num1" type=number value=10><br>
+      <input type=button value="Function" onClick="{
+         document.getElementById('myDiv02').innerHTML =  myFunction(document.getElementById('num1').value)
+      }"><br>
+      <div class="foreground1" id="myDiv02">...</div><br><br>
    </body>
 </html>
