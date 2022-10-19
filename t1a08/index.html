@@ -131,7 +131,7 @@
         <div class="foreground1" id="myDiv04">...</div><br><br>
 
         <h4>Will loop x times and some loops will be labelled:</h4>
-        <input id="myNum05" type=number value=10><br>
+        <input id="myNum05" type=number value=9><br>
         <input type=button value="Run" onclick="
             var myIn05 = eval(document.getElementById('myNum05').value);
             var output = '';
@@ -140,8 +140,14 @@
                     case 0://First Loop
                         output += `First loop: ${i}<br>`
                         break;
-                    case Math.floor(myIn05/2)://Halfway loop
-                        output += `Halfway loop: ${i}<br>`
+                    case Math.floor((myIn05-1)/2)://Halfway Loop Low
+                    case Math.floor((myIn05)/2)://Halfway Loop High
+                        if(!(myIn05 % 2)) {
+                            output += `Kinda Halfway loop: ${i}<br>`
+                        }
+                        else {
+                            output += `Halfway loop: ${i}<br>`
+                        }
                         break;
                     case myIn05-1://Last Loop
                         output += `Last loop: ${i}<br>`

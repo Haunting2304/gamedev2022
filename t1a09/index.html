@@ -10,54 +10,98 @@
         <script type="text/javascript" src="/gamedev2022/stylePref.js"></script>
     </head>
     <body>
-      <div id="back"><a href="/gamedev2022" class="link">← Back to index (Giorgio)</a></div>
-      <script>
+        <div id="back"><a href="/gamedev2022" class="link">← Back to index (Giorgio)</a></div>
+        <script>
 
-      function myExampleFunction(){
-         let myIn01 = parseInt(document.getElementById('myText01').value)
-         let mySum = myIn01 + myIn01
-         let myReply =  myIn01 + ' + ' + myIn01 + ' = ' + mySum
-         return myReply
-      }
+        function myExampleFunction(){
+            let myIn01 = parseInt(document.getElementById('myText01').value)
+            let mySum = myIn01 + myIn01
+            let myReply =  myIn01 + ' + ' + myIn01 + ' = ' + mySum
+            return myReply
+        }
 
-      function myFunction(thing){
-         return (thing * 2) + 5
-      }
+        //My functions
+        function myFunction(thing) {
+            return (thing * 2) + 5;
+        }
 
-      </script>
+        function stringToBool(string) {
+            if(string === "true") {
+                return true;
+            }
+            else if(string === "false") {
+                return false;
+            }
+            else {
+                return undefined;
+            }
+        }
 
-      <h1>T1A09: Functions</h1>
+        function removeE(string) {
+            output = "";
+            for(i=0; i<string.length; i++) {
+                if(string[i] != "e" && string[i] != "E") {
+                    output += string[i];
+                }
+            }
+            return output;
+        }
 
-      <a href="https://www.w3schools.com/js/js_functions.asp">Good reference to Javascript functions</a><br>
+        </script>
 
-      Functions are used to sensibly organzie code. Then they are "Called" elsewhere. 
-      Information can also be passed to functions (that's more advanced).
+        <h1>T1A09: Functions</h1>
 
-      <h4> Example Functions code</h4>
-      <pre>function myGrabNumber(){
+        <a href="https://www.w3schools.com/js/js_functions.asp">Good reference to Javascript functions</a><br>
+
+        Functions are used to sensibly organzie code. Then they are "Called" elsewhere. 
+        Information can also be passed to functions (that's more advanced).
+
+        <h4> Example Functions code</h4>
+        <pre>
+function myGrabNumber(){
    return parseInt(document.getElementById('myText01').value)
-}</pre>
+}
+        </pre>
 
-      <h4> Example working code</h4>
+        <h4>Example working code</h4>
 
 
-      <input type=text id="myText01" value="3"><br>
+        <input type=text id="myText01" value="3"><br>
 
-      <input type=button value="Function Example" onClick="{
-         document.getElementById('myDiv01').innerHTML =  myExampleFunction()
-      }"><br>
+        <input type=button value="Function Example" onClick="{
+            document.getElementById('myDiv01').innerHTML =  myExampleFunction()
+        }"><br>
 
-      <div class="foreground1" id="myDiv01">...</div><br><br>
+        <div class="foreground1" id="myDiv01">...</div><br><br>
 
-      <hr>
+        <hr>
 
-      <h2>My Examples</h2>
+        <h2>My Examples</h2>
 
-      <h4>Multiplies input by 2 then adds 5</h4>
-      <input id="num1" type=number value=10><br>
-      <input type=button value="Function" onClick="{
-         document.getElementById('myDiv02').innerHTML =  myFunction(document.getElementById('num1').value)
-      }"><br>
-      <div class="foreground1" id="myDiv02">...</div><br><br>
-   </body>
+        <h4>Multiplies input by 2 then adds 5</h4>
+        <input id="num2" type=number value=10><br>
+        <input type=button value="myFunction(x)" onClick="{
+            document.getElementById('myDiv2').innerHTML =  myFunction(document.getElementById('num2').value)
+        }"><br>
+        <div class="foreground1" id="myDiv2">...</div><br><br>
+
+        <h4>This function turns the string "true" or "false" into a boolean</h4>
+        <input id="text3" type=text value='true'><br>
+        <input type=button value="No function" onClick="{
+            input3 = document.getElementById('text3').value
+            document.getElementById('myDiv3').innerHTML =  `${input3} (${(typeof input3)})`
+        }"><br>
+        <input type=button value="stringToBool(x)" onClick="{
+            input3 = stringToBool(document.getElementById('text3').value)
+            document.getElementById('myDiv3').innerHTML =  `${input3} (${(typeof input3)})`
+        }"><br>
+        <div class="foreground1" id="myDiv3">...</div><br><br>
+
+        <h4>This function removes all "e"s from the input</h4>
+        <input id="text4" type=text value="Hello World"><br>
+        <input type=button value="removeE(x)" onClick="{
+            document.getElementById('myDiv4').innerHTML =  removeE(document.getElementById('text4').value)
+        }"><br>
+        <div class="foreground1" id="myDiv4">...</div><br><br>
+    </body>
 </html>
