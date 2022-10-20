@@ -47,6 +47,16 @@
             return output;
         }
 
+        function removeLetter(letter, string) {
+            output = "";
+            for(i=0; i<string.length; i++) {
+                if(string[i] != letter.toLowerCase() && string[i] != letter.toUpperCase()) {
+                    output += string[i];
+                }
+            }
+            return output;
+        }
+
         </script>
 
         <h1>T1A09: Functions</h1>
@@ -132,5 +142,24 @@ function removeE(string) {
             document.getElementById('myDiv4').innerHTML =  removeE(document.getElementById('text4').value)
         }"><br>
         <div class="foreground1" id="myDiv4">...</div><br><br>
+
+        <h4>This function removes all of an input letter from the input</h4>
+        Code:
+        <br><pre class="foreground1">
+function removeLetter(letter, string) {
+    output = "";
+    for(i=0; i&ltstring.length; i++) {
+        if(string[i] != letter.toLowerCase() && string[i] != letter.toUpperCase()) {
+            output += string[i];
+        }
+    }
+    return output;
+}</pre><br>
+        <input id="text5" type=text value="l"><br>
+        <input id="text51" type=text value="Hello World"><br>
+        <input type=button value="removeLetter(x)" onClick="{
+            document.getElementById('myDiv5').innerHTML =  removeLetter(document.getElementById('text5').value, document.getElementById('text51').value)
+        }"><br>
+        <div class="foreground1" id="myDiv5">...</div><br><br>
     </body>
 </html>
