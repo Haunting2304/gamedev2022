@@ -46,22 +46,43 @@ document.getElementById('myDiv01').innerHTML = myIn01 </pre>
         
         <h2>My Examples</h2>
         
+        <h4>Using a variable to remember data</h4>
         <input id="myText02" type=text value="Example" ><br> 
 
         <input type=button value="Set Variable" onclick='
             document.myIn02 = document.getElementById(`myText02`).value
-            document.getElementById(`mySpan02`).innerHTML = `(Stored \"${document.getElementById(`myText02`).value}\")`
+            document.getElementById(`mySpan02`).innerHTML = `(Variable set to \"${document.getElementById(`myText02`).value}\")`
         '><span id="mySpan02" style="font-size: 16px;"></span><br>
 
         <input type=button value="Show variable in div" onclick="
            document.getElementById('myDiv02').innerHTML = myIn02
         "><br>
         
-        <input type=button value="Show input in div" onclick="
+        <input type=button value="Show input text in div" onclick="
            document.getElementById('myDiv02').innerHTML = document.getElementById('myText02').value
         "><br>
 
         <div class="foreground1" id="myDiv02">...</div>
+
+
+        <h4>Using a variable to compare if data has changed</h4>
+        <input id="myText03" type=text value="Example" ><br> 
+
+        <input type=button value="Set Variable" onclick='
+            document.myIn03 = document.getElementById(`myText03`).value
+            document.getElementById(`mySpan03`).innerHTML = `(Variable set to \"${document.getElementById(`myText03`).value}\")`
+        '><span id="mySpan03" style="font-size: 16px;"></span><br>
+
+        <input type=button value="Check if input is same a variable" onclick="
+            if(myIn03 === document.getElementById(`myText03`).value) {
+                document.getElementById('myDiv03').innerHTML = `Input has not changed`
+            }
+            else {
+                document.getElementById('myDiv03').innerHTML = `Input has changed`
+            }
+        "><br>
+
+        <div class="foreground1" id="myDiv03">...</div>
         
     </body>
 </html>
