@@ -21,7 +21,7 @@
         }
 
         //My functions
-        function myFunction(thing) {
+        function myFunction(x) {
             return (thing * 2) + 5;
         }
 
@@ -79,6 +79,11 @@ function myGrabNumber(){
         <h2>My Examples</h2>
 
         <h4>Multiplies input by 2 then adds 5</h4>
+        Code:
+        <br><pre class="foreground1">
+function myFunction(x) {
+    return (x * 2) + 5;
+}</pre><br>
         <input id="num2" type=number value=10><br>
         <input type=button value="myFunction(x)" onClick="{
             document.getElementById('myDiv2').innerHTML =  myFunction(document.getElementById('num2').value)
@@ -86,6 +91,19 @@ function myGrabNumber(){
         <div class="foreground1" id="myDiv2">...</div><br><br>
 
         <h4>This function turns the string "true" or "false" into a boolean</h4>
+        Code:
+        <br><pre class="foreground1">
+function stringToBool(string) {
+    if(string === "true") {
+        return true;
+    }
+    else if(string === "false") {
+        return false;
+    }
+    else {
+        return undefined;
+    }
+}</pre><br>
         <input id="text3" type=text value='true'><br>
         <input type=button value="No function" onClick="{
             input3 = document.getElementById('text3').value
@@ -98,6 +116,17 @@ function myGrabNumber(){
         <div class="foreground1" id="myDiv3">...</div><br><br>
 
         <h4>This function removes all "e"s from the input</h4>
+        Code:
+        <br><pre class="foreground1">
+function removeE(string) {
+    output = "";
+    for(i=0; i&ltstring.length; i++) {
+        if(string[i] != "e" && string[i] != "E") {
+            output += string[i];
+        }
+    }
+    return output;
+}</pre><br>
         <input id="text4" type=text value="Hello World"><br>
         <input type=button value="removeE(x)" onClick="{
             document.getElementById('myDiv4').innerHTML =  removeE(document.getElementById('text4').value)
