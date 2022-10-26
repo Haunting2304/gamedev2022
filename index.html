@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" style="overflow: hidden;">
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,23 +8,110 @@
         <link rel="stylesheet" type="text/css" href="/gamedev2022/style.css">
         <link id="styleMode" rel="stylesheet" type="text/css">
         <script type="text/javascript" src="/gamedev2022/stylePref.js"></script>
+        <script>
+            //Toggles whether the sections are collapsed
+            function toggleHidden(element, element2) {
+                if(element.style.display == "block") {
+                    element.style.display = "none"
+                    element2.src = `assets/Closed.png`
+                    localStorage.setItem(element.id, "true")
+                }
+                else {
+                    element.style.display = "block"
+                    element2.src = `assets/Open.png`
+                    localStorage.setItem(element.id, "false")
+                }
+            }
+            //On page load every link section is passed through this function
+            function setDefault(element, element2) {
+                switch(localStorage.getItem(element.id)) {
+                    case null:
+                        localStorage.setItem(element.id, "false")
+                    case "false":
+                        element.style.display = "block"
+                        element2.src = `assets/Open.png`
+                        return
+                    case "true":
+                        element.style.display = "none"
+                        element2.src = `assets/Closed.png`
+                        return
+                }
+            }
+        </script>
     </head>
-    <body>
+    <style>
+        /* width */
+::-webkit-scrollbar {
+  width: 15px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #202020;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #383838;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #464646;
+}
+    </style>
+    <body style="overflow: auto; max-height: 100vh;" onload='
+    var linkButtons = document.querySelectorAll(".linkButton");
+    for(i=0; i<linkButtons.length; i++) {//Loops through all link sections and check if they should be collapsed or not
+        setDefault(document.getElementById(linkButtons[i].id.slice(0, linkButtons[i].id.length - 6)), linkButtons[i]);
+    }'>
+        <!--Back Button-->
         <div id="back" style="float:left;"><a href="https://github.com/Haunting2304/gamedev2022" class="link">← Repository (Giorgio)</a></div>
-	<div style="float:right;"><a href="/gamedev2022/settings" class="link">Settings</a></div>
+
+        <!--Settings Button-->
+	    <div style="float:right;"><a href="/gamedev2022/settings" class="link">Settings</a></div>
+
         <br><br>
+
+
         <div class="links">
-            <div><a href="t1a01" class="link">T1A01: Basic web stuff</a></div>
-            <div><a href="t1a02" class="link">T1A02: Tables</a></div>
-            <div><a href="t1a03" class="link">T1A03: Forms</a></div>
-            <div><a href="t1a04" class="link">T1A04: CSS</a></div>
-	        <div><a href="t1a05" class="link">T1A05: Input Output</a></div>
-	        <div><a href="t1a06" class="link">T1A06: Variables</a></div>
-            <div><a href="t1a07" class="link">T1A07: Decisions</a></div>
-            <div><a href="t1a08" class="link">T1A08: Loops</a></div>
-            <div><a href="t1a09" class="link">T1A09: Functions</a></div>
-            <div><a href="t1a15" class="link">T1A15: Review Coding</a></div>
-	    <div><a href="edgeImpulsePen" class="link">Edge Impulse</a></div>
+
+            <!--Basic-->
+            <div style="display: inline-block;">
+                <img class="linkButton" id="linksBasicButton" style="position: relative; width: 22px;" src="assets/Open.png" onclick="toggleHidden(getElementById(this.id.slice(0, this.id.length - 6)), this)">
+                <span>Basic</span>
+                <div id="linksBasic" style="display: block;" class="foreground1">
+                    <div><a href="t1a01" class="link">T1A01: Basic web stuff</a></div>
+                    <div><a href="t1a02" class="link">T1A02: Tables</a></div>
+                    <div><a href="t1a03" class="link">T1A03: Forms</a></div>
+                    <div><a href="t1a04" class="link">T1A04: CSS</a></div>
+                </div>
+            </div><br>
+
+            <!--Video Flac-->
+            <div style="display: inline-block;">
+                <img class="linkButton" id="linksFlacButton" style="position: relative; width: 22px;" src="assets/Open.png" onclick="toggleHidden(getElementById(this.id.slice(0, this.id.length - 6)), this)">
+                <span>Video Flac</span>
+                <div id="linksFlac" style="display: block;" class="foreground1">
+                    <div><a href="t1a05" class="link">T1A05: Input Output</a></div>
+                    <div><a href="t1a06" class="link">T1A06: Variables</a></div>
+                    <div><a href="t1a07" class="link">T1A07: Decisions</a></div>
+                    <div><a href="t1a08" class="link">T1A08: Loops</a></div>
+                    <div><a href="t1a09" class="link">T1A09: Functions</a></div>
+                    <div><a href="t1a10" class="link">T1A10: Events</a></div>
+                </div>
+            </div><br>
+
+            <!--Other-->
+            <div style="display: inline-block;">
+                <img class="linkButton" id="linksOtherButton" style="position: relative; width: 22px;" src="assets/Open.png" onclick="toggleHidden(getElementById(this.id.slice(0, this.id.length - 6)), this)">
+                <span>Other</span>
+                <div id="linksOther" style="display: block;" class="foreground1">
+                    <div><a href="t1a15" class="link">T1A15: Review Coding</a></div>
+                    <div><a href="edgeImpulsePen" class="link">Edge Impulse</a></div>
+                </div>
+            </div><br>
+
         </div>
     </body>
 </html>
