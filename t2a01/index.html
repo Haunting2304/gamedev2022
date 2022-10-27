@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en" id="html">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>T2A01: Arrays</title>
+        <link rel="stylesheet" type="text/css" href="/gamedev2022/style.css">
+        <link id="styleMode" rel="stylesheet" type="text/css">
+        <script type="text/javascript" src="/gamedev2022/stylePref.js"></script>
+        <script>
+            function toggleHidden(element) {
+                if(element.style.display == "none") {
+                    element.style.display = "block"
+                    
+                }
+                else {
+                    element.style.display = "none"
+                }
+            }
+        </script>
+    </head>
+    <body>
+        <h1>T2A01: Arrays</h1>
+
+        <a href="https://www.w3schools.com/js/js_arrays.asp">Good reference to Javascript Arrays</a><br>
+
+        Arrays are stored numbered variables
+
+        <h4> Example Array code</h4>
+        <pre>
+myArray = new Array()
+myArray[0] = 'Fred'
+myArray[1] = 'Mary'</pre>
+
+        <h4>Example working Array code</h4>
+
+
+        Max Array Entry: <input type=text id="myText01" value="3"><br>
+
+        <input type=button value="Example onClick" onClick="{
+        let myTemp = document.getElementById('myText01').value
+        let mySum = ''
+        document.getElementById('myDiv01').innerHTML = ' '
+
+        myArray = new Array()
+        myArray[0] = 'Fred'
+        myArray[1] = 'Mary'
+        myArray[2] = 'Zizzy'
+
+        for (let myLoop=0;   myLoop < myTemp;  myLoop++){
+            mySum += 'Loop #: ' + myLoop + ' array entry: ' + myArray[myLoop] +'<br>'
+        }
+        document.getElementById('myDiv01').innerHTML = mySum
+        }">
+
+        <br>
+        <div id="myDiv01" class="foreground1">...</div>
+
+
+        <br><br>
+
+        <h2>My Examples</h2><br>
+
+        <h4>Select nth item in array to display</h4>
+        <pre>
+var exampleArray = ['My First Item', 'My Second Item', true, 15]</pre>
+        Position: <input id="num1" type=number value=0><br>
+        <input type="button" value="Show item" onclick="
+        var exampleArray = ['My First Item', 'My Second Item', true, 15]
+        document.getElementById('output1').innerHTML = exampleArray[document.getElementById('num1').value]
+        "><br>
+        <div id="output1" class="foreground1">...</div><br><br><br>
+
+
+        <h4>2D Array</h4>
+        <input type="button" onclick="toggleHidden(document.getElementById('2DArray'))" value="(Show/hide array)"><br>
+        <pre id="2DArray" style="display: none;">
+var twoDimensionalArray = [
+    ['0,0', '0,1',   '0,2', '0,3'], 
+    ['1,0',  5 + 10, '1,2', '2,3'], 
+    ['2,0', '2,1',   '2,2', '2,3'], 
+    ['3,0', '3,1',   'Hello', '3,3']
+]</pre><br>
+        Position in 1st dimension: <input id="num21" type=number value=0><br>
+        Position in 2nd dimension: <input id="num22" type=number value=0><br>
+        <input type="button" value="Show item" onclick="
+            var twoDimensionalArray = [
+                ['0,0', '0,1',   '0,2', '0,3'], 
+                ['1,0',  5 + 10, '1,2', '2,3'], 
+                ['2,0', '2,1',   '2,2', '2,3'], 
+                ['3,0', '3,1',   'Hello', '3,3']
+            ]
+            document.getElementById('output2').innerHTML = exampleArray[document.getElementById('num21').value][document.getElementById('num22').value]
+        "><br>
+        <div id="output2" class="foreground1">...</div><br><br><br>
+
+
+        <h4>3D Array</h4>
+        <input type="button" onclick="toggleHidden(document.getElementById('3DArray'))" value="(Show/hide array)"><br>
+        <pre id="3DArray" style="display: none;">
+var threeDimensionalArray = [
+    [
+        //0th Layer
+        ['0,0,0', '0,0,1', '0,0,2', '0,0,3'],
+        ['0,1,0', '0,1,1', '0,1,2', '0,1,3'],
+        ['0,2,0', '0,2,1', '0,2,2', '0,2,3'],
+        ['0,3,0', '0,3,1', '0,3,2', '0,3,3']
+    ], 
+    [
+        //1st Layer
+        ['1,0,0', '1,0,1', '1,0,2', '1,0,3'],
+        ['1,1,0', '1,1,1', '1,1,2', '1,1,3'],
+        ['1,2,0', '1,2,1', '1,2,2', '1,2,3'],
+        ['1,3,0', '1,3,1', '1,3,2', '1,3,3']
+    ], 
+    [
+        //2nd Layer
+        ['2,0,0', '2,0,1', '2,0,2', '2,0,3'],
+        ['2,1,0', '2,1,1', '2,1,2', '2,1,3'],
+        ['2,2,0', '2,2,1', '2,2,2', '2,2,3'],
+        ['2,3,0', '2,3,1', '2,3,2', '2,3,3']
+    ], 
+    [
+        //3rd Layer
+        ['3,0,0', '3,0,1', '3,0,2', '3,0,3'],
+        ['3,1,0', '3,1,1', '3,1,2', '3,1,3'],
+        ['3,2,0', '3,2,1', '3,2,2', '3,2,3'],
+        ['3,3,0', '3,3,1', '3,3,2', '3,3,3']
+    ]
+]</pre><br>
+        Position in 1st dimension: <input id="num31" type=number value=0><br>
+        Position in 2nd dimension: <input id="num32" type=number value=0><br>
+        Position in 3rd dimension: <input id="num33" type=number value=0><br>
+        <input type="button" value="Show item" onclick="
+            var threeDimensionalArray = [
+                [
+                    //0th Layer
+                    ['0,0,0', '0,0,1', '0,0,2', '0,0,3'],
+                    ['0,1,0', '0,1,1', '0,1,2', '0,1,3'],
+                    ['0,2,0', '0,2,1', '0,2,2', '0,2,3'],
+                    ['0,3,0', '0,3,1', '0,3,2', '0,3,3']
+                ], 
+                [
+                    //1st Layer
+                    ['1,0,0', '1,0,1', '1,0,2', '1,0,3'],
+                    ['1,1,0', '1,1,1', '1,1,2', '1,1,3'],
+                    ['1,2,0', '1,2,1', '1,2,2', '1,2,3'],
+                    ['1,3,0', '1,3,1', '1,3,2', '1,3,3']
+                ], 
+                [
+                    //2nd Layer
+                    ['2,0,0', '2,0,1', '2,0,2', '2,0,3'],
+                    ['2,1,0', '2,1,1', '2,1,2', '2,1,3'],
+                    ['2,2,0', '2,2,1', '2,2,2', '2,2,3'],
+                    ['2,3,0', '2,3,1', '2,3,2', '2,3,3']
+                ], 
+                [
+                    //3rd Layer
+                    ['3,0,0', '3,0,1', '3,0,2', '3,0,3'],
+                    ['3,1,0', '3,1,1', '3,1,2', '3,1,3'],
+                    ['3,2,0', '3,2,1', '3,2,2', '3,2,3'],
+                    ['3,3,0', '3,3,1', '3,3,2', '3,3,3']
+                ]
+            ]
+            document.getElementById('output3').innerHTML = threeDimensionalArray[document.getElementById('num31').value][document.getElementById('num32').value][document.getElementById('num33').value]
+        "><br>
+        <div id="output3" class="foreground1">...</div><br><br><br>
+
+
+        <h4>For fun, a small 5D array</h4>
+        <input type="button" onclick="toggleHidden(document.getElementById('5DArray'))" value="(Show/hide array)"><br>
+        <pre id="5DArray" style="display: none;">
+var fiveDimensionalArray = [ //I am not labelling this on with comments
+    [
+        [
+            [
+                ['0,0,0,0,0', '0,0,0,0,1'],
+                ['0,0,0,1,0', '0,0,0,1,1']
+            ],
+            [
+                ['0,0,1,0,0', '0,0,1,0,1'],
+                ['0,0,1,1,0', '0,0,1,1,1']
+            ]
+        ],
+        [
+            [
+                ['0,1,0,0,0', '0,1,0,0,1'],
+                ['0,1,0,1,0', '0,0,0,1,1']
+            ],
+            [
+                ['0,1,1,0,0', '0,1,1,0,1'],
+                ['0,1,1,1,0', '0,1,1,1,1']
+            ]
+        ]
+    ],
+    [
+        [
+            [
+                ['1,0,0,0,0', '1,0,0,0,1'],
+                ['1,0,0,1,0', 'Secret :)']
+            ],
+            [
+                ['1,0,1,0,0', '1,0,1,0,1'],
+                ['1,0,1,1,0', '1,0,1,1,1']
+            ]
+        ],
+        [
+            [
+                ['1,1,0,0,0', '1,1,0,0,1'],
+                ['1,1,0,1,0', '1,0,0,1,1']
+            ],
+            [
+                ['1,1,1,0,0', '1,1,1,0,1'],
+                ['1,1,1,1,0', '1,1,1,1,1']
+            ]
+        ]
+    ]
+]</pre><br>
+        Position in 1st dimension: <input id="num41" type=number value=0><br>
+        Position in 2nd dimension: <input id="num42" type=number value=0><br>
+        Position in 3rd dimension: <input id="num43" type=number value=0><br>
+        Position in 4th dimension: <input id="num44" type=number value=0><br>
+        Position in 5th dimension: <input id="num45" type=number value=0><br>
+        <input type="button" value="Show item" onclick="
+            var fiveDimensionalArray = [ //I am not labelling this on with comments
+                [
+                    [
+                        [
+                            ['0,0,0,0,0', '0,0,0,0,1'],
+                            ['0,0,0,1,0', '0,0,0,1,1']
+                        ],
+                        [
+                            ['0,0,1,0,0', '0,0,1,0,1'],
+                            ['0,0,1,1,0', '0,0,1,1,1']
+                        ]
+                    ],
+                    [
+                        [
+                            ['0,1,0,0,0', '0,1,0,0,1'],
+                            ['0,1,0,1,0', '0,0,0,1,1']
+                        ],
+                        [
+                            ['0,1,1,0,0', '0,1,1,0,1'],
+                            ['0,1,1,1,0', '0,1,1,1,1']
+                        ]
+                    ]
+                ],
+                [
+                    [
+                        [
+                            ['1,0,0,0,0', '1,0,0,0,1'],
+                            ['1,0,0,1,0', 'Secret :)']
+                        ],
+                        [
+                            ['1,0,1,0,0', '1,0,1,0,1'],
+                            ['1,0,1,1,0', '1,0,1,1,1']
+                        ]
+                    ],
+                    [
+                        [
+                            ['1,1,0,0,0', '1,1,0,0,1'],
+                            ['1,1,0,1,0', '1,0,0,1,1']
+                        ],
+                        [
+                            ['1,1,1,0,0', '1,1,1,0,1'],
+                            ['1,1,1,1,0', '1,1,1,1,1']
+                        ]
+                    ]
+                ]
+            ]
+            document.getElementById('output4').innerHTML = fiveDimensionalArray[document.getElementById('num41').value][document.getElementById('num42').value][document.getElementById('num43').value][document.getElementById('num44').value][document.getElementById('num45').value]
+        "><br>
+        <div id="output4" class="foreground1">...</div><br><br><br>
+
+        
+        <h4>Loop that loops than all array elements</h4>
+        <input type="button" onclick="toggleHidden(document.getElementById('loopArray'))" value="(Show/hide array and code)"><br>
+        <div id="loopArray" style="display: none;">
+            Array:
+            <pre>
+var loopArray = ['My First Item', 'My Second Item', false, 29]
+</pre><br>
+            Code:
+            <pre>
+for(i=0; i&ltloopArray.length; i++) {
+    if(i&ltloopArray.length-1) {
+        document.getElementById('output5').innerHTML += `${loopArray[i]},&ltbr&gt`
+    }
+    else{
+        document.getElementById('output5').innerHTML += `${loopArray[i]}`   
+    }
+}
+</pre><br>
+        </div>
+        <input type="button" value="Show item" onclick="
+        var loopArray = ['My First Item', 'My Second Item', false, 29]
+        document.getElementById('output5').innerHTML = ''
+        for(i=0; i<loopArray.length; i++) {
+            if(i<loopArray.length-1) {
+                document.getElementById('output5').innerHTML += `${loopArray[i]},<br>`
+            }
+            else{
+                document.getElementById('output5').innerHTML += `${loopArray[i]}`   
+            }
+        }
+        "><br>
+        <div id="output5" class="foreground1">...</div><br><br><br>
+
+
+        <h4>Loop that loops than all array elements in a 3D array</h4>
+        <input type="button" onclick="toggleHidden(document.getElementById('3DloopArray'))" value="(Show/hide array and code)"><br>
+        <div id="3DloopArray" style="display: none;">
+            Array:
+            <pre>
+var threeDimensionalLoopArray = [
+    [
+        //0th Layer
+        ['0,0,0', '0,0,1', '0,0,2', '0,0,3'],
+        ['0,1,0', '0,1,1', '0,1,2', '0,1,3'],
+        ['0,2,0', '0,2,1', '0,2,2', '0,2,3'],
+        ['0,3,0', '0,3,1', '0,3,2', '0,3,3']
+    ], 
+    [
+        //1st Layer
+        ['1,0,0', '1,0,1', '1,0,2', '1,0,3'],
+        ['1,1,0', '1,1,1', '1,1,2', '1,1,3'],
+        ['1,2,0', '1,2,1', '1,2,2', '1,2,3'],
+        ['1,3,0', '1,3,1', '1,3,2', '1,3,3']
+    ], 
+    [
+        //2nd Layer
+        ['2,0,0', '2,0,1', '2,0,2', '2,0,3'],
+        ['2,1,0', '2,1,1', '2,1,2', '2,1,3'],
+        ['2,2,0', '2,2,1', '2,2,2', '2,2,3'],
+        ['2,3,0', '2,3,1', '2,3,2', '2,3,3']
+    ], 
+    [
+        //3rd Layer
+        ['3,0,0', '3,0,1', '3,0,2', '3,0,3'],
+        ['3,1,0', '3,1,1', '3,1,2', '3,1,3'],
+        ['3,2,0', '3,2,1', '3,2,2', '3,2,3'],
+        ['3,3,0', '3,3,1', '3,3,2', '3,3,3']
+    ]
+]
+</pre><br>
+            Code:
+            <pre>
+for(i=0; i&ltthreeDimensionalLoopArray.length; i++) {
+    for(a=0; a&ltthreeDimensionalLoopArray[i].length; a++) {
+        for(b=0; b&ltthreeDimensionalLoopArray[i][a].length; b++) {
+            document.getElementById('output6').innerHTML += `${threeDimensionalLoopArray[i][a][b]},&ltbr&gt`
+        }
+    }
+}
+</pre><br>
+        </div>
+        <input type="button" value="Run Loop" onclick="
+        var threeDimensionalLoopArray = [
+                [
+                    //0th Layer
+                    ['0,0,0', '0,0,1', '0,0,2', '0,0,3'],
+                    ['0,1,0', '0,1,1', '0,1,2', '0,1,3'],
+                    ['0,2,0', '0,2,1', '0,2,2', '0,2,3'],
+                    ['0,3,0', '0,3,1', '0,3,2', '0,3,3']
+                ], 
+                [
+                    //1st Layer
+                    ['1,0,0', '1,0,1', '1,0,2', '1,0,3'],
+                    ['1,1,0', '1,1,1', '1,1,2', '1,1,3'],
+                    ['1,2,0', '1,2,1', '1,2,2', '1,2,3'],
+                    ['1,3,0', '1,3,1', '1,3,2', '1,3,3']
+                ], 
+                [
+                    //2nd Layer
+                    ['2,0,0', '2,0,1', '2,0,2', '2,0,3'],
+                    ['2,1,0', '2,1,1', '2,1,2', '2,1,3'],
+                    ['2,2,0', '2,2,1', '2,2,2', '2,2,3'],
+                    ['2,3,0', '2,3,1', '2,3,2', '2,3,3']
+                ], 
+                [
+                    //3rd Layer
+                    ['3,0,0', '3,0,1', '3,0,2', '3,0,3'],
+                    ['3,1,0', '3,1,1', '3,1,2', '3,1,3'],
+                    ['3,2,0', '3,2,1', '3,2,2', '3,2,3'],
+                    ['3,3,0', '3,3,1', '3,3,2', '3,3,3']
+                ]
+            ]
+        document.getElementById('output6').innerHTML = ''
+        for(i=0; i<threeDimensionalLoopArray.length; i++) {
+            for(a=0; a<threeDimensionalLoopArray[i].length; a++) {
+                for(b=0; b<threeDimensionalLoopArray[i][a].length; b++) {
+                    document.getElementById('output6').innerHTML += `${threeDimensionalLoopArray[i][a][b]},<br>`
+                }
+            }
+        }
+        "><br>
+        <div id="output6" class="foreground1">...</div><br><br><br>
+    </body>
+</html>

@@ -38,28 +38,22 @@
                 }
             }
         </script>
+        <style>
+            /* Scrollbar */
+            ::-webkit-scrollbar {
+            width: 15px;
+            }
+            ::-webkit-scrollbar-track {
+            background: #202020;
+            }
+            ::-webkit-scrollbar-thumb {
+            background: #383838;
+            }
+            ::-webkit-scrollbar-thumb:hover {
+            background: #464646;
+            }
+        </style>
     </head>
-    <style>
-        /* width */
-::-webkit-scrollbar {
-  width: 15px;
-}
-
-/* Track */
-::-webkit-scrollbar-track {
-  background: #202020;
-}
-
-/* Handle */
-::-webkit-scrollbar-thumb {
-  background: #383838;
-}
-
-/* Handle on hover */
-::-webkit-scrollbar-thumb:hover {
-  background: #464646;
-}
-    </style>
     <body style="overflow: auto; max-height: 100vh;" onload='
     var linkButtons = document.querySelectorAll(".linkButton");
     for(i=0; i<linkButtons.length; i++) {//Loops through all link sections and check if they should be collapsed or not
@@ -99,6 +93,7 @@
                     <div><a href="t1a08" class="link">T1A08: Loops</a></div>
                     <div><a href="t1a09" class="link">T1A09: Functions</a></div>
                     <div><a href="t1a10" class="link">T1A10: Events</a></div>
+                    <div><a href="t2a01" class="link">T2A01: Arrays</a></div>
                 </div>
             </div><br>
 
