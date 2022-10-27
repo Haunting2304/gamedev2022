@@ -8,23 +8,24 @@ body {
     color: #fff;
 }
 
-.foreground1 {
-    background: #363636;
+.foreground1, .foreground pre {
+    background: #303030;
     box-shadow: 5px 5px 5px #181818;
-    margin-bottom: 6px;
+    margin-bottom: 8px;
 }
 
-.foreground2 {
-    background: #464646;
+.foreground2, .foreground1 pre{
+    background: #363636;
     box-shadow: 5px 5px 5px #282828;
-    margin-bottom: 6px;
+    margin-bottom: 8px;
 }
 
 .foreground3 {
-    background: #525252;
+    background: #464646;
     box-shadow: 5px 5px 5px #343434;
-    margin-bottom: 6px;
+    margin-bottom: 8px;
 }
+/*525252*/
 
 a:link {
     color: #1166FF;
@@ -69,14 +70,16 @@ textarea {
     color: hsl(0, 0%, 70%);
 }
 
+/* Scrollbar */
+::-webkit-scrollbar {
+    width: 15px;
+}
 ::-webkit-scrollbar-track {
-  background: #363636;
+    background: #202020;
 }
-
 ::-webkit-scrollbar-thumb {
-  background: #565656;
+    background: #383838;
 }
-
 ::-webkit-scrollbar-thumb:hover {
-  background: #666666;
+    background: #464646;
 }
