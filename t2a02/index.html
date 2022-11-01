@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en" id="html">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>T2A02: Objects</title>
+        <link rel="stylesheet" type="text/css" href="/gamedev2022/style.css">
+        <link id="styleMode" rel="stylesheet" type="text/css">
+        <script type="text/javascript" src="/gamedev2022/stylePref.js"></script>
+    </head>
+    <body>
+        <div id="back"><a href="/gamedev2022" class="link">← Back to index (Giorgio)</a></div>
+
+        <h1>T2A02: Objects</h1>
+
+        <a href="https://www.w3schools.com/js/js_objects.asp">Good reference to Javascript Objects</a><br>
+
+        Objects are stored named variables
+
+        <h4> Example Objects code</h4>
+        <pre>
+let myPerson = {   
+    "firstName": "John",
+    "lastName": "Doe",
+    "age": 50,
+    "eyeColor": "blue"
+}
+</pre>
+
+        <h4> Example working Objects code</h4>
+
+        <input type=button value="Example Object Set and Show" onClick="{
+
+        let myPerson = {   
+            'firstName' : 'John',
+            'lastName'  : 'Doe',
+            'age'       :  50,
+            'eyeColor'  : 'blue'
+        }
+
+        document.getElementById('myDiv01').innerHTML = '<br>myPerson Object has properties: <br>'
+        document.getElementById('myDiv01').innerHTML += 'firstName: ' + myPerson.firstName + '<br>'
+        document.getElementById('myDiv01').innerHTML += 'lastName: ' + myPerson.lastName + '<br>'
+        document.getElementById('myDiv01').innerHTML += 'fullName: ' + myPerson.firstName + ' ' + myPerson.lastName + '<br>'
+        document.getElementById('myDiv01').innerHTML += 'age: ' + myPerson.age + '<br>'
+        document.getElementById('myDiv01').innerHTML += 'eyeColor: ' + myPerson.eyeColor + '<br>'
+
+        }">
+        <br>
+        <div id="myDiv01" class="foreground1">...</div>
+
+
+        <br><br>
+
+        <h2>My Examples</h2><br>
+
+        <h4>Objects can contain many different data types</h4>
+        <pre>
+let myObject = {   
+    myString : 'Hello',
+    myInt  : 5,
+    myFloat :  3.14,
+    myBool  : true
+}
+</pre><br>
+<script>
+    document.myObject = {   
+        myString : 'Hello',
+        myInt  : 5,
+        myFloat :  3.14,
+        myBool  : true
+    }
+    document.myObject2 = {   
+        myString : 'Hello',
+        myInt  : 5,
+        myFloat :  3.14,
+        myBool  : true
+    }
+</script>
+        <input type=button value="myObject.myString" onClick="
+            document.getElementById('myDiv02').innerHTML = myObject.myString
+        ">
+        <input type=button value="myObject.myInt" onClick="
+            document.getElementById('myDiv02').innerHTML = myObject.myInt
+        ">
+        <input type=button value="myObject.myFloat" onClick="
+            document.getElementById('myDiv02').innerHTML = myObject.myFloat
+        ">
+        <input type=button value="myObject.myBool" onClick="
+            document.getElementById('myDiv02').innerHTML = myObject.myBool
+        ">
+        <br>
+        <div id="myDiv02" class="foreground1">...</div>
+        <br><br>
+        
+
+        <h4>Another way to access an objects properties is like this</h4>
+        <input type=button value='myObject["myInt"]' onClick="
+            document.getElementById('myDiv03').innerHTML = myObject['myInt']
+        ">
+        <br>
+        <div id="myDiv03" class="foreground1">...</div>
+        <br><br>
+
+
+        <h4>You can delete properties with the delete operator</h4>
+        <input type=button value='myObject.myFloat' onClick="
+            document.getElementById('myDiv04').innerHTML = myObject2.myFloat;
+        ">
+        <input type=button value='delete myObject.myFloat' onClick="
+            delete myObject2.myFloat;
+        ">
+        <br>
+        <div id="myDiv04" class="foreground1">...</div>
+        <br><br>
+
+
+        <h4>You can add or change properties like this</h4>
+        <input type=button value='myObject.myString' onClick="
+            document.getElementById('myDiv05').innerHTML = myObject2.myString
+        ">
+        <input type=button value='myObject.myString = "newValue"' onClick="
+            myObject2.myString = 'newValue'
+        ">
+        <br>
+        <div id="myDiv05" class="foreground1">...</div>
+        <br><br>
+        <input type=button value='myObject.myNewProperty' onClick="
+            document.getElementById('myDiv06').innerHTML = myObject2.myNewProperty
+        ">
+        <input type=button value='myObject.myNewProperty = "Hi"' onClick="
+            myObject2.myNewProperty = 'Hi'
+        "><br>
+        <div id="myDiv06" class="foreground1">...</div>
+    </body>
+</html>
+
+
+
