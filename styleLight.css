@@ -14,13 +14,13 @@ input, select{
     border-color: #d0d0d0;
 }
 
-.foreground1 {
+.foreground1, pre {
     background: #e0e0e0;
     box-shadow: 5px 5px 5px #d0d0d0;
     margin-bottom: 6px;
 }
 
-.foreground2 {
+.foreground2, div.foreground1 pre {
     background: #d0d0d0;
     box-shadow: 5px 5px 5px #c0c0c0;
     margin-bottom: 6px;

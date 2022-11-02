@@ -8,13 +8,13 @@ body {
     color: #fff;
 }
 
-.foreground1, .foreground pre {
+.foreground1, pre{
     background: #303030;
     box-shadow: 5px 5px 5px #181818;
     margin-bottom: 8px;
 }
 
-.foreground2, .foreground1 pre{
+.foreground2, div.foreground1 pre{
     background: #363636;
     box-shadow: 5px 5px 5px #282828;
     margin-bottom: 8px;
@@ -25,22 +25,22 @@ body {
     box-shadow: 5px 5px 5px #343434;
     margin-bottom: 8px;
 }
-/*525252*/
+/*525252 for lighter*/
 
 a:link {
     color: #1166FF;
 }
 
 a:visited {
-  color: #7744ff;
+    color: #7744ff;
 }
 
 a:hover {
-  color: #4499FF;
+     color: #4499FF;
 }
 
 a:active {
-  color: #FF3333;
+    color: #FF3333;
 }
 
 input[type=text], input[type=number] {
@@ -49,13 +49,13 @@ input[type=text], input[type=number] {
     border-color: #565656;
 }
 
-div.foreground1 input[type=text], div.foreground1 input[type=number], input[type=button], select {
+div.foreground1 input[type=text], div.foreground1 input[type=number], input[type=button], select, pre {
     background-color: #363636;
     color: inherit;
     border-color: #565656;
 }
 
-div.foreground2 input[type=text], div.foreground2 input[type=number], div.foreground1 input[type=button], div.foreground1 select {
+div.foreground2 input[type=text], div.foreground2 input[type=number], div.foreground1 input[type=button], div.foreground1 select, div.foreground1 pre {
     background-color: #464646;
     color: inherit;
     border-color: #565656;
@@ -72,7 +72,7 @@ textarea {
 
 /* Scrollbar */
 ::-webkit-scrollbar {
-    width: 15px;
+    width: 17px;
 }
 ::-webkit-scrollbar-track {
     background: #202020;

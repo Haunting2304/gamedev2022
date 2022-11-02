@@ -24,11 +24,10 @@ h1 {
     font-size: 24px;
 }
 
-.foreground1, .foreground2, .foreground3 {
+.foreground1, .foreground2, .foreground3, .foreground pre, .foreground1 pre, .foreground2 pre {
     display: inline-block;
-    padding: 6px;
+    padding: 12px;
     margin-top: 6px;
-    
 }
 
 #back {
@@ -37,4 +36,9 @@ h1 {
 
 .cur {
     cursor: default;
+}
+
+pre {
+    overflow-x: auto;
+    padding: 6px;
 }
