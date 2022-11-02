@@ -92,7 +92,7 @@ var twoDimensionalArray = [
                 ['2,0', '2,1',   '2,2', '2,3'], 
                 ['3,0', '3,1',   'Hello', '3,3']
             ]
-            document.getElementById('output2').innerHTML = exampleArray[document.getElementById('num21').value][document.getElementById('num22').value]
+            document.getElementById('output2').innerHTML = twoDimensionalArray[document.getElementById('num21').value][document.getElementById('num22').value]
         "><br>
         <div id="output2" class="foreground1">...</div><br><br><br>
 
@@ -275,7 +275,7 @@ var fiveDimensionalArray = [ //I am not labelling this on with comments
         <div id="output4" class="foreground1">...</div><br><br><br>
 
         
-        <h4>Loop that loops than all array elements</h4>
+        <h4>Loop that loops through all elements in an array</h4>
         <input type="button" onclick="toggleHidden(document.getElementById('loopArray'))" value="(Show/hide array and code)"><br>
         <div id="loopArray" style="display: none;">
             Array:
@@ -309,7 +309,7 @@ for(i=0; i&ltloopArray.length; i++) {
         <div id="output5" class="foreground1">...</div><br><br><br>
 
 
-        <h4>Loop that loops than all array elements in a 3D array</h4>
+        <h4>Loop that loops through all elements in a 3D array</h4>
         <input type="button" onclick="toggleHidden(document.getElementById('3DloopArray'))" value="(Show/hide array and code)"><br>
         <div id="3DloopArray" style="display: none;">
             Array:
@@ -397,5 +397,57 @@ for(i=0; i&ltthreeDimensionalLoopArray.length; i++) {
         }
         "><br>
         <div id="output6" class="foreground1">...</div><br><br><br>
+
+
+        <h4>Makes a x dimensional array (Will log array to console)(7+ dimensions can take multiple seconds to calculate)</h4>
+
+        <input type="button" onclick="toggleHidden(document.getElementById('constructedArray'))" value="(Show/hide code)"><br>
+        <div id="constructedArray" style="display: none;">
+            Code:
+            <pre>
+document.position = []
+function constructArray(dimensions, items) {
+    eval(`document.constructedArray${dimensions} = []`)
+    if(dimensions > 1) {
+        for(var i=0; i&ltitems[dimensions-1]; i++) {
+            position[dimensions-1] = i
+            eval(`document.constructedArray${dimensions}`)[i] = constructArray(dimensions-1, items)
+        }
+    }
+    if(dimensions === 1) {
+        for(i=0; i&ltitems[dimensions-1]; i++) {
+            position[dimensions-1] = i
+            eval(`constructedArray${dimensions}`)[i] = `${position[2]}, ${position[1]}, ${position[0]}`
+        }
+    }
+    return eval(`constructedArray${dimensions}`)
+}
+console.log(constructArray(parseInt(document.getElementById('myText7').value), eval(`[${document.getElementById('myText71').value}]`)))
+</pre><br>
+        </div>
+        Amount of dimensions: <input type=text id="myText7" value="3"><br>
+        This is hard to explain but important: <input type=text id="myText71" value="5, 5, 5"><br>
+        <input type="button" value="Run Loop" onclick="
+        document.position = []
+        function constructArray(dimensions, items) {
+            eval(`document.constructedArray${dimensions} = []`)
+            if(dimensions > 1) {
+                for(var i=0; i<items[dimensions-1]; i++) {
+                    //console.log(`loop${i}/${items[dimensions-1]-1}`)
+                    position[dimensions-1] = i
+                    eval(`document.constructedArray${dimensions}`)[i] = constructArray(dimensions-1, items)
+                }
+            }
+            if(dimensions === 1) {
+                for(i=0; i<items[dimensions-1]; i++) {
+                    position[dimensions-1] = i
+                    eval(`constructedArray${dimensions}`)[i] = `${position[2]}, ${position[1]}, ${position[0]}`
+                }
+            }
+            //console.log(eval(`constructedArray${dimensions}`))
+            return eval(`constructedArray${dimensions}`)
+        }
+        console.log(constructArray(parseInt(document.getElementById('myText7').value), eval(`[${document.getElementById('myText71').value}]`)))
+        "><br>
     </body>
 </html>

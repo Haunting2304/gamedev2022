@@ -8,6 +8,17 @@
         <link rel="stylesheet" type="text/css" href="/gamedev2022/style.css">
         <link id="styleMode" rel="stylesheet" type="text/css">
         <script type="text/javascript" src="/gamedev2022/stylePref.js"></script>
+        <script>
+            function toggleHidden(element) {
+                if(element.style.display == "none") {
+                    element.style.display = "block"
+                    
+                }
+                else {
+                    element.style.display = "none"
+                }
+            }
+        </script>
     </head>
     <body>
         <div id="back"><a href="/gamedev2022" class="link">← Back to index (Giorgio)</a></div>
@@ -133,6 +144,117 @@ let myObject = {
             myObject2.myNewProperty = 'Hi'
         "><br>
         <div id="myDiv06" class="foreground1">...</div>
+
+
+        <h4>An array with objects inside</h4>
+        <input type="button" onclick="toggleHidden(document.getElementById('array07'))" value="(Show/hide array)"><br>
+        <pre id="array07" style="display: none;">
+document.array07 = [ 
+    {
+        index : 0,
+        name : 'Loops',
+        link : 'https://www.w3schools.com/js/js_loop_for.asp'
+    },
+    {
+        index : 1,
+        name : 'Functions',
+        link : 'https://www.w3schools.com/js/js_functions.asp'
+    },
+    {
+        index : 2,
+        name : 'Events',
+        link : 'https://www.w3schools.com/js/js_events.asp'
+    },
+    {
+        index : 3,
+        name : 'Arrays',
+        link : 'https://www.w3schools.com/js/js_arrays.asp'
+    },
+    {
+        index : 4,
+        name : 'Objects',
+        link : 'https://www.w3schools.com/js/js_objects.asp'
+    }
+]</pre>
+<script>
+    document.array07 = [ 
+        {
+            index : 0,
+            name : 'Loops',
+            link : 'https://www.w3schools.com/js/js_loop_for.asp'
+        },
+        {
+            index : 1,
+            name : 'Functions',
+            link : 'https://www.w3schools.com/js/js_functions.asp'
+        },
+        {
+            index : 2,
+            name : 'Events',
+            link : 'https://www.w3schools.com/js/js_events.asp'
+        },
+        {
+            index : 3,
+            name : 'Arrays',
+            link : 'https://www.w3schools.com/js/js_arrays.asp'
+        },
+        {
+            index : 4,
+            name : 'Objects',
+            link : 'https://www.w3schools.com/js/js_objects.asp'
+        }
+    ]
+</script>
+        <input type="button" value="Loop through index" onclick="
+        document.getElementById('output7').innerHTML = ''
+        for(let i=0; i<array07.length; i++) {
+            document.getElementById('output7').innerHTML += `${array07[i].index}<br>`
+        }
+        ">
+        <input type="button" value="Loop through name" onclick="
+        document.getElementById('output7').innerHTML = ''
+        for(let i=0; i<array07.length; i++) {
+            document.getElementById('output7').innerHTML += `${array07[i].name}<br>`
+        }
+        ">
+        <input type="button" value="Loop through link" onclick="
+        document.getElementById('output7').innerHTML = ''
+        for(let i=0; i<array07.length; i++) {
+            document.getElementById('output7').innerHTML += `${array07[i].link}<br>`
+        }
+        "><br>
+        <div id="output7" class="foreground1">...</div><br><br><br>
+
+
+        <h4>An object with a method inside</h4>
+        <input type="button" onclick="toggleHidden(document.getElementById('object8'))" value="(Show/hide object)"><br>
+        <pre id="object8" style="display: none;">
+document.playerStats = {
+    health : '47HP',
+    maxHealth : '150HP',
+    healthPercentage : function() {
+        return `${Math.round(100 * parseInt(this.health) / parseInt(this.maxHealth))}%`;
+    }
+}</pre>
+<script>
+    document.playerStats = {
+        health : '47HP',
+        maxHealth : '150HP',
+        healthPercentage : function() {
+            return `${Math.round(100 * parseInt(this.health) / parseInt(this.maxHealth))}%`;
+        }
+    }
+</script>
+        <input type="button" value="playerStats.health" onclick="
+            getElementById('output8').innerHTML = playerStats.health
+        ">
+        <input type="button" value="playerStats.maxHealth" onclick="
+            getElementById('output8').innerHTML = playerStats.maxHealth
+        ">
+        <input type="button" value="playerStats.healthPercentage()" onclick="
+            getElementById('output8').innerHTML = playerStats.healthPercentage()
+        "><br>
+        <div id="output8" class="foreground1">...</div><br><br><br>
     </body>
 </html>
 
