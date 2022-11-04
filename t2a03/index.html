@@ -20,7 +20,7 @@
             }
         </script>
     </head>
-    <body>
+    <body onload="document.data = eval(`new uniqueData(${document.getElementById('text3').value})`)">
         <div id="back"><a href="/gamedev2022" class="link">← Back to index (Giorgio)</a></div>
         <h1>T2A03: Classes</h1>
 
@@ -65,7 +65,7 @@ myDog.myShow()
         <h2>My Examples</h2>
 
         <h4>A class I made that uses the constructor() and custom methods</h4>
-        <input type="button" onclick="toggleHidden(document.getElementById('class2')); w3CodeColor(document.getElementById('class2'), 'js')" value="(Show/hide code)"><br>
+        <input type="button" onclick="toggleHidden(document.getElementById('class2'));" value="(Show/hide code)"><br>
         <pre id="class2" style="display: none;">
 class person {
     constructor(firstName, lastName, year, eyeColour) {
@@ -106,21 +106,63 @@ class person {
         </script>
         <input id="text2" type=text value="'John', 'Doe', 1972, 'Blue'"><br>
         <input type=button value=".firstName" onClick="
-            person1 = eval(`new person(${document.getElementById('text2').value})`)
+           var person1 = eval(`new person(${document.getElementById('text2').value})`)
             document.getElementById('div2').innerHTML = person1.firstName
         ">
         <input type=button value=".fullName()" onClick="
-            person1 = eval(`new person(${document.getElementById('text2').value})`)
+          var person1 = eval(`new person(${document.getElementById('text2').value})`)
             document.getElementById('div2').innerHTML = person1.fullName()
         ">
         <input type=button value=".ageYear()" onClick="
-            person1 = eval(`new person(${document.getElementById('text2').value})`)
+            var person1 = eval(`new person(${document.getElementById('text2').value})`)
             document.getElementById('div2').innerHTML = Math.round(person1.ageYear() * 100) / 100
         ">
         <input type=button value=".ageSec()" onClick="
-            person1 = eval(`new person(${document.getElementById('text2').value})`)
+            var person1 = eval(`new person(${document.getElementById('text2').value})`)
             document.getElementById('div2').innerHTML = Math.round(person1.ageSec() * 100) / 100
         "><br>
         <div class="foreground1" id="div2">...</div>
+
+
+        <h4>A small class that stores data with a unique identifier and an age in seconds</h4>
+        <input type="button" onclick="toggleHidden(document.getElementById('class3'));" value="(Show/hide code)"><br>
+        <pre id="class3" style="display: none;">
+class uniqueData {
+    constructor(data) {
+        this.identifier = Date.now()
+        this.data = data
+        this.creationTime = Date.now()
+    }
+    age() {
+        return (Date.now() - this.creationTime) / 1000
+    }
+}
+</pre>
+        <script>
+            class uniqueData {
+                constructor(data) {
+                    this.identifier = Date.now()
+                    this.data = data
+                    this.creationTime = Date.now()
+                }
+                age() {
+                    return (Date.now() - this.creationTime) / 1000
+                }
+            }
+        </script>
+        <input id="text3" type=text value="'This is data'"><br>
+        <input type=button value="Create object" onClick="
+            document.data = eval(`new uniqueData(${document.getElementById('text3').value})`)
+        ">
+        <input type=button value=".data" onClick="
+            document.getElementById('div3').innerHTML = data.data
+        ">
+        <input type=button value=".identifier" onClick="
+            document.getElementById('div3').innerHTML = data.identifier
+        ">
+        <input type=button value=".age()" onClick="
+            document.getElementById('div3').innerHTML = Math.round(data.age() * 100) / 100
+        "><br>
+        <div class="foreground1" id="div3">...</div>
     </body>
 </html>
