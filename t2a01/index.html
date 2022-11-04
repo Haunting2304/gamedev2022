@@ -399,7 +399,7 @@ for(i=0; i&ltthreeDimensionalLoopArray.length; i++) {
         <div id="output6" class="foreground1">...</div><br><br><br>
 
 
-        <h4>Makes a x dimensional array (Will log array to console)(7+ dimensions can take multiple seconds to calculate)</h4>
+        <h4>Makes a x dimensional array (Will log in console)(7+ dimensions can take multiple seconds to calculate)</h4>
 
         <input type="button" onclick="toggleHidden(document.getElementById('constructedArray'))" value="(Show/hide code)"><br>
         <div id="constructedArray" style="display: none;">
@@ -426,7 +426,7 @@ console.log(constructArray(parseInt(document.getElementById('myText7').value), e
 </pre><br>
         </div>
         Amount of dimensions: <input type=text id="myText7" value="3"><br>
-        This is hard to explain but important: <input type=text id="myText71" value="5, 5, 5"><br>
+        Amount of positions in each coordinate: <input type=text id="myText71" value="5, 5, 5"><br>
         <input type="button" value="Run Loop" onclick="
         document.position = []
         function constructArray(dimensions, items) {
