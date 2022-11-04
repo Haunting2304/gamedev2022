@@ -24,10 +24,17 @@ h1 {
     font-size: 24px;
 }
 
-.foreground1, .foreground2, .foreground3, .foreground pre, .foreground1 pre, .foreground2 pre {
+.foreground1, .foreground2 {
     display: inline-block;
     padding: 12px;
     margin-top: 6px;
+    border-radius: 5px;
+}
+
+pre {
+    padding: 12px;
+    margin-top: 6px;
+    border-radius: 5px;
 }
 
 #back {

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en" id="html">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>T2A03: Classes</title>
+        <link rel="stylesheet" type="text/css" href="/gamedev2022/style.css">
+        <link id="styleMode" rel="stylesheet" type="text/css">
+        <script type="text/javascript" src="/gamedev2022/stylePref.js"></script>
+        <script>
+            function toggleHidden(element) {
+                if(element.style.display == "none") {
+                    element.style.display = "block"
+                    
+                }
+                else {
+                    element.style.display = "none"
+                }
+            }
+        </script>
+    </head>
+    <body>
+        <div id="back"><a href="/gamedev2022" class="link">← Back to index (Giorgio)</a></div>
+        <h1>T2A03: Classes</h1>
+
+        <a href="https://www.w3schools.com/js/js_classes.asp">Find a good reference to Javascript Classes</a><br>
+        Classes are both Objects that store variables (Called Properties) and Functions
+        that work on the variables (called Methods)
+
+        <h4> Example Classses code</h4>
+        <pre>
+class myAnimal {
+    constructor(passName, passAge) {
+    this.myName = passName;
+    this.myAge = passAge;
+    }
+    myShow(){    
+    document.getElementById('myDiv01').innerHTML = 'Hello '+ this.myName + '. You are ' + this.myAge + ' years old<br>'
+    }
+myDog = new myAnimal('Snickers', 5)
+myDog.myShow()  
+</pre>
+
+        <h4> Example working Classes code</h4>
+        <input type=button value="Example Class Set and Show Class Animal" onClick="{
+        class myAnimal {
+            constructor(passName, passAge) {
+                this.myName = passName;
+                this.myAge = passAge;
+            }
+            myShow(){    
+                document.getElementById('myDiv01').innerHTML = 'Hello '+ this.myName + '. You are ' + this.myAge + ' years old<br>'
+            }
+        }  // end class myAnimal
+        myDog = new myAnimal('Snickers', 5)
+        myDog.myShow()  
+
+        }"><br>
+        <div class="foreground1" id="myDiv01">...</div>
+
+
+        <br><br>
+        <h2>My Examples</h2>
+
+        <h4>A class I made that uses the constructor() and custom methods</h4>
+        <input type="button" onclick="toggleHidden(document.getElementById('class2')); w3CodeColor(document.getElementById('class2'), 'js')" value="(Show/hide code)"><br>
+        <pre id="class2" style="display: none;">
+class person {
+    constructor(firstName, lastName, year, eyeColour) {
+        this.firstName = firstName
+        this.lastName = lastName
+        this.date = (year - 1970) * 31536000000
+        this.eyeColour = eyeColour
+    }
+    fullName() {
+        return `${this.firstName} ${this.lastName}`
+    }
+    ageYear() {
+        return (Date.now() - this.date) / 31536000000
+    }
+    ageSec() {
+        return (Date.now() - this.date) / 1000
+    }
+}
+</pre>
+        <script>
+            class person {
+                constructor(firstName, lastName, year, eyeColour) {
+                    this.firstName = firstName
+                    this.lastName = lastName
+                    this.date = (year - 1970) * 31536000000
+                    this.eyeColour = eyeColour
+                }
+                fullName() {
+                    return `${this.firstName} ${this.lastName}`
+                }
+                ageYear() {
+                    return (Date.now() - this.date) / 31536000000
+                }
+                ageSec() {
+                    return (Date.now() - this.date) / 1000
+                }
+            }
+        </script>
+        <input id="text2" type=text value="'John', 'Doe', 1972, 'Blue'"><br>
+        <input type=button value=".firstName" onClick="
+            person1 = eval(`new person(${document.getElementById('text2').value})`)
+            document.getElementById('div2').innerHTML = person1.firstName
+        ">
+        <input type=button value=".fullName()" onClick="
+            person1 = eval(`new person(${document.getElementById('text2').value})`)
+            document.getElementById('div2').innerHTML = person1.fullName()
+        ">
+        <input type=button value=".ageYear()" onClick="
+            person1 = eval(`new person(${document.getElementById('text2').value})`)
+            document.getElementById('div2').innerHTML = Math.round(person1.ageYear() * 100) / 100
+        ">
+        <input type=button value=".ageSec()" onClick="
+            person1 = eval(`new person(${document.getElementById('text2').value})`)
+            document.getElementById('div2').innerHTML = Math.round(person1.ageSec() * 100) / 100
+        "><br>
+        <div class="foreground1" id="div2">...</div>
+    </body>
+</html>
