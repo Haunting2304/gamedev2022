@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en" id="html">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>T2A04: Extending Classes</title>
+        <link rel="stylesheet" type="text/css" href="/gamedev2022/style.css">
+        <link id="styleMode" rel="stylesheet" type="text/css">
+        <script type="text/javascript" src="/gamedev2022/stylePref.js"></script>
+        <script>
+            function toggleHidden(element) {
+                if(element.style.display == "none") {
+                    element.style.display = "block"
+                    
+                }
+                else {
+                    element.style.display = "none"
+                }
+            }
+        </script>
+    </head>
+    <body>
+        <div id="back"><a href="/gamedev2022" class="link">← Back to index (Giorgio)</a></div>
+        <h1>T2A04: Extending Classes</h1>
+
+        <h4> Example Class extend code</h4>
+        <pre>
+class myCat extends myAnimal {
+    myShow(){
+        document.getElementById('myDiv01').innerHTML = this.myName
+    }                                                                   
+}
+</pre>
+
+
+        <h4> Example working Classes code</h4>
+
+        <script>
+            class myAnimal {
+                constructor(passName, passAge) {
+                    this.myName = passName;
+                    this.myAge = passAge;
+                }
+                myShow() {    
+                    document.getElementById('myDiv01').innerHTML = `Hello ${this.myName}<br>`
+                }
+            }
+        </script>
+
+        <input type=button value="Example Class Set and Show Class Animal" onClick="
+            myDog = new myAnimal('Snickers', 5)
+            myDog.myShow()  
+        ">
+
+        <h4> Example extending Class code</h4>
+        Nothing: <input type=text id="myText01" value="Useless at the moment"><br>
+
+        <input type=button value="Example Extend Class Animal" onClick="
+            class myCat extends myAnimal {                                                                      
+                myShow() {
+                    document.getElementById('myDiv01').innerHTML = `${this.myName} is a great cat<br>`
+                }                                                                   
+            }    // end extended class myCat                                                                                                                                                                                                                                                                                                                                 
+            myPet = new myCat('Fluffy', 14)
+            myPet.myShow()  
+        "><br>
+
+        <div id="myDiv01" class="foreground1">...</div>
+
+        <br><br>
+        <h2>My Examples</h2>
+
+        <h4>(Placeholder Text)</h4>
+        <input type="button" onclick="toggleHidden(document.getElementById('class2'));" value="(Show/hide class)"><br>
+        <pre id="class2" style="display: none;">
+</pre>
+    </body>
+</html>
+
+
+
+
+
