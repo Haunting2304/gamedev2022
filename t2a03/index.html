@@ -32,12 +32,13 @@
         <pre>
 class myAnimal {
     constructor(passName, passAge) {
-    this.myName = passName;
-    this.myAge = passAge;
+        this.myName = passName;
+        this.myAge = passAge;
     }
     myShow(){    
-    document.getElementById('myDiv01').innerHTML = 'Hello '+ this.myName + '. You are ' + this.myAge + ' years old<br>'
+        document.getElementById('myDiv01').innerHTML = 'Hello '+ this.myName + '. You are ' + this.myAge + ' years old'
     }
+}
 myDog = new myAnimal('Snickers', 5)
 myDog.myShow()  
 </pre>
