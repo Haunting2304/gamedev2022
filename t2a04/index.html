@@ -24,17 +24,14 @@
         <div id="back"><a href="/gamedev2022" class="link">← Back to index (Giorgio)</a></div>
         <h1>T2A04: Extending Classes</h1>
 
-        <h4> Example Class extend code</h4>
+        <h4>Example Class Extend Code</h4>
         <pre>
 class myCat extends myAnimal {
     myShow(){
         document.getElementById('myDiv01').innerHTML = this.myName
     }                                                                   
-}
-</pre>
-
-
-        <h4> Example working Classes code</h4>
+}</pre><br>
+        <h4>Working Classes Code</h4>
 
         <script>
             class myAnimal {
@@ -43,38 +40,141 @@ class myCat extends myAnimal {
                     this.myAge = passAge;
                 }
                 myShow() {    
-                    document.getElementById('myDiv01').innerHTML = `Hello ${this.myName}<br>`
+                    return `Hello ${this.myName}<br>`
                 }
             }
         </script>
 
         <input type=button value="Example Class Set and Show Class Animal" onClick="
             myDog = new myAnimal('Snickers', 5)
-            myDog.myShow()  
-        ">
-
-        <h4> Example extending Class code</h4>
-        Nothing: <input type=text id="myText01" value="Useless at the moment"><br>
+            document.getElementById('myDiv01').innerHTML = myDog.myShow()  
+        "><br>
+        <div id="myDiv01" class="foreground1">...</div><br>
+        <h4>Working Class Extend Code</h4>
+        Cat name: <input type=text id="myText01" value="Fluffy"><br>
 
         <input type=button value="Example Extend Class Animal" onClick="
             class myCat extends myAnimal {                                                                      
                 myShow() {
-                    document.getElementById('myDiv01').innerHTML = `${this.myName} is a great cat<br>`
+                    return `${this.myName} is a great cat<br>`
                 }                                                                   
             }    // end extended class myCat                                                                                                                                                                                                                                                                                                                                 
-            myPet = new myCat('Fluffy', 14)
-            myPet.myShow()  
+            myPet = new myCat(document.getElementById('myText01').value, 14)
+            document.getElementById('myDiv02').innerHTML = myPet.myShow()  
         "><br>
 
-        <div id="myDiv01" class="foreground1">...</div>
+        <div id="myDiv02" class="foreground1">...</div>
 
         <br><br>
         <h2>My Examples</h2>
 
-        <h4>(Placeholder Text)</h4>
+        <h4>My use of class extend</h4>
         <input type="button" onclick="toggleHidden(document.getElementById('class2'));" value="(Show/hide class)"><br>
         <pre id="class2" style="display: none;">
-</pre>
+function isVowel(letter) {
+    return ['a', 'e', 'i', 'o', 'u'].indexOf(letter.toLowerCase()) !== -1
+}
+class animal {
+    constructor(name, age, type) {
+        this.name = name;
+        this.age = age;
+        this.type = type;
+        if(type === undefined) {
+            this.type = 'animal';
+        }
+    }
+    animalType() {
+        this.a = 'a'
+        if(isVowel(this.type[0])) {
+            this.a = 'an'
+        }
+        if(this.age === undefined) {
+            return `${this.name} is ${this.a} ${this.type}.`
+        }
+        else{
+            return `${this.name} is ${this.a} ${this.type} that is ${this.age} years old.`
+        }
+    }
+    talk() {
+        return this.animalType()
+    }
+}
+class cat extends animal {
+    constructor(name, age) {
+        super(name, age, 'cat')
+    }
+    talk() {
+        return `${this.animalType()} ${this.name} goes meow.`
+    }                                                                   
+}
+class dog extends animal {
+    constructor(name, age) {
+        super(name, age, 'dog')
+    }
+    talk() {
+        return `${this.animalType()} ${this.name} goes woof.`
+    }                                                                   
+}</pre>
+        <script>
+            function isVowel(letter) {
+                return ['a', 'e', 'i', 'o', 'u'].indexOf(letter.toLowerCase()) !== -1
+            }
+            class animal {
+                constructor(name, age, type) {
+                    this.name = name;
+                    this.age = age;
+                    this.type = type;
+                    if(type === undefined) {
+                        this.type = 'animal';
+                    }
+                }
+                animalType() {
+                    this.a = 'a'
+                    if(isVowel(this.type[0])) {
+                        this.a = 'an'
+                    }
+                    if(this.age === undefined) {
+                        return `${this.name} is ${this.a} ${this.type}.`
+                    }
+                    else{
+                        return `${this.name} is ${this.a} ${this.type} that is ${this.age} years old.`
+                    }
+                }
+                talk() {
+                    return this.animalType()
+                }
+            }
+            class cat extends animal {
+                constructor(name, age) {
+                    super(name, age, 'cat')
+                }
+                talk() {
+                    return `${this.animalType()} ${this.name} goes meow.`
+                }                                                                   
+            }
+            class dog extends animal {
+                constructor(name, age) {
+                    super(name, age, 'dog')
+                }
+                talk() {
+                    return `${this.animalType()} ${this.name} goes woof.`
+                }                                                                   
+            }
+        </script>
+        <input type=button value="new animal('Fluffy').talk()" onClick="
+            document.getElementById('div2').innerHTML = new animal('Fluffy').talk()
+        ">
+        <input type=button value="new animal('Fluffy', 7).talk()" onClick="
+            document.getElementById('div2').innerHTML = new animal('Fluffy', 14).talk()
+        ">
+        <input type=button value="new cat('Luna').talk()" onClick="
+            document.getElementById('div2').innerHTML = new cat('Luna').talk()
+        ">
+        <input type=button value="new dog('Bella', 9).talk()" onClick="
+            document.getElementById('div2').innerHTML = new dog('Bella', 9).talk()
+        "><br>
+
+        <div id="div2" class="foreground1">...</div>
     </body>
 </html>
 
