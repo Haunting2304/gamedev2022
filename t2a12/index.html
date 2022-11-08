@@ -44,19 +44,52 @@
                 document.getElementById("annualTax").innerHTML = `Taxes to pay: $${annualTax/100}`;
                 document.getElementById("annualProfit").innerHTML = `Profit: $${annualProfit/100}`;
             }
-            
+            function calcAdvanced() {
+                var rate = document.getElementById("rate").value * 100; //Multiply by 100 to convert to cents/h 
+                var hours = document.getElementById("hours").value;
+                var taxRate = document.getElementById("taxRate").value;
+                var monthWorkDays = document.getElementById("monthWorkDays").value;
+
+                //Calculate some math using logic
+                var amountMade = rate * hours;
+                var tax = (amountMade * taxRate)/100; //Divided by one hundred because of percentage(Done after multiplication to avoid floating point)
+                var profit = amountMade - tax;
+                
+                //Multiply daily by days worked per month for monthly
+                var monthlyAmountMade = amountMade * monthWorkDays;
+                var monthlyTax = tax * monthWorkDays;
+                var monthlyProfit = profit * monthWorkDays;
+
+                //Multiply monthly by 12 for annual
+                var annualAmountMade = monthlyAmountMade * 12
+                var annualTax = monthlyTax * 12;
+                var annualProfit = monthlyProfit * 12;
+
+                var taxBracket = [
+                    {amount : 50197, rate : 15},
+                    {amount : 100392, rate : 20.5},
+                    {amount : 155625, rate : 26},
+                    {amount : 221708, rate : 29},
+                    {rate : 33}
+                ]
+                for(var i=0; i<taxBracket.length; i++)
+
+                document.getElementById("advancedAmountMade").innerHTML = `Amount Made: $${advancedAmountMade/100}`;
+                document.getElementById("advancedTax").innerHTML = `Taxes to pay: $${advancedTax/100}`;
+                document.getElementById("advancedProfit").innerHTML = `Profit: $${advancedProfit/100}`;
+            }
         </script>
     </head>
     <body>
         <div id="back"><a href="/gamedev2022" class="link">← Back to index (Giorgio)</a></div>
         <h1>T2A12: Pay</h1>
-        <h2>Input:</h2>
+        <h3>Input:</h3>
         Hourly Rate: <input type="number" style="width: 5em" id="rate" onchange="calculate()" value="15"><br>
         Hours Worked: <input type="number" style="width: 5em" id="hours" onchange="calculate()" value="8"><br>
         Tax Rate: <input type="number" id="taxRate" style="width: 3em" onchange="calculate()" value="30">%<br>
         Month Work Days: <input type="number" id="monthWorkDays" style="width: 3em" onchange="calculate()" value="20">
         <br>
-        <h2>Calculations:</h2>
+        <h3>Calculations:</h3>
         <h4 style="margin-bottom: 5px;">Daily:</h4>
         <div class="foreground1">
             <div id="amountMade"></div>
@@ -75,8 +108,23 @@
             <div id="annualTax"></div>
             <div id="annualProfit"></div>
         </div>
+        <h2 style="margin-bottom: 5px;">Advanced:</h2>
+        <h3>Input:</h3>
+        Hourly Rate: <input type="number" style="width: 5em" id="rate" onchange="calculate()" value="15"><br>
+        Hours Worked: <input type="number" style="width: 5em" id="hours" onchange="calculate()" value="8"><br>
+        Tax Rate: <input type="number" id="taxRate" style="width: 3em" onchange="calculate()" value="30">%<br>
+        Month Work Days: <input type="number" id="monthWorkDays" style="width: 3em" onchange="calculate()" value="20">
+        <br>
+        <h3>Calculations:</h3>
+        <h4 style="margin-bottom: 5px;">Annual:</h4>
+        <div class="foreground1">
+            <div id="advancedAmountMade"></div>
+            <div id="advancedTax"></div>
+            <div id="advancedProfit"></div>
+        </div>
     </body>
     <script>
         calculate()
+        calcAdvanced()
     </script>
 </html>
