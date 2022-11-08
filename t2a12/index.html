@@ -9,38 +9,40 @@
         <link id="styleMode" rel="stylesheet" type="text/css">
         <script type="text/javascript" src="/gamedev2022/stylePref.js"></script>
         <script>
-            function toggleHidden(element) {
-                if(element.style.display == "none") {
-                    element.style.display = "block"
-                    
-                }
-                else {
-                    element.style.display = "none"
-                }
-            }
-            function calculate() {
-                var rate = document.getElementById("rate").value;
+            function calculate() { //(All calculations are in cents until displayed then they are converted back to dollars in order to avoid floating point number issues)
+                //Get all inputs
+                var rate = document.getElementById("rate").value * 100; //Multiply by 100 to convert to cents/h 
                 var hours = document.getElementById("hours").value;
                 var taxRate = document.getElementById("taxRate").value;
-                var amountMade = rate * hours;
-                var tax = amountMade * (taxRate / 100);
-                var profit = amountMade - tax;
                 var monthWorkDays = document.getElementById("monthWorkDays").value;
+
+                //Calculate some math using logic
+                var amountMade = rate * hours;
+                var tax = (amountMade * taxRate)/100; //Divided by one hundred because of percentage(Done after multiplication to avoid floating point)
+                var profit = amountMade - tax;
+                
+                //Multiply daily by days worked per month for monthly
                 var monthlyAmountMade = amountMade * monthWorkDays;
                 var monthlyTax = tax * monthWorkDays;
                 var monthlyProfit = profit * monthWorkDays;
+
+                //Multiply monthly by 12 for annual
                 var annualAmountMade = monthlyAmountMade * 12
                 var annualTax = monthlyTax * 12;
                 var annualProfit = monthlyProfit * 12;
-                document.getElementById("amountMade").innerHTML = `Amount Made: $${amountMade}`;
-                document.getElementById("tax").innerHTML = `Taxes to pay: $${tax}`;
-                document.getElementById("profit").innerHTML = `Profit: $${profit}`;
-                document.getElementById("monthlyAmountMade").innerHTML = `Monthly Amount Made: $${monthlyAmountMade}`;
-                document.getElementById("monthlyTax").innerHTML = `Monthly Taxes to pay: $${monthlyTax}`;
-                document.getElementById("monthlyProfit").innerHTML = `Monthly Profit: $${monthlyProfit}`;
-                document.getElementById("annualAmountMade").innerHTML = `Annual Amount Made: $${annualAmountMade}`;
-                document.getElementById("annualTax").innerHTML = `Annual Taxes to pay: $${annualTax}`;
-                document.getElementById("annualProfit").innerHTML = `Annual Profit: $${annualProfit}`;
+
+                //Numbers multiplied by 100 to convert from cents to dollars
+                document.getElementById("amountMade").innerHTML = `Amount Made: $${amountMade/100}`; 
+                document.getElementById("tax").innerHTML = `Taxes to pay: $${tax/100}`;
+                document.getElementById("profit").innerHTML = `Profit: $${profit/100}`;
+
+                document.getElementById("monthlyAmountMade").innerHTML = `Amount Made: $${monthlyAmountMade/100}`;
+                document.getElementById("monthlyTax").innerHTML = `Taxes to pay: $${monthlyTax/100}`;
+                document.getElementById("monthlyProfit").innerHTML = `Profit: $${monthlyProfit/100}`;
+
+                document.getElementById("annualAmountMade").innerHTML = `Amount Made: $${annualAmountMade/100}`;
+                document.getElementById("annualTax").innerHTML = `Taxes to pay: $${annualTax/100}`;
+                document.getElementById("annualProfit").innerHTML = `Profit: $${annualProfit/100}`;
             }
             
         </script>
@@ -56,17 +58,23 @@
         <br>
         <h2>Calculations:</h2>
         <h4 style="margin-bottom: 5px;">Daily:</h4>
-        <div id="amountMade"></div>
-        <div id="tax"></div>
-        <div id="profit"></div>
+        <div class="foreground1">
+            <div id="amountMade"></div>
+            <div id="tax"></div>
+            <div id="profit"></div>
+        </div><br>
         <h4 style="margin-bottom: 5px;">Monthly:</h4>
-        <div id="monthlyAmountMade"></div>
-        <div id="monthlyTax"></div>
-        <div id="monthlyProfit"></div>
+        <div class="foreground1">
+            <div id="monthlyAmountMade"></div>
+            <div id="monthlyTax"></div>
+            <div id="monthlyProfit"></div>
+        </div><br>
         <h4 style="margin-bottom: 5px;">Annual:</h4>
-        <div id="annualAmountMade"></div>
-        <div id="annualTax"></div>
-        <div id="annualProfit"></div>
+        <div class="foreground1">
+            <div id="annualAmountMade"></div>
+            <div id="annualTax"></div>
+            <div id="annualProfit"></div>
+        </div>
     </body>
     <script>
         calculate()
