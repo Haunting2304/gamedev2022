@@ -1,13 +1,13 @@
 html {
     -webkit-font-smoothing: antialiased;
+    font-size: 2.1vh;
 }
 
 body {
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-    font-size: 16px;
     line-height: 1.5;
     margin: 0 auto;
-    max-width: 800px;
+    max-width: 51%;
     padding: 2em;
 }
 
@@ -21,17 +21,17 @@ h1 {
 
 .links > div {
     padding: 5px;
-    font-size: 24px;
+    font-size: 1.5em;
 }
 
-.foreground1, .foreground2 {
+.foreground1, .foreground2, .foreground3 {
     display: inline-block;
     padding: 12px;
     margin-top: 6px;
-    border-radius: 5px;
+    border-radius: .333em;
 }
 
-input[type=button], input[type=text], input[type=number], textarea{
+input[type=button], button, input[type=text], input[type=number], textarea{
     border-radius: 5px;
 }
 
