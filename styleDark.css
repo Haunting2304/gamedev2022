@@ -49,13 +49,13 @@ input[type=text], input[type=number] {
     border-color: #565656;
 }
 
-div.foreground1 input[type=text], div.foreground1 input[type=number], input[type=button], select, pre {
+div.foreground1 input[type=text], div.foreground1 input[type=number], input[type=button], button, select, pre {
     background-color: #363636;
     color: inherit;
     border-color: #565656;
 }
 
-div.foreground2 input[type=text], div.foreground2 input[type=number], div.foreground1 input[type=button], div.foreground1 select, div.foreground1 pre {
+div.foreground2 input[type=text], div.foreground2 input[type=number], div.foreground1 input[type=button], div.foreground1 button,  div.foreground1 select, div.foreground1 pre {
     background-color: #464646;
     color: inherit;
     border-color: #565656;

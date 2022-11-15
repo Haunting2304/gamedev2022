@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en" id="html">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>T2A06: Spy</title>
+        <link rel="stylesheet" type="text/css" href="/gamedev2022/style.css">
+        <link id="styleMode" rel="stylesheet" type="text/css">
+        <script type="text/javascript" src="/gamedev2022/stylePref.js"></script>
+        <script>
+            function encrypt(char) {
+                if(char == ' ') {
+                    return 'k'
+                }
+                if(char == char.toUpperCase()) {
+                    var capital = true
+                }
+                if(capital) {
+                    char = char.toLowerCase()
+                }
+                table = {
+                    a:'b',
+                    b:'c',
+                    c:'d',
+                    d:'e',
+                    e:'f',
+                    f:'g',
+                    g:'h',
+					h:'i',
+					i:'j',
+					j:' ',
+					k:'l',
+					l:'m',
+					m:'n',
+					n:'o',
+					o:'p',
+					p:'q',
+					q:'r',
+					r:'s',
+					s:'t',
+					t:'u',
+					u:'v',
+					v:'w',
+					w:'x',
+					x:'y',
+					y:'z',
+					z:'a',
+                    1:'!',
+                    2:'@',
+                    3:'#',
+                    4:'$',
+                    5:'%',
+                    6:'^',
+                    7:'&',
+                    8:'*',
+                    9:'(',
+                    0:')',
+                }
+                var newChar = table[char]
+                if(capital) {
+                    newChar = newChar.toUpperCase()
+                }
+                return newChar
+            }
+            function decrypt(char) {
+                if(char == ' ') {
+                    return 'j'
+                }
+                if(char == char.toUpperCase()) {
+                    var capital = true
+                }
+                if(capital) {
+                    char = char.toLowerCase()
+                }
+                table = {
+                    a:'z',
+                    b:'a',
+                    c:'a',
+                    d:'c',
+                    e:'d',
+                    f:'e',
+                    g:'f',
+					h:'g',
+					i:'h',
+					j:'i',
+					k:' ',
+					l:'k',
+					m:'l',
+					n:'m',
+					o:'n',
+					p:'o',
+					q:'p',
+					r:'q',
+					s:'r',
+					t:'s',
+					u:'t',
+					v:'u',
+					w:'v',
+					x:'w',
+					y:'x',
+					z:'y',
+                    '!':'1',
+                    '@':'2',
+                    '#':'3',
+                    '$':'4',
+                    '%':'5',
+                    '^':'6',
+                    '&':'7',
+                    '*':'8',
+                    '(':'9',
+                    ')':'0'
+                }
+                var newChar = table[char]
+                if(capital) {
+                    newChar = newChar.toUpperCase()
+                }
+                return newChar
+
+            }
+        </script>
+    </head>
+    <body>
+        <div id="back"><a href="/gamedev2022" class="link">← Back to index (Giorgio)</a></div>
+        <h1>T2A06: Spy</h1>
+
+        <h4>Works with numbers</h4>
+
+        <textarea id="myArea01" rows=4 cols=70>Example 12 String</textarea><br> 
+
+        <input type=button value="Encrypt" onclick="
+        var myTemp = ''
+        myString = document.getElementById('myArea01').value.split('')
+        for (var myLoop=0;myLoop<myString.length; myLoop++){
+            myTemp = myString[myLoop]
+            myTemp = encrypt(myTemp)
+            myString[myLoop] = myTemp
+        }
+        document.getElementById('myArea02').value = myString.join('')
+        "><br><br>
+
+        <textarea id="myArea02" rows=4 cols=70></textarea><br> 
+
+        <input type=button value="Decrypt" onclick="
+        var myTemp = ''
+        myString = document.getElementById('myArea02').value.split('')
+        for (var myLoop=0;myLoop<myString.length; myLoop++){
+            myTemp = myString[myLoop]
+            myTemp = decrypt(myTemp)
+            myString[myLoop] = myTemp
+        }
+        document.getElementById('myArea03').value = myString.join('')
+        "><br><br>
+
+        <textarea id="myArea03" rows=4 cols=70></textarea><br> 
+
+        <h2>My Examples</h2>
+
+        <h3>Base64 Encoding</h3>
+
+        Input String:<input id="inputString2" type="text" value=""><br>
+        <button onclick="
+            document.getElementById('output2').innerHTML = btoa(document.getElementById('inputString2').value)
+        ">Encode</button><br>
+        <div id='output2' class="foreground1">...</div><br>
+
+        <button onclick="
+            document.getElementById('output3').innerHTML = atob(document.getElementById('output2').innerHTML)
+        ">Decode</button><br>
+        <div id='output3' class="foreground1">...</div><br>
+    </body>
+</html>
