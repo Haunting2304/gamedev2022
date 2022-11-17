@@ -150,7 +150,11 @@
                 '[':']',
                 ']':'{',
                 '{':'}',
-                '}':'1'
+                '}':'\'',
+                '\'':'\"',
+                '\"':'\`',
+                '\`':'\\',
+                '\\':'1'
             }
             const tableStrongBack = {
                 a:'z',
@@ -179,7 +183,7 @@
                 x:'w',
                 y:'x',
                 z:'y',
-                '1':'}',
+                '1':'\\',
                 '!':'1',
                 '2':'!',
                 '@':'2',
@@ -215,7 +219,11 @@
                 '[':'|',
                 ']':'[',
                 '{':']',
-                '}':'{'
+                '}':'{',
+                '\'':'}',
+                '\"':'\'',
+                '\`':'\"',
+                '\\':'\`'
             }
             const tableKeyConvert = {
                 'a':'0',
@@ -269,21 +277,28 @@
                     }
                     final += num
                 }
+                if(final == '') {
+                    final = 0
+                }
                 return parseInt(final)
             }
             function encryptStringAdvanced(string, key) {
                 key = convertKey(key)
+                console.log(key)
                 var thing = ''
                 for(var i=0; i<string.length; i++) {
-                    thing += encryptAdvanced(string[i], i+2, key)
+                    thing += encryptAdvanced(string[i], i, key)
                 }
                 return thing
             }
             function decryptStringAdvanced(string, key) {
                 key = convertKey(key)
+                if(key == NaN) {
+                    key = 0
+                }
                 var thing = ''
                 for(var i=0; i<string.length; i++) {
-                    thing += decryptAdvanced(string[i], i+2, key)
+                    thing += decryptAdvanced(string[i], i, key)
                 }
                 return thing
             }
@@ -429,8 +444,6 @@
     <body>
         <div id="back"><a href="/gamedev2022" class="link">← Back to index (Giorgio)</a></div>
         <h1>T2A06: Spy</h1>
-
-        <h4>Works with numbers</h4>
 
         <textarea id="myArea01" rows=4 cols=70></textarea><br> 
 
