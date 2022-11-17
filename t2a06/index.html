@@ -11,14 +11,326 @@
         <script type="text/javascript" src="md5.min.js"></script>
         <script>
             //No comments, good luck
-            function encryptString(string) {
+            const tableWeak = {
+                a:'b',
+                b:'c',
+                c:'d',
+                d:'e',
+                e:'f',
+                f:'g',
+                g:'h',
+                h:'i',
+                i:'j',
+                j:' ',
+                k:'l',
+                l:'m',
+                m:'n',
+                n:'o',
+                o:'p',
+                p:'q',
+                q:'r',
+                r:'s',
+                s:'t',
+                t:'u',
+                u:'v',
+                v:'w',
+                w:'x',
+                x:'y',
+                y:'z',
+                z:'a',
+                1:'2',
+                2:'3',
+                3:'4',
+                4:'5',
+                5:'6',
+                6:'7',
+                7:'8',
+                8:'9',
+                9:'0',
+                0:'1',
+            }
+            const tableWeakBack = {
+                a:'z',
+                b:'a',
+                c:'b',
+                d:'c',
+                e:'d',
+                f:'e',
+                g:'f',
+                h:'g',
+                i:'h',
+                j:'i',
+                k:' ',
+                l:'k',
+                m:'l',
+                n:'m',
+                o:'n',
+                p:'o',
+                q:'p',
+                r:'q',
+                s:'r',
+                t:'s',
+                u:'t',
+                v:'u',
+                w:'v',
+                x:'w',
+                y:'x',
+                z:'y',
+                '1':'0',
+                '2':'1',
+                '3':'2',
+                '4':'3',
+                '5':'4',
+                '6':'5',
+                '7':'6',
+                '8':'7',
+                '9':'8',
+                '0':'9'
+            }
+            const tableStrong = {
+                a:'b',
+                b:'c',
+                c:'d',
+                d:'e',
+                e:'f',
+                f:'g',
+                g:'h',
+                h:'i',
+                i:'j',
+                j:'k',
+                k:'l',
+                l:'m',
+                m:'n',
+                n:'o',
+                o:'p',
+                p:'q',
+                q:'r',
+                r:'s',
+                s:'t',
+                t:'u',
+                u:'v',
+                v:'w',
+                w:'x',
+                x:'y',
+                y:'z',
+                z:'a',
+                '1':'!',
+                '!':'2',
+                '2':'@',
+                '@':'3',
+                '3':'#',
+                '#':'4',
+                '4':'$',
+                '$':'5',
+                '5':'%',
+                '%':'6',
+                '6':'^',
+                '^':'7',
+                '7':'&',
+                '&':'8',
+                '8':'*',
+                '*':'9',
+                '9':'(',
+                '(':'0',
+                '0':')',
+                ')':' ',
+                ' ':'-',
+                '-':'_',
+                '_':'=',
+                '=':'+',
+                '+':'.',
+                '.':',',
+                ',':'/',
+                '/':'?',
+                '?':'~',
+                '~':';',
+                ';':':',
+                ':':'|',
+                '|':'[',
+                '[':']',
+                ']':'{',
+                '{':'}',
+                '}':'1'
+            }
+            const tableStrongBack = {
+                a:'z',
+                b:'a',
+                c:'b',
+                d:'c',
+                e:'d',
+                f:'e',
+                g:'f',
+                h:'g',
+                i:'h',
+                j:'i',
+                k:'j',
+                l:'k',
+                m:'l',
+                n:'m',
+                o:'n',
+                p:'o',
+                q:'p',
+                r:'q',
+                s:'r',
+                t:'s',
+                u:'t',
+                v:'u',
+                w:'v',
+                x:'w',
+                y:'x',
+                z:'y',
+                '1':'}',
+                '!':'1',
+                '2':'!',
+                '@':'2',
+                '3':'@',
+                '#':'3',
+                '4':'#',
+                '$':'4',
+                '5':'$',
+                '%':'5',
+                '6':'%',
+                '^':'6',
+                '7':'^',
+                '&':'7',
+                '8':'&',
+                '*':'8',
+                '9':'*',
+                '(':'9',
+                '0':'(',
+                ')':'0',
+                ' ':')',
+                '-':' ',
+                '_':'-',
+                '=':'_',
+                '+':'=',
+                '.':'+',
+                ',':'.',
+                '/':',',
+                '?':'/',
+                '~':'?',
+                ';':'~',
+                ':':';',
+                '|':':',
+                '[':'|',
+                ']':'[',
+                '{':']',
+                '}':'{'
+            }
+            const tableKeyConvert = {
+                'a':'0',
+                'b':'1',
+                'c':'2',
+                'd':'3',
+                'e':'4',
+                'f':'5',
+                'g':'6',
+                'h':'7',
+                'i':'8',
+                'j':'9',
+                'k':'10',
+                'l':'11',
+                'm':'12',
+                'n':'13',
+                'o':'14',
+                'p':'15',
+                'q':'16',
+                'r':'17',
+                's':'18',
+                't':'19',
+                'u':'21',
+                'v':'22',
+                'w':'23',
+                'x':'24',
+                'y':'25',
+                'z':'26'
+            }
+            function isCapital(char) {
+                if(char.match(/[A-Z]/) != null) {
+                    return true
+                }
+                else {
+                    return false
+                }
+            }
+            function convertKey(key) {
+                var final = '';
+                key = key.split('')
+                for(var i=0; i<key.length; i++) {
+                    var num = key[i]
+                    if(isNaN(num)) {
+                        num = tableKeyConvert[num]
+                        if(num == null) {
+                            num = '0'
+                        }
+                        if(isCapital(key[i])) {
+                            num = (num + 27).toString()
+                        }
+                    }
+                    final += num
+                }
+                return parseInt(final)
+            }
+            function encryptStringAdvanced(string, key) {
+                key = convertKey(key)
+                var thing = ''
+                for(var i=0; i<string.length; i++) {
+                    thing += encryptAdvanced(string[i], i+2, key)
+                }
+                return thing
+            }
+            function decryptStringAdvanced(string, key) {
+                key = convertKey(key)
+                var thing = ''
+                for(var i=0; i<string.length; i++) {
+                    thing += decryptAdvanced(string[i], i+2, key)
+                }
+                return thing
+            }
+            function encryptAdvanced(char, value, key) {
+                var effectiveValue = value + key
+                var capital = isCapital(char)
+                if(capital) {
+                    char = char.toLowerCase()
+                }
+                var newChar = tableStrong[char]
+                if(newChar == null) {
+                    return char
+                }
+                if(capital) {
+                    newChar = newChar.toUpperCase()
+                }
+                if(effectiveValue > 0) {
+                    newChar = encryptAdvanced(newChar, effectiveValue-1, 0)
+                }
+                return newChar
+            }
+            function decryptAdvanced(char, value, key) {
+                var effectiveValue = value + key
+                var capital = isCapital(char)
+                if(capital) {
+                    char = char.toLowerCase()
+                }
+                var newChar = tableStrongBack[char]
+                if(newChar == null) {
+                    return char
+                }
+                if(capital) {
+                    newChar = newChar.toUpperCase()
+                }
+                if(effectiveValue > 0) {
+                    newChar = decryptAdvanced(newChar, effectiveValue-1, 0)
+                }
+                return newChar
+            }
+            function encryptStringBetter(string) {
                 var thing = ''
                 for(var i=0; i<string.length; i++) {
                     thing += encryptBetter(string[i], i)
                 }
                 return thing
             }
-            function decryptString(string) {
+            function decryptStringBetter(string) {
                 var thing = ''
                 for(var i=0; i<string.length; i++) {
                     thing += decryptBetter(string[i], i)
@@ -26,52 +338,12 @@
                 return thing
             }
             function encryptBetter(char, value) {
-                if(char.match(/[A-Z]/) != null) {
-                    var capital = true
-                }
+                var capital = isCapital(char)
                 if(capital) {
                     char = char.toLowerCase()
                 }
-                table = {
-                    a:'b',
-                    b:'c',
-                    c:'d',
-                    d:'e',
-                    e:'f',
-                    f:'g',
-                    g:'h',
-                    h:'i',
-                    i:'j',
-                    j:'k',
-                    k:'l',
-                    l:'m',
-                    m:'n',
-                    n:'o',
-                    o:'p',
-                    p:'q',
-                    q:'r',
-                    r:'s',
-                    s:'t',
-                    t:'u',
-                    u:'v',
-                    v:'w',
-                    w:'x',
-                    x:'y',
-                    y:'z',
-                    z:'a',
-                    '1':'2',
-                    '2':'3',
-                    '3':'4',
-                    '4':'5',
-                    '5':'6',
-                    '6':'7',
-                    '7':'8',
-                    '8':'9',
-                    '9':'0',
-                    '0':' ',
-                    ' ':'1'
-                }
-                var newChar = table[char]
+                
+                var newChar = tableStrong[char]
                 if(newChar == null) {
                     return char
                 }
@@ -84,52 +356,11 @@
                 return newChar
             }
             function decryptBetter(char, value) {
-                if(char.match(/[A-Z]/) != null) {
-                    var capital = true
-                }
+                var capital = isCapital(char)
                 if(capital) {
                     char = char.toLowerCase()
                 }
-                table = {
-                    a:'z',
-                    b:'a',
-                    c:'b',
-                    d:'c',
-                    e:'d',
-                    f:'e',
-                    g:'f',
-                    h:'g',
-                    i:'h',
-                    j:'i',
-                    k:'j',
-                    l:'k',
-                    m:'l',
-                    n:'m',
-                    o:'n',
-                    p:'o',
-                    q:'p',
-                    r:'q',
-                    s:'r',
-                    t:'s',
-                    u:'t',
-                    v:'u',
-                    w:'v',
-                    x:'w',
-                    y:'x',
-                    z:'y',
-                    '2':'1',
-                    '3':'2',
-                    '4':'3',
-                    '5':'4',
-                    '6':'5',
-                    '7':'6',
-                    '8':'7',
-                    '9':'8',
-                    '0':'9',
-                    '1':' ',
-                    ' ':'0'
-                }
-                var newChar = table[char]
+                var newChar = tableStrongBack[char]
                 if(newChar == null) {
                     return char
                 }
@@ -141,6 +372,20 @@
                 }
                 return newChar
             }
+            function encryptString(string) {
+                var thing = ''
+                for(var i=0; i<string.length; i++) {
+                    thing += encrypt(string[i], i)
+                }
+                return thing
+            }
+            function decryptString(string) {
+                var thing = ''
+                for(var i=0; i<string.length; i++) {
+                    thing += decrypt(string[i], i)
+                }
+                return thing
+            }
             function encrypt(char) {
                 if(char == ' ') {
                     return 'k'
@@ -151,45 +396,7 @@
                 if(capital) {
                     char = char.toLowerCase()
                 }
-                table = {
-                    a:'b',
-                    b:'c',
-                    c:'d',
-                    d:'e',
-                    e:'f',
-                    f:'g',
-                    g:'h',
-                    h:'i',
-                    i:'j',
-                    j:' ',
-                    k:'l',
-                    l:'m',
-                    m:'n',
-                    n:'o',
-                    o:'p',
-                    p:'q',
-                    q:'r',
-                    r:'s',
-                    s:'t',
-                    t:'u',
-                    u:'v',
-                    v:'w',
-                    w:'x',
-                    x:'y',
-                    y:'z',
-                    z:'a',
-                    1:'2',
-                    2:'3',
-                    3:'4',
-                    4:'5',
-                    5:'6',
-                    6:'7',
-                    7:'8',
-                    8:'9',
-                    9:'0',
-                    0:'1',
-                }
-                var newChar = table[char]
+                var newChar = tableWeak[char]
                 if(newChar == null) {
                     return char
                 }
@@ -208,45 +415,7 @@
                 if(capital) {
                     char = char.toLowerCase()
                 }
-                table = {
-                    a:'z',
-                    b:'a',
-                    c:'b',
-                    d:'c',
-                    e:'d',
-                    f:'e',
-                    g:'f',
-                    h:'g',
-                    i:'h',
-                    j:'i',
-                    k:' ',
-                    l:'k',
-                    m:'l',
-                    n:'m',
-                    o:'n',
-                    p:'o',
-                    q:'p',
-                    r:'q',
-                    s:'r',
-                    t:'s',
-                    u:'t',
-                    v:'u',
-                    w:'v',
-                    x:'w',
-                    y:'x',
-                    z:'y',
-                    '1':'0',
-                    '2':'1',
-                    '3':'2',
-                    '4':'3',
-                    '5':'4',
-                    '6':'5',
-                    '7':'6',
-                    '8':'7',
-                    '9':'8',
-                    '0':'9'
-                }
-                var newChar = table[char]
+                var newChar = tableWeakBack[char]
                 if(newChar == null) {
                     return char
                 }
@@ -266,43 +435,38 @@
         <textarea id="myArea01" rows=4 cols=70></textarea><br> 
 
         <input type=button value="Encrypt" onclick="
-            var myTemp = ''
-            myString = document.getElementById('myArea01').value.split('')
-            for (var myLoop=0;myLoop<myString.length; myLoop++){
-                myTemp = myString[myLoop]
-                myTemp = encrypt(myTemp)
-                myString[myLoop] = myTemp
-            }
-            document.getElementById('myArea02').value = myString.join('')
+            document.getElementById('myArea02').value = encryptString(document.getElementById('myArea01').value)
         ">
         <button onclick="
-            document.getElementById('myArea02').value = encryptString(document.getElementById('myArea01').value)
-        ">Encrypt Better</button>
+            document.getElementById('myArea02').value = encryptStringBetter(document.getElementById('myArea01').value)
+        ">Better Encrypt</button>
         <button onclick="
             document.getElementById('myArea02').value = btoa(document.getElementById('myArea01').value)
-        ">Base64 Encode</button>
+        ">Base64 Encode</button><br>
         <button onclick="
-            document.getElementById('myArea02').value = md5(document.getElementById('myArea01').value)
-        ">MD5 Encryption</button><br><br>
+            document.getElementById('myArea02').value = md5(document.getElementById('myArea01').value, document.getElementById('MD5Key').value)
+        ">MD5 Encryption</button>
+        <span style="font-size: .9rem">Key: </span><input type="text" id="MD5Key" value=""><br>
+        <button onclick="
+            document.getElementById('myArea02').value = encryptStringAdvanced(document.getElementById('myArea01').value, document.getElementById('encryptKey').value)
+        ">Advanced Encrypt</button>
+        <span style="font-size: .9rem">Key: </span><input type="text" id="encryptKey" value=""><br><br>
 
         <textarea id="myArea02" rows=4 cols=70></textarea><br> 
 
         <input type=button value="Decrypt" onclick="
-        var myTemp = ''
-        myString = document.getElementById('myArea02').value.split('')
-        for (var myLoop=0;myLoop<myString.length; myLoop++){
-            myTemp = myString[myLoop]
-            myTemp = decrypt(myTemp)
-            myString[myLoop] = myTemp
-        }
-        document.getElementById('myArea03').value = myString.join('')
+            document.getElementById('myArea03').value = decryptString(document.getElementById('myArea02').value)
         ">
         <button onclick="
-            document.getElementById('myArea03').value = decryptString(document.getElementById('myArea02').value)
+            document.getElementById('myArea03').value = decryptStringBetter(document.getElementById('myArea02').value)
         ">Decrypt Better</button>
         <button onclick="
             document.getElementById('myArea03').value = atob(document.getElementById('myArea02').value)
-        ">Base64 Decode</button><br><br>
+        ">Base64 Decode</button><br>
+        <button onclick="
+            document.getElementById('myArea03').value = decryptStringAdvanced(document.getElementById('myArea02').value, document.getElementById('decryptKey').value)
+        ">Advanced Decrypt</button>
+        <span style="font-size: .9rem">Key: </span><input type="text" id="decryptKey" value=""><br><br>
 
         <textarea id="myArea03" rows=4 cols=70></textarea><br> 
     </body>
