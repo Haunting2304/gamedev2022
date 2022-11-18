@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" id="html">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>T2A09: Local Storage</title>
+        <link rel="stylesheet" type="text/css" href="/gamedev2022/style.css">
+        <link id="styleMode" rel="stylesheet" type="text/css">
+        <script type="text/javascript" src="/gamedev2022/stylePref.js"></script>
+    </head>
+    <body onload="if(localStorage.getItem('t1a07') != null){document.getElementById('myText1').value = localStorage.getItem('t1a07')}; if(sessionStorage.getItem('t1a07') != null){document.getElementById('myText2').value = sessionStorage.getItem('t1a07')}">
+        <div id="back"><a href="/gamedev2022" class="link">← Back to index (Giorgio)</a></div>
+        <h1>T2A09: Local Storage</h1>
+        <h4>Example Local Storage:</h4>
+        <input id="myText1" type=text size=20 value="" placeholder="Write here to store"><br>
+
+        <input type="button" value="Store Text" onClick="
+            localStorage.setItem('t1a07', document.getElementById('myText1').value)
+            document.getElementById('myText1').value = ''
+        ">
+
+        <input type="button" value="Retrieve Text" onClick="
+            document.getElementById('myText1').value = localStorage.getItem('t1a07')
+        ">
+        
+        <input type="button" value="Delete Storage" onClick="
+            localStorage.removeItem('t1a07')
+        "><br>
+
+        <h4>Session Storage(Forgets once browser is fully closed):</h4>
+        <input id="myText2" type=text size=20 value="" placeholder="Write here to store for this session"><br>
+
+        <input type="button" value="Session Store" onClick="
+            sessionStorage.setItem('t1a07', document.getElementById('myText2').value)
+            document.getElementById('myText2').value = ''
+        ">
+
+        <input type="button" value="Session Retrieve" onClick="
+            document.getElementById('myText2').value = sessionStorage.getItem('t1a07')
+        "> 
+
+        <input type="button" value="Delete Storage" onClick="
+            sessionStorage.removeItem('t1a07')
+        ">
+    </body>
+</html>
+
+
+

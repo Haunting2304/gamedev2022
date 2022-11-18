@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en" id="html">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>T2A07: Move Background</title>
+        <script>
+            let myGlobalX = 0
+            let myGlobalY = 0
+            let myClock
+            let myClockV
+        </script>
+        <style>
+            .link:link, .link:visited {
+                color: white;
+            }
+            .links > div {
+                padding: 5px;
+                font-size: 1.5em;
+            }
+            #back {
+                margin-bottom: 1em;
+            }
+        </style>
+    </head>
+    <body id="myBody" style="background-repeat:repeat; background-size: 80%" background="myBackground01.jpg">
+        <div id="back"><a href="/gamedev2022" class="link">← Back to index (Giorgio)</a></div>
+
+        <input id="myButton01" type=button value="Background Move Left" onclick="
+            myTemp = '100px 0px'
+            myGlobalX -= 20
+            myTemp =  `${myGlobalX}px ${myGlobalY}px`
+            document.getElementById('myBody').style.backgroundPosition = myTemp
+        ">
+        <input id="myButton01" type=button value="Background Move Right" onclick="
+            myTemp = '100px 0px'
+            myGlobalX += 20
+            myTemp =  `${myGlobalX}px ${myGlobalY}px`
+            document.getElementById('myBody').style.backgroundPosition = myTemp
+        "><br><br>
+        
+        <input style="position: relative; left: 80px;" type=button value="Auto Up" onclick="
+            clearInterval(myClockV)
+            myClockV = setInterval(function(){
+                myTemp = '100px 0px'
+                myGlobalY -= 2
+                myTemp =  `${myGlobalX}px ${myGlobalY}px`
+                document.getElementById('myBody').style.backgroundPosition = myTemp
+            }, 20)
+        "><br>
+        <input type=button value="Auto Left" onclick="
+            clearInterval(myClock)
+            myClock = setInterval(function(){
+                myTemp = '100px 0px'
+                myGlobalX -= 2
+                myTemp =  `${myGlobalX}px ${myGlobalY}px`
+                document.getElementById('myBody').style.backgroundPosition = myTemp
+            }, 20)
+        ">
+        <input type=button value="Auto Down" onclick="
+            clearInterval(myClockV)
+            myClockV = setInterval(function(){
+                myTemp = '100px 0px'
+                myGlobalY += 2
+                myTemp =  `${myGlobalX}px ${myGlobalY}px`
+                document.getElementById('myBody').style.backgroundPosition = myTemp
+            }, 20)
+        ">
+        <input type=button value="Auto Right" onclick="
+            clearInterval(myClock)
+            myClock = setInterval(function(){
+                myTemp = '100px 0px'
+                myGlobalX += 2
+                myTemp =  `${myGlobalX}px ${myGlobalY}px`
+                document.getElementById('myBody').style.backgroundPosition = myTemp
+            }, 20)
+        "><br><br>
+
+        <input style="position: relative; left: 110px;" type=button value="Fast Auto Up" onclick="
+        clearInterval(myClockV)
+        myClockV = setInterval(function(){
+            myTemp = '100px 0px'
+            myGlobalY -= 5
+            myTemp =  `${myGlobalX}px ${myGlobalY}px`
+            document.getElementById('myBody').style.backgroundPosition = myTemp
+        }, 20)
+        "><br>
+        <input type=button value="Fast Auto Left" onclick="
+        clearInterval(myClock)
+        myClock = setInterval(function(){
+            myTemp = '100px 0px'
+            myGlobalX -= 5
+            myTemp =  `${myGlobalX}px ${myGlobalY}px`
+            document.getElementById('myBody').style.backgroundPosition = myTemp
+        }, 20)
+        ">
+        <input type=button value="Fast Auto Down" onclick="
+        clearInterval(myClockV)
+        myClockV = setInterval(function(){
+            myTemp = '100px 0px'
+            myGlobalY += 5
+            myTemp =  `${myGlobalX}px ${myGlobalY}px`
+            document.getElementById('myBody').style.backgroundPosition = myTemp
+        }, 20)
+        ">
+        <input type=button value="Fast Auto Right" onclick="
+        clearInterval(myClock)
+        myClock = setInterval(function(){
+            myTemp = '100px 0px'
+            myGlobalX += 5
+            myTemp =  `${myGlobalX}px ${myGlobalY}px`
+            document.getElementById('myBody').style.backgroundPosition = myTemp
+        }, 20)
+        "><br><br>
+        <input type=button value="Stop Auto Background" onclick="
+            clearInterval(myClock)
+            clearInterval(myClockV)
+        "><br><br>
+        
+        <input style="position: relative; left:90px" type=button value="Image Up" onclick="
+            document.getElementById('myImage01').style.top = parseInt(document.getElementById('myImage01').style.top) - 10 + 'px'
+        "><br>
+        <input type=button value="Image Left" onclick="
+            document.getElementById('myImage01').style.left = parseInt(document.getElementById('myImage01').style.left) - 10 + 'px'
+        ">
+        <input type=button value="Image Down" onclick="
+            document.getElementById('myImage01').style.top = parseInt(document.getElementById('myImage01').style.top) + 10 + 'px'
+        ">
+        <input type=button value="Image Right" onclick="
+            document.getElementById('myImage01').style.left = parseInt(document.getElementById('myImage01').style.left) + 10 + 'px'
+        "><br><br>
+        
+        <img id="myImage01" style="position:relative; width:100px; height:80px; top:0px; left:0px;" src="myImage01.jpg">
+    </body>
+</html>
