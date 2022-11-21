@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en" id="html">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>T2A08: Canvas</title>
+        <link rel="stylesheet" type="text/css" href="/gamedev2022/style.css">
+        <link id="styleMode" rel="stylesheet" type="text/css">
+        <script type="text/javascript" src="/gamedev2022/stylePref.js"></script>
+        <script>
+            const fps = 30
+            const pageStart = Date.now() / 50
+            var clicked = false
+            var drawList = {}
+            function draw() {
+                myContext.clearRect(0, 0, myCanvas.width, myCanvas.height);
+                for(property in drawList) {
+                    for(var i=0; i<drawList[property].code.length; i++) {
+                        eval(drawList[property].code[i])
+                    }
+                }
+            }
+            var X = 0
+            var Y = 0
+            var X2 = 0
+            var Y2 = 0
+            function canvasClick(event) {
+                if(!clicked) {
+                    X = event.offsetX
+                    Y = event.offsetY
+                    drawList['clickLine'] = {
+                        'code' : [
+                            'myContext.beginPath();',
+                            'myContext.lineWidth = 1;' ,
+                            `myContext.moveTo(${X}, ${Y});`,
+                            'myContext.stroke();'
+                        ]
+                    }
+                }
+                else {
+                    X2 = event.offsetX
+                    Y2 = event.offsetY
+                    delete drawList.clickLine
+                    drawList[Date.now()] = {
+                        'code' : [
+                            'myContext.beginPath();',
+                            'myContext.lineWidth = 1;' ,
+                            `myContext.moveTo(${X}, ${Y});`,
+                            `myContext.lineTo(${X2}, ${Y2});`,
+                            'myContext.stroke();'
+                        ]
+                    }
+                }
+                clicked = !clicked
+            }
+        </script>
+    </head>
+    <body>
+        <h1>T2A08: Canvas</h1>
+        You use loops and variables to make fast fancy drawings <br><br>
+
+        <input type=button value=".lineTo(30,200)" onclick="
+            drawList[Date.now()] = {
+                'code' : [
+                    'myContext.beginPath();',
+                    'myContext.lineWidth = 1;' ,
+                    'myContext.moveTo(20,10);',
+                    'myContext.lineTo((Date.now() / 50) - pageStart,200);',
+                    'myContext.stroke();'
+                ]
+            }
+        ">
+
+        <input type=button value=".arc(95, 50, 40, 0, 2 * Math.PI)" onclick="
+            drawList[Date.now()] = {
+                'type' : 'line',
+                code : [
+                    'myContext.beginPath();',
+                    'myContext.lineWidth = 10;',
+                    'myContext.strokeStyle = \'green\';',
+                    'myContext.arc(95, 50, 40, 0, 2 * Math.PI);',
+                    'myContext.stroke();'
+                ]
+            }
+        ">
+
+        <input type=button value=".fillText('Hello World', 400, 100)" onclick="
+            myContext.font = '20px Arial';
+            myContext.fillText('Hello World', 400, 100);
+            myContext.translate(400, 100);  
+            myContext.rotate(60 * Math.PI / 180); 
+            myContext.fillText('Hello World', 10, 10);
+            myContext.stroke();
+            myContext.resetTransform();  
+            //myContext.rotate(-60 * Math.PI / 180); 
+        ">
+
+        <input type=button value=".quadraticCurveTo(100,220,240,110)" onclick="
+            myContext.beginPath();
+            myContext.moveTo(300,100);
+            myContext.quadraticCurveTo(100,220,240,110);
+            myContext.stroke();
+
+        ">
+
+
+
+        <input type=button value=".createLinearGradient(100, 300, 200, 400)" onclick="
+            let myGradient = myContext.createLinearGradient(100, 300, 200, 400);
+            myGradient.addColorStop(0, 'red');
+            myGradient.addColorStop(0.5, 'blue');
+            myGradient.addColorStop(1, 'yellow');
+
+            myContext.fillStyle = myGradient;
+            myContext.fillRect(100, 300, 200, 400);
+
+            // reset fillstyle
+            myContext.fillStyle = 'black';
+        "><br><br>
+
+        <input type=button value="clearRect(20, 20, 50, 50)" onclick="
+            myContext.clearRect(20, 20, 50, 50);
+        ">
+
+        <input type=button value="Clear all" onclick="
+            drawList = {}
+        "><br><br>
+
+        <canvas id="myCoolTag" style="width: 48vw; height: 29vw;" width="1000" height="600" style="border:1px solid #000000;" onclick="
+            canvasClick(event)
+        "></canvas>
+
+        <script>
+            let myCanvas=document.getElementById('myCoolTag');
+            let myContext=myCanvas.getContext('2d');
+            setInterval(draw, 1000 / fps)
+            document.getElementById('myCoolTag').width = parseInt(getComputedStyle(document.getElementById('myCoolTag')).width)
+            document.getElementById('myCoolTag').height = parseInt(getComputedStyle(document.getElementById('myCoolTag')).height)
+        </script>
+   </body>
+</html>
