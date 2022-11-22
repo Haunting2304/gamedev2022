@@ -9,9 +9,9 @@
         <link id="styleMode" rel="stylesheet" type="text/css">
         <script type="text/javascript" src="/gamedev2022/stylePref.js"></script>
         <script>
-            const fps = 30
-            const pageStart = Date.now() / 50
+            const fps = 60
             var clicked = false
+            var lineWidth = 1
             var drawList = {}
             function draw() {
                 myContext.clearRect(0, 0, myCanvas.width, myCanvas.height);
@@ -21,46 +21,93 @@
                     }
                 }
             }
+            var mouseX
+            var mouseY
+            var updateCount = 0
+            function mouseMove(event) {
+                mouseX = event.clientX-4
+                mouseY = event.clientY-4
+            }
             var X = 0
             var Y = 0
             var X2 = 0
             var Y2 = 0
+            var tool = 'line'
             function canvasClick(event) {
                 if(!clicked) {
-                    X = event.offsetX
-                    Y = event.offsetY
-                    drawList['clickLine'] = {
-                        'code' : [
-                            'myContext.beginPath();',
-                            'myContext.lineWidth = 1;' ,
-                            `myContext.moveTo(${X}, ${Y});`,
-                            'myContext.stroke();'
-                        ]
+                        X = mouseX-canvasRect.left
+                        Y = mouseY-canvasRect.top
                     }
-                }
-                else {
-                    X2 = event.offsetX
-                    Y2 = event.offsetY
-                    delete drawList.clickLine
-                    drawList[Date.now()] = {
-                        'code' : [
-                            'myContext.beginPath();',
-                            'myContext.lineWidth = 1;' ,
-                            `myContext.moveTo(${X}, ${Y});`,
-                            `myContext.lineTo(${X2}, ${Y2});`,
-                            'myContext.stroke();'
-                        ]
+                    else{
+                        X2 = mouseX-canvasRect.left
+                        Y2 = mouseY-canvasRect.top
                     }
+                switch(tool) {
+                    case 'line':
+                        if(!clicked) {
+                            drawList['clickLine'] = {
+                                'code' : [
+                                    'myContext.beginPath();',
+                                    `myContext.lineWidth = ${lineWidth};`,
+                                    `myContext.moveTo(${X}, ${Y});`,
+                                    `myContext.lineTo(mouseX-canvasRect.left, mouseY-canvasRect.top);`,
+                                    'myContext.stroke();'
+                                ]
+                            }
+                        }
+                        else {
+                            delete drawList.clickLine
+                            drawList[Date.now()] = {
+                                'code' : [
+                                    'myContext.beginPath();',
+                                    `myContext.lineWidth = ${lineWidth};`,
+                                    `myContext.moveTo(${X}, ${Y});`,
+                                    `myContext.lineTo(${X2}, ${Y2});`,
+                                    'myContext.stroke();'
+                                ]
+                            }
+                        }
+                        break
+                        case 'ellipse':
+                            if(!clicked) {
+                                drawList['clickCircle'] = {
+                                    'code' : [
+                                        'myContext.beginPath();',
+                                        `myContext.lineWidth = ${lineWidth};`,
+                                        `myContext.ellipse(${X}-.5*(X+canvasRect.left-mouseX), ${Y}-.5*(Y+canvasRect.top-mouseY), .5*Math.abs(X+canvasRect.left-mouseX), .5*Math.abs(Y+canvasRect.top-mouseY), 0, 0, 2 * Math.PI);`,
+                                        'myContext.stroke();'
+                                    ]
+                                }
+                            }
+                            else {
+                                delete drawList.clickCircle
+                                drawList[Date.now()] = {
+                                    'code' : [
+                                        'myContext.beginPath();',
+                                        `myContext.lineWidth = ${lineWidth};`,
+                                        `myContext.ellipse(${X-.5*(X+canvasRect.left-mouseX)}, ${Y-.5*(Y+canvasRect.top-mouseY)}, ${.5*Math.abs(X+canvasRect.left-mouseX)}, ${.5*Math.abs(Y+canvasRect.top-mouseY)}, 0, 0, 2 * Math.PI);`,
+                                        'myContext.stroke();'
+                                    ]
+                                }
+                            }
                 }
+                //'myContext.strokeStyle = \'green\';',
                 clicked = !clicked
             }
         </script>
     </head>
     <body>
+        <div id="back"><a href="/gamedev2022" class="link">← Back to index (Giorgio)</a></div>
         <h1>T2A08: Canvas</h1>
         You use loops and variables to make fast fancy drawings <br><br>
-
-        <input type=button value=".lineTo(30,200)" onclick="
+        <!--
+        <input style="appearance: button;" type="radio" name="tool">A
+        <input type="radio" name="tool">B
+        -->
+        Tools:<br>
+        <input type=button value="Line" onclick="
+            tool = 'line'
+            /*
             drawList[Date.now()] = {
                 'code' : [
                     'myContext.beginPath();',
@@ -70,9 +117,12 @@
                     'myContext.stroke();'
                 ]
             }
+            */
         ">
 
-        <input type=button value=".arc(95, 50, 40, 0, 2 * Math.PI)" onclick="
+        <input type=button value="Ellipse" onclick="
+            tool = 'ellipse'
+            /*
             drawList[Date.now()] = {
                 'type' : 'line',
                 code : [
@@ -83,8 +133,9 @@
                     'myContext.stroke();'
                 ]
             }
-        ">
-
+            */
+        "><br><br>
+        <!--
         <input type=button value=".fillText('Hello World', 400, 100)" onclick="
             myContext.font = '20px Arial';
             myContext.fillText('Hello World', 400, 100);
@@ -126,8 +177,8 @@
         <input type=button value="Clear all" onclick="
             drawList = {}
         "><br><br>
-
-        <canvas id="myCoolTag" style="width: 48vw; height: 29vw;" width="1000" height="600" style="border:1px solid #000000;" onclick="
+        -->
+        <canvas id="myCoolTag" style="width: 48vw; height: 29vw; border: #141414 .5vh solid;" width="1000" height="600" onclick="
             canvasClick(event)
         "></canvas>
 
@@ -137,6 +188,8 @@
             setInterval(draw, 1000 / fps)
             document.getElementById('myCoolTag').width = parseInt(getComputedStyle(document.getElementById('myCoolTag')).width)
             document.getElementById('myCoolTag').height = parseInt(getComputedStyle(document.getElementById('myCoolTag')).height)
+            document.querySelector('html').addEventListener('mousemove', () => {mouseMove(event)})
+            var canvasRect = document.getElementById('myCoolTag').getBoundingClientRect();
         </script>
    </body>
 </html>
