@@ -11,22 +11,26 @@
         <script>
             const fps = 60
             var clicked = false
-            var lineWidth = 1
+            var drawWidth = 1
+            var drawColor = '#000'
             var drawList = {}
             function draw() {
                 myContext.clearRect(0, 0, myCanvas.width, myCanvas.height);
+                canvasRect = document.getElementById('myCoolTag').getBoundingClientRect();
                 for(property in drawList) {
                     for(var i=0; i<drawList[property].code.length; i++) {
                         eval(drawList[property].code[i])
                     }
                 }
+                myContext.lineWidth = 1
+                myContext.strokeStyle =  '#000'
             }
             var mouseX
             var mouseY
             var updateCount = 0
             function mouseMove(event) {
-                mouseX = event.clientX-4
-                mouseY = event.clientY-4
+                mouseX = ((event.clientX-4)-canvasRect.left)/(myCanvas.clientWidth)*(myCanvas.width)
+                mouseY = ((event.clientY-4)-canvasRect.top)/(myCanvas.clientHeight)*(myCanvas.height)
             }
             var X = 0
             var Y = 0
@@ -35,32 +39,34 @@
             var tool = 'line'
             function canvasClick(event) {
                 if(!clicked) {
-                        X = mouseX-canvasRect.left
-                        Y = mouseY-canvasRect.top
-                    }
-                    else{
-                        X2 = mouseX-canvasRect.left
-                        Y2 = mouseY-canvasRect.top
-                    }
+                    X = ((event.clientX-4)-canvasRect.left)/(myCanvas.clientWidth)*(myCanvas.width)
+                    Y = ((event.clientY-4)-canvasRect.top)/(myCanvas.clientHeight)*(myCanvas.height)
+                }
+                else{
+                    X2 = ((event.clientX-4)-canvasRect.left)/(myCanvas.clientWidth)*(myCanvas.width)
+                    Y2 = ((event.clientY-4)-canvasRect.top)/(myCanvas.clientHeight)*(myCanvas.height)
+                    delete drawList.drawing
+                }
                 switch(tool) {
                     case 'line':
                         if(!clicked) {
-                            drawList['clickLine'] = {
+                            drawList['drawing'] = {
                                 'code' : [
                                     'myContext.beginPath();',
-                                    `myContext.lineWidth = ${lineWidth};`,
+                                    'myContext.lineWidth = drawWidth;',
+                                    'myContext.strokeStyle = drawColor;',
                                     `myContext.moveTo(${X}, ${Y});`,
-                                    `myContext.lineTo(mouseX-canvasRect.left, mouseY-canvasRect.top);`,
+                                    `myContext.lineTo(mouseX, mouseY);`,
                                     'myContext.stroke();'
                                 ]
                             }
                         }
                         else {
-                            delete drawList.clickLine
                             drawList[Date.now()] = {
                                 'code' : [
                                     'myContext.beginPath();',
-                                    `myContext.lineWidth = ${lineWidth};`,
+                                    `myContext.lineWidth = ${drawWidth};`,
+                                    `myContext.strokeStyle = "${drawColor}";`,
                                     `myContext.moveTo(${X}, ${Y});`,
                                     `myContext.lineTo(${X2}, ${Y2});`,
                                     'myContext.stroke();'
@@ -70,29 +76,35 @@
                         break
                         case 'ellipse':
                             if(!clicked) {
-                                drawList['clickCircle'] = {
+                                drawList['drawing'] = {
                                     'code' : [
                                         'myContext.beginPath();',
-                                        `myContext.lineWidth = ${lineWidth};`,
-                                        `myContext.ellipse(${X}-.5*(X+canvasRect.left-mouseX), ${Y}-.5*(Y+canvasRect.top-mouseY), .5*Math.abs(X+canvasRect.left-mouseX), .5*Math.abs(Y+canvasRect.top-mouseY), 0, 0, 2 * Math.PI);`,
+                                        `myContext.lineWidth = drawWidth;`,
+                                        'myContext.strokeStyle = drawColor;',
+                                        `myContext.ellipse(${X}-.5*(${X}-mouseX), ${Y}-.5*(${Y}-mouseY), .5*Math.abs(${X}-mouseX), .5*Math.abs(${Y}-mouseY), 0, 0, 2 * Math.PI);`,
                                         'myContext.stroke();'
                                     ]
                                 }
                             }
                             else {
-                                delete drawList.clickCircle
                                 drawList[Date.now()] = {
                                     'code' : [
                                         'myContext.beginPath();',
-                                        `myContext.lineWidth = ${lineWidth};`,
-                                        `myContext.ellipse(${X-.5*(X+canvasRect.left-mouseX)}, ${Y-.5*(Y+canvasRect.top-mouseY)}, ${.5*Math.abs(X+canvasRect.left-mouseX)}, ${.5*Math.abs(Y+canvasRect.top-mouseY)}, 0, 0, 2 * Math.PI);`,
+                                        `myContext.lineWidth = ${drawWidth};`,
+                                        `myContext.strokeStyle = "${drawColor}";`,
+                                        `myContext.ellipse(${X-.5*(X-mouseX)}, ${Y-.5*(Y-mouseY)}, ${.5*Math.abs(X-mouseX)}, ${.5*Math.abs(Y-mouseY)}, 0, 0, 2 * Math.PI);`,
                                         'myContext.stroke();'
                                     ]
                                 }
                             }
                 }
-                //'myContext.strokeStyle = \'green\';',
                 clicked = !clicked
+            }
+            function canvasClickStop() {
+                if(clicked) {
+                    delete drawList.drawing
+                    clicked = !clicked
+                }
             }
         </script>
     </head>
@@ -106,44 +118,37 @@
         -->
         Tools:<br>
         <input type=button value="Line" onclick="
+            canvasClickStop()
             tool = 'line'
-            /*
-            drawList[Date.now()] = {
-                'code' : [
-                    'myContext.beginPath();',
-                    'myContext.lineWidth = 1;' ,
-                    'myContext.moveTo(20,10);',
-                    'myContext.lineTo((Date.now() / 50) - pageStart,200);',
-                    'myContext.stroke();'
-                ]
-            }
-            */
         ">
 
         <input type=button value="Ellipse" onclick="
+            canvasClickStop()
             tool = 'ellipse'
-            /*
-            drawList[Date.now()] = {
-                'type' : 'line',
-                code : [
-                    'myContext.beginPath();',
-                    'myContext.lineWidth = 10;',
-                    'myContext.strokeStyle = \'green\';',
-                    'myContext.arc(95, 50, 40, 0, 2 * Math.PI);',
-                    'myContext.stroke();'
-                ]
-            }
-            */
+        "><br><br>
+
+        Width:
+        <input style="width: 5ch;" type=number value="1" oninput="
+            drawWidth = this.value
+        "><br>
+
+        Colour:
+        <input style="width: 8ch;" type=text value="#000" oninput="
+            drawColor = this.value
         "><br><br>
         <!--
         <input type=button value=".fillText('Hello World', 400, 100)" onclick="
-            myContext.font = '20px Arial';
-            myContext.fillText('Hello World', 400, 100);
-            myContext.translate(400, 100);  
-            myContext.rotate(60 * Math.PI / 180); 
-            myContext.fillText('Hello World', 10, 10);
-            myContext.stroke();
-            myContext.resetTransform();  
+            drawList['drawing'] = {
+                'code' : [
+                    "myContext.font = '20px Arial';",
+                        "myContext.fillText('Hello World', 400, 100);",
+                        "myContext.translate(400, 100);",
+                        "myContext.rotate(60 * Math.PI / 180);",
+                        "myContext.fillText('Hello World', 10, 10);",
+                        "myContext.stroke();",
+                        "myContext.resetTransform(); "
+                ]
+            }
             //myContext.rotate(-60 * Math.PI / 180); 
         ">
 
@@ -178,7 +183,7 @@
             drawList = {}
         "><br><br>
         -->
-        <canvas id="myCoolTag" style="width: 48vw; height: 29vw; border: #141414 .5vh solid;" width="1000" height="600" onclick="
+        <canvas id="myCoolTag" style="width: 48vw; height: 29vw; border: #141414 .5vh solid;" onclick="
             canvasClick(event)
         "></canvas>
 
@@ -186,10 +191,15 @@
             let myCanvas=document.getElementById('myCoolTag');
             let myContext=myCanvas.getContext('2d');
             setInterval(draw, 1000 / fps)
-            document.getElementById('myCoolTag').width = parseInt(getComputedStyle(document.getElementById('myCoolTag')).width)
-            document.getElementById('myCoolTag').height = parseInt(getComputedStyle(document.getElementById('myCoolTag')).height)
+            function updateCanvasSize() {
+                document.getElementById('myCoolTag').width = parseInt(getComputedStyle(document.getElementById('myCoolTag')).width)
+                document.getElementById('myCoolTag').height = parseInt(getComputedStyle(document.getElementById('myCoolTag')).height)
+            }
+            updateCanvasSize()
+            window.addEventListener('resize', updateCanvasSize)
             document.querySelector('html').addEventListener('mousemove', () => {mouseMove(event)})
             var canvasRect = document.getElementById('myCoolTag').getBoundingClientRect();
+            myContext.lineCap = 'round'
         </script>
    </body>
 </html>
