@@ -111,7 +111,6 @@
     <body>
         <div id="back"><a href="/gamedev2022" class="link">← Back to index (Giorgio)</a></div>
         <h1>T2A08: Canvas</h1>
-        You use loops and variables to make fast fancy drawings <br><br>
         <!--
         <input style="appearance: button;" type="radio" name="tool">A
         <input type="radio" name="tool">B
@@ -135,6 +134,11 @@
         Colour:
         <input style="width: 8ch;" type=text value="#000" oninput="
             drawColor = this.value
+        "><br><br>
+        
+        <input type=button value="Clear Canvas" onclick="
+            canvasClickStop()
+            drawList = {}
         "><br><br>
         <!--
         <input type=button value=".fillText('Hello World', 400, 100)" onclick="
