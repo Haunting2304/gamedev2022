@@ -29,8 +29,8 @@
             var mouseY
             var updateCount = 0
             function mouseMove(event) {
-                mouseX = ((event.clientX-4)-canvasRect.left)/(myCanvas.clientWidth)*(myCanvas.width)
-                mouseY = ((event.clientY-4)-canvasRect.top)/(myCanvas.clientHeight)*(myCanvas.height)
+                mouseX = ((event.clientX-3)-canvasRect.left)/(myCanvas.clientWidth)*(myCanvas.width)
+                mouseY = ((event.clientY-3)-canvasRect.top)/(myCanvas.clientHeight)*(myCanvas.height)
             }
             var X = 0
             var Y = 0
@@ -39,12 +39,12 @@
             var tool = 'line'
             function canvasClick(event) {
                 if(!clicked) {
-                    X = ((event.clientX-4)-canvasRect.left)/(myCanvas.clientWidth)*(myCanvas.width)
-                    Y = ((event.clientY-4)-canvasRect.top)/(myCanvas.clientHeight)*(myCanvas.height)
+                    X = ((event.clientX-3)-canvasRect.left)/(myCanvas.clientWidth)*(myCanvas.width)
+                    Y = ((event.clientY-3)-canvasRect.top)/(myCanvas.clientHeight)*(myCanvas.height)
                 }
                 else{
-                    X2 = ((event.clientX-4)-canvasRect.left)/(myCanvas.clientWidth)*(myCanvas.width)
-                    Y2 = ((event.clientY-4)-canvasRect.top)/(myCanvas.clientHeight)*(myCanvas.height)
+                    X2 = ((event.clientX-3)-canvasRect.left)/(myCanvas.clientWidth)*(myCanvas.width)
+                    Y2 = ((event.clientY-3)-canvasRect.top)/(myCanvas.clientHeight)*(myCanvas.height)
                     delete drawList.drawing
                 }
                 switch(tool) {
@@ -74,36 +74,88 @@
                             }
                         }
                         break
-                        case 'ellipse':
-                            if(!clicked) {
-                                drawList['drawing'] = {
-                                    'code' : [
-                                        'myContext.beginPath();',
-                                        `myContext.lineWidth = drawWidth;`,
-                                        'myContext.strokeStyle = drawColor;',
-                                        `myContext.ellipse(${X}-.5*(${X}-mouseX), ${Y}-.5*(${Y}-mouseY), .5*Math.abs(${X}-mouseX), .5*Math.abs(${Y}-mouseY), 0, 0, 2 * Math.PI);`,
-                                        'myContext.stroke();'
-                                    ]
-                                }
+                    case 'ellipse':
+                        if(!clicked) {
+                            drawList['drawing'] = {
+                                'code' : [
+                                    'myContext.beginPath();',
+                                    `myContext.lineWidth = drawWidth;`,
+                                    'myContext.strokeStyle = drawColor;',
+                                    `myContext.ellipse(${X}-.5*(${X}-mouseX), ${Y}-.5*(${Y}-mouseY), .5*Math.abs(${X}-mouseX), .5*Math.abs(${Y}-mouseY), 0, 0, 2 * Math.PI);`,
+                                    'myContext.stroke();'
+                                ]
                             }
-                            else {
-                                drawList[Date.now()] = {
-                                    'code' : [
-                                        'myContext.beginPath();',
-                                        `myContext.lineWidth = ${drawWidth};`,
-                                        `myContext.strokeStyle = "${drawColor}";`,
-                                        `myContext.ellipse(${X-.5*(X-mouseX)}, ${Y-.5*(Y-mouseY)}, ${.5*Math.abs(X-mouseX)}, ${.5*Math.abs(Y-mouseY)}, 0, 0, 2 * Math.PI);`,
-                                        'myContext.stroke();'
-                                    ]
-                                }
+                        }
+                        else {
+                            drawList[Date.now()] = {
+                                'code' : [
+                                    'myContext.beginPath();',
+                                    `myContext.lineWidth = ${drawWidth};`,
+                                    `myContext.strokeStyle = "${drawColor}";`,
+                                    `myContext.ellipse(${X-.5*(X-mouseX)}, ${Y-.5*(Y-mouseY)}, ${.5*Math.abs(X-mouseX)}, ${.5*Math.abs(Y-mouseY)}, 0, 0, 2 * Math.PI);`,
+                                    'myContext.stroke();'
+                                ]
                             }
+                        }
+                        break
+                    case 'rectangle':
+                        if(!clicked) {
+                            drawList['drawing'] = {
+                                'code' : [
+                                    'myContext.beginPath();',
+                                    `myContext.lineWidth = drawWidth;`,
+                                    'myContext.strokeStyle = drawColor;',
+                                    `myContext.rect(${X}, ${Y}, mouseX-${X}, mouseY-${Y});`,
+                                    'myContext.stroke();'
+                                ]
+                            }
+                        }
+                        else {
+                            drawList[Date.now()] = {
+                                'code' : [
+                                    'myContext.beginPath();',
+                                    `myContext.lineWidth = ${drawWidth};`,
+                                    `myContext.strokeStyle = "${drawColor}";`,
+                                    `myContext.rect(${X}, ${Y}, ${X2-X}, ${Y2-Y});`,
+                                    'myContext.stroke();'
+                                ]
+                            }
+                        }
+                        break
+                    case 'filledRectangle':
+                    if(!clicked) {
+                        drawList['drawing'] = {
+                            'code' : [
+                                'myContext.beginPath();',
+                                `myContext.lineWidth = drawWidth;`,
+                                'myContext.strokeStyle = drawColor;',
+                                'myContext.fillStyle = drawColor;',
+                                `myContext.fillRect(${X}, ${Y}, mouseX-${X}, mouseY-${Y});`,
+                                'myContext.stroke();'
+                            ]
+                        }
+                    }
+                    else {
+                        drawList[Date.now()] = {
+                            'code' : [
+                                'myContext.beginPath();',
+                                `myContext.lineWidth = ${drawWidth};`,
+                                `myContext.strokeStyle = "${drawColor}";`,
+                                `myContext.fillStyle = "${drawColor}";`,
+                                `myContext.fillRect(${X}, ${Y}, ${X2-X}, ${Y2-Y});`,
+                                'myContext.stroke();'
+                            ]
+                        }
+                    }
+                    break
+
                 }
                 clicked = !clicked
             }
             function canvasClickStop() {
                 if(clicked) {
                     delete drawList.drawing
-                    clicked = !clicked
+                    clicked = false
                 }
             }
         </script>
@@ -124,6 +176,16 @@
         <input type=button value="Ellipse" onclick="
             canvasClickStop()
             tool = 'ellipse'
+        ">
+        
+        <input type=button value="Rectangle" onclick="
+            canvasClickStop()
+            tool = 'rectangle'
+        ">
+        
+        <input type=button value="Filled Rectangle" onclick="
+            canvasClickStop()
+            tool = 'filledRectangle'
         "><br><br>
 
         Width:
@@ -181,10 +243,6 @@
 
         <input type=button value="clearRect(20, 20, 50, 50)" onclick="
             myContext.clearRect(20, 20, 50, 50);
-        ">
-
-        <input type=button value="Clear all" onclick="
-            drawList = {}
         "><br><br>
         -->
         <canvas id="myCoolTag" style="width: 48vw; height: 29vw; border: #141414 .5vh solid;" onclick="
