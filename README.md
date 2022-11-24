@@ -1,1 +1,1 @@
-Link to website: https://haunting2304.github.io/gamedev2022/settings/
+Link to website: https://haunting2304.github.io/gamedev2022
