@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en" id="html">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>T2A12B: Sort</title>
+        <link rel="stylesheet" type="text/css" href="/gamedev2022/style.css">
+        <link id="styleMode" rel="stylesheet" type="text/css">
+        <script type="text/javascript" src="/gamedev2022/stylePref.js"></script>
+    </head>
+    <body>
+        <div id="back"><a href="/gamedev2022" class="link">← Back to index (Giorgio)</a></div>
+        <h1>T2A12B: Sort</h1>
+
+        <script>
+            var myCards = [
+                1,
+                'Hello',
+                'Hello World',
+                'HelloWorld',
+                2,
+                'hi',
+                3,
+                'HI',
+                5,
+                'hello'
+            ]
+            function showArray(inputArray) {
+                let output = ''
+                for (let i=0;i<inputArray.length;i++){
+                    //output += `${i}: ${inputArray[i]}<br>`
+                    output += `${inputArray[i]}<br>`
+                }
+                return output
+            }
+            function convertLetterToNumber(letter) {
+                convertObject = {
+                    0:-11,
+                    1:-10,
+                    2:-9,
+                    3:-8,
+                    4:-7,
+                    5:-6,
+                    6:-5,
+                    7:-4,
+                    8:-3,
+                    9:-2,
+                    ' ':-1,
+                    a:0,
+                    b:2,
+                    c:4,
+                    d:6,
+                    e:8,
+                    f:10,
+                    g:12,
+                    h:14,
+                    i:16,
+                    j:18,
+                    k:20,
+                    l:22,
+                    m:24,
+                    n:26,
+                    o:28,
+                    p:30,
+                    q:32,
+                    r:34,
+                    s:36,
+                    t:38,
+                    u:40,
+                    v:42,
+                    w:44,
+                    x:46,
+                    y:48,
+                    z:50
+                }
+                let value = convertObject[letter.toLowerCase()]
+                if(letter.match(/[a-z]/) != null) {
+                    value += 1
+                }
+                return value
+            }
+        </script>
+
+        Size of array: <input id="num1" type="number" value="5"><br>
+        Number Range: <input id="num2" type="number" value="10"><br>
+
+        <input type=button value="Set Random" onclick="
+            let cardsMax = document.getElementById('num1').value
+            let numberRange = document.getElementById('num2').value
+            for (let i=0;i<cardsMax;i++){
+                myCards[i] = Math.floor(Math.random()*numberRange)+1
+            }
+            document.getElementById('div01').innerHTML = showArray(myCards)
+        ">
+
+        <input type=button value="Sort" onclick="
+            let newArray = []
+            for (let i=0;i<myCards.length;i++){
+                let item = myCards[i]
+                let itemString = item + ''
+                for(let j=0;j<myCards.length;j++) {
+                    let string = newArray[j] + ''
+                    if(newArray[j] === undefined) { //If at end of current stuff in array
+                        newArray[j] = item
+                        break
+                    }
+                    else { //Both are stuff
+                        let willBreak = false
+                        for(let i=0; i<string.length; i++) {
+                            if(itemString[i] === undefined) { //Move on to next spot to insert at
+                                break
+                            }
+                            else if(itemString[i].match(/^[a-zA-Z' ']+$/) != null && string[i].match(/^[a-zA-Z' ']+$/) != null) { //If both are letters or space
+                                if(convertLetterToNumber(string[i]) !== convertLetterToNumber(itemString[i])) {
+                                    if (convertLetterToNumber(string[i]) > convertLetterToNumber(itemString[i])) {
+                                        newArray.splice(j, 0, item)
+                                        willBreak = true
+                                        break
+                                    }
+                                    if (convertLetterToNumber(string[i]) < convertLetterToNumber(itemString[i])) { //Move onto next item
+                                        break
+                                    }
+                                }
+                            }
+                            else if(itemString[i].match(/^[0-9]+$/) != null && string[i].match(/^[0-9]+$/) != null) { //If both are numbers
+                                if(itemString[i] !== string[i]) {
+                                    if(string[i] > itemString[i]) {
+                                        newArray.splice(j, 0, item)
+                                        willBreak = true
+                                        break
+                                    }
+                                    if (string[i] < itemString[i]) { //Move onto next item
+                                        break
+                                    }
+                                }
+                            }
+                            else if(itemString[i].match(/^[0-9]+$/) != null && string[i].match(/^[0-9]+$/) == null) { //If item is number and itemString is not a number
+                                newArray.splice(j, 0, item)
+                                willBreak = true
+                                break
+                            }
+                            else if(itemString[i].match(/^[0-9]+$/) == null && string[i].match(/^[0-9]+$/) != null) { //If item is not a number and itemString is a number
+                                break
+                            }
+                        }
+                        if(willBreak) {
+                            break
+                        }
+                    }
+                }
+            }
+            myCards = newArray
+            document.getElementById('div01').innerHTML = showArray(myCards) 
+        ">
+        <br>
+        <div class="foreground1" id="div01"></div>
+        <script>
+            document.getElementById('div01').innerHTML = showArray(myCards)
+        </script>
+    </body>
+</html>
+<!--
+myCards = [
+    1,
+    'Hello',
+    'Hello World',
+    'HelloWorld',
+    2,
+    'hi',
+    3,
+    'HI',
+    5,
+    'hello'
+]
+-->

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en" id="html">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>T2A10: Translate</title>
+        <link rel="stylesheet" type="text/css" href="/gamedev2022/style.css">
+        <link id="styleMode" rel="stylesheet" type="text/css">
+        <script type="text/javascript" src="/gamedev2022/stylePref.js"></script>
+        <script src="http://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+        <script src='https://code.responsivevoice.org/responsivevoice.js'></script>
+        <script>
+            function googleTranslateElementInit() {
+                new google.translate.TranslateElement({pageLanguage: 'en', includedLanguages: 'en,fr,de,ru', layout:google.translate.TranslateElement.InlineLayout.SIMPLE, autoDisplay: false}, 'google_translate_element');
+            }
+        </script>
+        <style id="translateStyle"></style>
+        <script>
+            if(darkMode) {
+                document.getElementById('translateStyle').innerHTML = `
+                .goog-te-gadget-simple {
+                    background-color: #303030;
+                    box-shadow: 5px 5px 5px #181818;
+                    margin-bottom: 8px;
+                    border-color: #1f1f1f;
+                    border-width: 2px;
+                }
+                .goog-te-banner {
+                    background-image: ;
+                    background-color: #353535;
+                }`
+                setInterval(()=>{
+                    if(document.querySelectorAll('IFrame')[0] !== undefined) {
+                        if(getComputedStyle(document.querySelectorAll('IFrame')[0].contentDocument.childNodes[0].childNodes[1]).backgroundImage != 'none') {
+                            let frameBody = document.querySelectorAll('IFrame')[0].contentDocument.childNodes[0].childNodes[1]
+                            let frameOriginalCon = document.querySelectorAll('IFrame')[0].contentDocument.childNodes[0].childNodes[1].childNodes[0].childNodes[0].childNodes[0].childNodes[3].childNodes[0].childNodes[0].childNodes[2].childNodes[2].childNodes[0]
+                            let frameOriginal = document.querySelectorAll('IFrame')[0].contentDocument.childNodes[0].childNodes[1].childNodes[0].childNodes[0].childNodes[0].childNodes[3].childNodes[0].childNodes[0].childNodes[2].childNodes[2].childNodes[0].childNodes[0]
+                            let frameOptionsCon = document.querySelectorAll('IFrame')[0].contentDocument.childNodes[0].childNodes[1].childNodes[0].childNodes[0].childNodes[0].childNodes[5].childNodes[0]
+                            let frameOptions = document.querySelectorAll('IFrame')[0].contentDocument.childNodes[0].childNodes[1].childNodes[0].childNodes[0].childNodes[0].childNodes[5].childNodes[0].childNodes[0]
+                            let frameExit = document.querySelectorAll('IFrame')[0].contentDocument.childNodes[0].childNodes[1].childNodes[0].childNodes[0].childNodes[0].childNodes[6].childNodes[0].childNodes[0]
+                            frameBody.style.backgroundImage = ''
+                            frameBody.style.backgroundColor = '#303030'
+                            frameOriginal.style.backgroundImage = ''
+                            frameOriginal.style.backgroundColor = '#353535'
+                            frameOriginal.style.borderColor = '#1a1a1a'
+                            frameOriginalCon.style.borderColor = '#1a1a1a'
+                            frameOptions.style.backgroundImage = ''
+                            frameOptions.style.backgroundColor = '#353535'
+                            frameOptions.style.borderColor = '#1a1a1a'
+                            frameOptionsCon.style.borderColor = '#1a1a1a'
+                            frameExit.style.backgroundImage = `url('te_ctrl3.png')`
+                            document.querySelectorAll('IFrame')[0].style = 'visibility:visible; box-Shadow: 0 0 8px 4px #1a1a1a; border-bottom: 1px solid #000;'
+                            //document.querySelectorAll('IFrame')[0].borderBottom = `0px black solid`
+                        }
+                    }
+                    if(document.querySelector('.goog-te-gadget-icon').style.backgroundImage != `url('te_ctrl3.png')`) {
+                        document.querySelector('.goog-te-gadget-icon').style.backgroundImage = `url('te_ctrl3.png')`
+                    }
+                }, 250)
+                
+            }
+        </script>
+    </head>
+    <body>
+        <div id="back"><a href="/gamedev2022" class="link">← Back to index (Giorgio)</a></div>
+        <h1>T2A10: Translate</h1>
+
+        <div id="google_translate_element">Language select(If missing reload until it appears):</div><br>
+        <input type="text" value="This text is an input and won't translate."><br><br>
+        This text will translate.<br><br>
+        <div class="foreground1">This text is in a div and also will translate.</div><br><br>
+        
+
+
+        <input  type="button" value="initilize speak" onclick="
+            let myVoice = 'Russian Female'
+            responsiveVoice.speak(document.getElementById('google_translate_element').innerText, myVoice, {pitch: 1, rate: 1, volume : 1})                                              
+        "><br><br>
+    </body>
+</html>
