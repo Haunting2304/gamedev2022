@@ -21,81 +21,188 @@
     <body id="myBody" style="background-repeat:repeat; background-size: 100%" background="myBackground01.jpg">
         <div id="back"><a href="/gamedev2022" class="link">← Back to index (Giorgio)</a></div>
         <h1 style="color:#fff">T2A11: Game Template</h1>
+        <div style="color:#fff" id="health"></div>
         <br><br><br><br><br><br><br><br>
 
         <script>
-
-        // global variables here
-        let myGlobalX = 0
-        let myClock
-
-
-        // global functions here
-        function myHitOther(my1,my2){
-            var m1 = document.getElementById(my1)
-            var m2 = document.getElementById(my2)
-            left1   = parseInt(getComputedStyle(document.getElementById(my1)).left)
-            right1  = left1 + parseInt(getComputedStyle(document.getElementById(my1)).width)
-            top1    = parseInt(getComputedStyle(document.getElementById(my1)).top)   
-            bottom1 = top1   + parseInt(getComputedStyle(document.getElementById(my1)).height)
-            left2   = parseInt(getComputedStyle(document.getElementById(my2)).left)
-            right2  = left2 + parseInt(getComputedStyle(document.getElementById(my2)).width)
-            top2    = parseInt(getComputedStyle(document.getElementById(my2)).top)   
-            bottom2 = top2   + parseInt(getComputedStyle(document.getElementById(my2)).height)
-            if ((right1  >=  left2  ) &&
-                (bottom1 >=  top2   ) &&
-                (left1   <=  right2 ) &&
-                (top1    <=  bottom2)){
-                return true
+            
+            var entities = {}
+            var fps = 30
+            const healthDefault = 20
+            var health = healthDefault
+            var damage = 1
+            function updateHealth() {
+                document.getElementById('health').innerHTML = `HP = ${health}`
             }
-        }
-
-        function myCheckHit(){
-        if (myHitOther('myImg01','myImg02')){
-            document.getElementById('output').innerHTML = 'You lose'
-            document.getElementById('myImg01').style.left = '20px'
-            document.getElementById('myImg01').style.top = '110px'
-        }
+            updateHealth()
+            // global variables here
+            var myGlobalX = 0
+            var myClock
 
 
-        // more if statements here like the above
+            // global functions here
+            function myHitOther(my1,my2){
+                var m1 = document.getElementById(my1)
+                var m2 = document.getElementById(my2)
+                left1   = parseInt(getComputedStyle(document.getElementById(my1)).left)
+                right1  = left1 + parseInt(getComputedStyle(document.getElementById(my1)).width)
+                top1    = parseInt(getComputedStyle(document.getElementById(my1)).top)   
+                bottom1 = top1   + parseInt(getComputedStyle(document.getElementById(my1)).height)
+                left2   = parseInt(getComputedStyle(document.getElementById(my2)).left)
+                right2  = left2 + parseInt(getComputedStyle(document.getElementById(my2)).width)
+                top2    = parseInt(getComputedStyle(document.getElementById(my2)).top)   
+                bottom2 = top2   + parseInt(getComputedStyle(document.getElementById(my2)).height)
+                if ((right1  >=  left2  ) &&
+                    (bottom1 >=  top2   ) &&
+                    (left1   <=  right2 ) &&
+                    (top1    <=  bottom2)){
+                    return true
+                }
+            }
 
+            document.addEventListener("keypress", (e)=>{
+                e = e || window.event;
+                keyNameTable = {
+                    119:"w",
+                    97:"a",
+                    115:"s",
+                    100:"d"
+                }
+                let keyName = keyNameTable[e.keyCode]
+                if(keyName !== undefined) {
+                    console.log(keyName)
+                }
+                else { 
+                    console.log('Key not recognised')
+                }
+                if(keyName === 'w') {
+                    document.getElementById('myImg01').style.top = parseInt(getComputedStyle(document.getElementById('myImg01')).top) - 10 + 'px'
+                }
+                else if(keyName === 'a') {
+                    document.getElementById('myImg01').style.left = parseInt(getComputedStyle(document.getElementById('myImg01')).left) - 10 + 'px'
+                }
+                else if(keyName === 's') {
+                    document.getElementById('myImg01').style.top = parseInt(getComputedStyle(document.getElementById('myImg01')).top) + 10 + 'px'
+                }
+                else if(keyName === 'd') {
+                    document.getElementById('myImg01').style.left = parseInt(getComputedStyle(document.getElementById('myImg01')).left) + 10 + 'px'
+                }
+            });
 
-
-        }  // end of myCheckHit()
-
-        document.addEventListener("keypress", (e)=>{
-            e = e || window.event;
-            console.log(e.keyCode)
-        });
+            function spawnBullet(id, x, y) {
+                let div = document.createElement('div')
+                entities[id] = {
+                    object : div,
+                    x : x,
+                    y : y,
+                    xVelocity : -15,
+                    yVelocity : 0,
+                    height : 10,
+                    width : 10,
+                    damage : 5,
+                    lifeTime : 100
+                }
+                div.id = id
+                div.style.position = 'absolute'
+                div.style.zIndex = '-1'
+                div.style.left = `${entities[id].x}px`
+                div.style.top = `${entities[id].y}px`
+                div.style.backgroundColor = '#ff2222'
+                div.style.backgroundSize = 'contain'
+                div.style.height = `${entities[id].height}px`
+                div.style.width = `${entities[id].width}px`
+                document.querySelector('body').appendChild(div)
+            }
+            function checkDefault(param, ifDefault) {
+                return param !== undefined ? param : ifDefault
+            }
+            function createEntity(id, info) {
+                let div = document.createElement('div')
+                if(info === undefined) {
+                    info = {}
+                }
+                entities[id] = {
+                    object : div,
+                    health : checkDefault(info.health, 10),
+                    x : checkDefault(info.x, 500),
+                    y : checkDefault(info.y, 110),
+                    xVelocity : checkDefault(info.xVelocity, 0),
+                    yVelocity : checkDefault(info.yVelocity, 0),
+                    height : checkDefault(info.height, 80),
+                    width : checkDefault(info.width, 100),
+                    damage : checkDefault(info.damage, 0),
+                    movePath : function() {
+                        if(this.y < 200) {
+                            this.yVelocity++
+                        }
+                        if(this.y > 500) {
+                            this.yVelocity--
+                        }
+                    },
+                    bulletTimerDefault : checkDefault(info.bulletTimerDefault, 30),
+                    bulletTimer : checkDefault(info.bulletTimerDefault, 30),
+                    bulletCount : 0,
+                    shootBullet : function() {
+                        if(this.bulletTimer <= 0) {
+                            spawnBullet(`${this.object.id}Bullet${this.bulletCount}`, this.x, this.y + .5 * this.height)
+                            this.bulletCount++
+                            this.bulletTimer = this.bulletTimerDefault
+                        }
+                        else {
+                            this.bulletTimer--
+                        }
+                    }
+                }
+                div.id = id
+                div.style.position = 'absolute'
+                div.style.zIndex = '-1'
+                div.style.left = `${entities[id].x}px`
+                div.style.top = `${entities[id].y}px`
+                div.style.backgroundColor = 'blue'
+                div.style.backgroundImage = "url(myImage02.jpg)"
+                div.style.backgroundSize = 'contain'
+                div.style.height = `${entities[id].height}px`
+                div.style.width = `${entities[id].width}px`
+                document.querySelector('body').appendChild(div)
+            }
+            createEntity('first')
+            var mainLoop = setInterval(() => {
+                for(let i in entities) {
+                    entities[i].object.style.left = `${entities[i].x}px`
+                    entities[i].object.style.top = `${entities[i].y}px`
+                    entities[i].x += entities[i].xVelocity
+                    entities[i].y += entities[i].yVelocity
+                    
+                    if(myHitOther('myImg01', entities[i].object.id)) {
+                        health -= entities[i].damage
+                        if(entities[i].health !== undefined) {
+                            entities[i].health -= damage
+                        }
+                    }
+                    if(entities[i].movePath !== undefined) {
+                        entities[i].movePath()
+                    }
+                    if(entities[i].shootBullet !== undefined) {
+                        entities[i].shootBullet()
+                    }
+                    if(entities[i].lifeTime != undefined) {
+                        entities[i].lifeTime--
+                    }
+                    if(entities[i].health < 0 || entities[i].lifeTime < 0) {
+                        entities[i].object.remove()
+                        delete entities[i]
+                    }
+                    if(health < 0) {
+                        document.getElementById('output').innerHTML = 'You lose'
+                        document.getElementById('myImg01').style.left = '20px'
+                        document.getElementById('myImg01').style.top = '130px'
+                        health = healthDefault
+                    }
+                }
+                updateHealth()
+            }, 1000 / fps);
         </script>
 
-        <img id="myImg01" style="position:absolute; z-index:-1; width:100px; height:80px; top:110px; left:50px;"  src="myImage01.jpg">
-        <img id="myImg02" style="position:absolute; z-index:-1; width:100px; height:80px; top:110px; left:250px;" src="myImage02.jpg">
+        <img id="myImg01" style="position:absolute; z-index:-1; width:100px; height:80px; top:130px; left:50px;"  src="myImage01.jpg">
 
-        <input type=button value="Auto Background Left" onclick="
-            clearInterval(myClock)
-            let myTemp = '100px 0px'
-            myClock = setInterval(function(){
-                myGlobalX -= 2
-                myTemp =  myGlobalX + 'px 0px'
-                document.getElementById('myBody').style.backgroundPosition = myTemp
-            }, 20)
-        "><br><br>
-        <input style="position: relative; left:85px" type=button value="Move Up" onTouchStart="this.click(); event.preventDefault();" onclick="
-            document.getElementById('myImg01').style.top = parseInt(getComputedStyle(document.getElementById('myImg01')).top) - 10 + 'px'
-            myCheckHit()     // checks for all collisions
-        "><br>
-        <input type=button value="Move Left" onTouchStart="this.click(); event.preventDefault();" onclick="
-            document.getElementById('myImg01').style.left = parseInt(getComputedStyle(document.getElementById('myImg01')).left) - 10 + 'px'
-            myCheckHit()     // checks for all collisions
-        ">
-        <input type=button value="Move Down" onTouchStart="this.click(); event.preventDefault();" onclick="
-            document.getElementById('myImg01').style.top = parseInt(getComputedStyle(document.getElementById('myImg01')).top) + 10 + 'px'
-            myCheckHit()     // checks for all collisions
-        ">
-        <input type=button value="Move Right" onTouchStart="this.click(); event.preventDefault();" onclick="
-            document.getElementById('myImg01').style.left = parseInt(getComputedStyle(document.getElementById('myImg01')).left) + 10 + 'px'
-            myCheckHit()     // checks for all collisions
-        "><br>
         <div style="color:#fff; font-size: 2em;" id="output"></div>
