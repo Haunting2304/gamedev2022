@@ -101,6 +101,26 @@ function createEntity(id, params, img) {
     document.querySelector('body').appendChild(div)
 }
 
+function winLevel() {
+    document.getElementById('output').innerHTML = 'You Win!'
+    if(redirectTimeout === undefined) {
+        redirectTimeout = setTimeout(()=>{
+            curLevel++
+            loadLevel(curLevel)
+            redirectTimeout = undefined
+        },1000)
+    }
+}
+
+function loseLevel() {
+    document.getElementById('output').innerHTML = 'You died.'
+    if(redirectTimeout === undefined) {
+        redirectTimeout = setTimeout(() => {
+            loadLevel(curLevel)
+            redirectTimeout = undefined
+        },1000)
+    }
+}
 function loadLevel(id) {
     for(let i in entities) {
         entities[i].object.remove()
@@ -173,6 +193,9 @@ function loadLevel(id) {
                         this.xVelocity += accel
                     }
                 },
+                onDeath : function() {
+                    loseLevel()
+                }
             }, 'myImage01.jpg')
             
             createEntity('win', {
@@ -183,18 +206,11 @@ function loadLevel(id) {
                 update : function() {
                     if(entities['player'] !== undefined) {
                         if(myHitOther(entities['player'].object, this.object)) {
-                            document.getElementById('output').innerHTML = 'You Win!'
-                            if(redirectTimeout === undefined) {
-                                redirectTimeout = setTimeout(()=>{
-                                    curLevel = 1
-                                    loadLevel(1)
-                                    redirectTimeout = undefined
-                                },1000)
-                            }
+                            winLevel()
                         }
                     }
-                },
-            }, 'win.jpg')
+                }
+            },'win.jpg')
             break
 
         case 1:
@@ -325,6 +341,9 @@ function loadLevel(id) {
                         this.xVelocity += accel
                     }
                 },
+                onDeath : function() {
+                    loseLevel()
+                }
             }, 'myImage01.jpg')
             
             createEntity('win', {
@@ -335,19 +354,75 @@ function loadLevel(id) {
                 update : function() {
                     if(entities['player'] !== undefined) {
                         if(myHitOther(entities['player'].object, this.object)) {
-                            document.getElementById('output').innerHTML = 'You Win!'
-                            if(redirectTimeout === undefined) {
-                                redirectTimeout = setTimeout(()=>{
-                                    curLevel = 1
-                                    loadLevel(1)
-                                    redirectTimeout = undefined
-                                },1000)
-                            }
+                            winLevel()
                         }
                     }
                 },
             }, 'win.jpg')
             break
+        case 2:
+            createEntity('first', {
+                bulletTimerDefault : 80,
+                bulletTimer : 40,
+                bulletCount : 0,
+                health : 10,
+                x : 1000,
+                y : 300,
+                damage: 0,
+                team : ['red'],
+                slowDown : 0,
+                update : function() {
+                    let xDiff = this.x + .5 * this.width - entities['player'].x - .5 * entities['player'].width
+                    let yDiff = this.y + .5 * this.height - entities['player'].y - .5 * entities['player'].height
+                    let angle = Math.atan2(xDiff, yDiff) / Math.PI
+                    //
+                    if(this.bulletTimer <= 0) {
+                        let bulletXVelocity,
+                        bulletYVelocity
+                        let fullSpeed = 2000
+                        let ratio = Math.abs((angle * 2)) - 1
+                        bulletXVelocity = (1-Math.abs(ratio)) * fullSpeed
+                        if(this.x > entities['player'].x) {
+                            bulletXVelocity = -bulletXVelocity
+                        }
+                        bulletYVelocity = ratio * fullSpeed
+                        spawnBullet(`${this.object.id}Bullet${this.bulletCount}`, this.x + .5 * this.width, this.y + .5 * this.height, {team:['red'], xVelocity:bulletXVelocity, yVelocity:bulletYVelocity})
+                        this.bulletCount++
+                        this.bulletTimer = this.bulletTimerDefault
+                    }
+                    else {
+                        this.bulletTimer--
+                    }
+                }
+            }, 'myImage02.jpg')
+            
+            createEntity('player', {
+                damage:5,
+                x:100,
+                y:350,
+                health:10,
+                update : function() {
+                    let accel = 50
+                    if(keyPressed[87]) { //W
+                        this.yVelocity += accel
+                    }
+                    if(keyPressed[83]) { //S
+                        this.yVelocity -= accel
+                    }
+                    if(keyPressed[65]) { //A
+                        this.xVelocity -= accel
+                    }
+                    if(keyPressed[68]) { //D
+                        this.xVelocity += accel
+                    }
+                    if(entities['first'] === undefined) {
+                        winLevel()
+                    }
+                },
+                onDeath : function() {
+                    loseLevel()
+                }
+            }, 'myImage01.jpg')
     }
 }
 
@@ -421,24 +496,21 @@ var mainLoop = setInterval(() => {
         if(entities[i].update !== undefined) {
             entities[i].update()
         }
-        if(entities[i].shootBullet !== undefined) {
-            entities[i].shootBullet()
-        }
         if(entities[i].lifeTime != undefined) {
             entities[i].lifeTime--
         }
         if(entities[i].health <= 0 || entities[i].lifeTime <= 0) {
+            if(entities[i].onDeath !== undefined) {
+                entities[i].onDeath()
+            }   
             entities[i].object.remove()
-            delete entities[i]
-        }
-        if(entities['player'] === undefined) {
-            document.getElementById('output').innerHTML = 'You died.'
-            if(redirectTimeout === undefined) {
-                redirectTimeout = setTimeout(() => {
-                    loadLevel(curLevel)
-                    redirectTimeout = undefined
-                },1000)
+            if(i !== 'player') {
+                delete entities[i]
             }
+            else {
+                delete entities[i].update
+            }
+            
         }
     }
 }, 1000 / fps)
