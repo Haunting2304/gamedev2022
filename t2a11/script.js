@@ -127,8 +127,10 @@ function loadLevel(id) {
         delete entities[i]
         document.getElementById('output').innerHTML = ''
     }
+    let width = Math.max(document.body.offsetWidth, document.documentElement.clientWidth, document.documentElement.scrollWidth, document.documentElement.offsetWidth)
     switch(id) {
         case 0:
+            
             createEntity('first', {
                 bulletTimerDefault : 30,
                 bulletTimer : 30,
@@ -199,7 +201,7 @@ function loadLevel(id) {
             }, 'myImage01.jpg')
             
             createEntity('win', {
-                x:1500,
+                x:0,
                 y:0,
                 height:1000,
                 width:100,
@@ -211,8 +213,9 @@ function loadLevel(id) {
                     }
                 }
             },'win.jpg')
+            entities.first.x = 2/3 *(width - entities.first.width)
+            entities.win.x = width - entities.win.width
             break
-
         case 1:
             createEntity('first', {
                 health : 50,
@@ -347,7 +350,7 @@ function loadLevel(id) {
             }, 'myImage01.jpg')
             
             createEntity('win', {
-                x:1500,
+                x:0,
                 y:0,
                 height:1000,
                 width:100,
@@ -359,6 +362,10 @@ function loadLevel(id) {
                     }
                 },
             }, 'win.jpg')
+            entities.first.x = 1/3 *(width - entities.first.width)
+            entities.second.x = 2/3 *(width - entities.second.width)
+            entities.third.x = 1.5/3 *(width - entities.third.width)
+            entities.win.x = width - entities.win.width
             break
         case 2:
             createEntity('first', {
@@ -423,7 +430,10 @@ function loadLevel(id) {
                     loseLevel()
                 }
             }, 'myImage01.jpg')
+            entities.first.x = 2/3 *(width - entities.first.width)
+            break
     }
+    curLevel = id
 }
 
 var mainLoop = setInterval(() => {
