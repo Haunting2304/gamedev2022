@@ -12,19 +12,13 @@
     <body>
         <div id="back"><a href="/gamedev2022" class="link">← Back to index (Giorgio)</a></div>
         <h1>T2A12B: Sort</h1>
-
         <script>
             var myCards = [
-                1,
-                'Hello',
                 'Hello World',
-                'HelloWorld',
+                8,
                 2,
-                'hi',
-                3,
-                'HI',
-                5,
-                'hello'
+                'hello world',
+                12,
             ]
             function showArray(inputArray) {
                 let output = ''
@@ -82,17 +76,35 @@
             }
         </script>
 
-        Size of array: <input id="num1" type="number" value="5"><br>
-        Number Range: <input id="num2" type="number" value="10"><br>
+        <h2>Works with letters!</h2>
 
-        <input type=button value="Set Random" onclick="
-            let cardsMax = document.getElementById('num1').value
-            let numberRange = document.getElementById('num2').value
-            for (let i=0;i<cardsMax;i++){
-                myCards[i] = Math.floor(Math.random()*numberRange)+1
-            }
-            document.getElementById('div01').innerHTML = showArray(myCards)
-        ">
+        <div class="foreground1">
+            <b>Randomize:</b><br>
+            Size of array: <input id="num1" type="number" value="5" style="width: 6ch;"><br>
+            Number Range: <input id="num2" type="number" value="10" style="width: 6ch;"><br>
+            <input type=button value="Randomize Array" onclick="
+                myCards = []
+                let cardsMax = document.getElementById('num1').value
+                let numberRange = document.getElementById('num2').value
+                for (let i=0;i<cardsMax;i++){
+                    myCards[i] = Math.floor(Math.random()*numberRange)+1
+                }
+                document.getElementById('div01').innerHTML = showArray(myCards)
+            ">
+        </div><br>
+
+        <div class="foreground1">
+            <b>Add string to end of array:</b><br>
+            Item to add: <input id="text1" type="text" value="5" style="width: 20ch;"><br>
+
+            <input type=button value="Add to array" onclick="
+                let item = document.getElementById('text1').value
+                myCards[myCards.length] = item
+                document.getElementById('div01').innerHTML = showArray(myCards)
+            ">
+        </div><br>
+        
+        <br>
 
         <input type=button value="Sort" onclick="
             let newArray = []
@@ -105,7 +117,21 @@
                         newArray[j] = item
                         break
                     }
-                    else { //Both are stuff
+                    else if(itemString.match(/^[0-9]+$/) != null) {
+                        if(string.match(/^[0-9]+$/) === null) {
+                            newArray.splice(j, 0, item)
+                            willBreak = true
+                            break
+                        }
+                        else {
+                            if(newArray[j] >= item) {
+                                newArray.splice(j, 0, item)
+                                willBreak = true
+                                break
+                            }
+                        }
+                    }
+                    else {
                         let willBreak = false
                         for(let i=0; i<string.length; i++) {
                             if(itemString[i] === undefined) { //Move on to next spot to insert at
@@ -113,24 +139,24 @@
                             }
                             else if(itemString[i].match(/^[a-zA-Z' ']+$/) != null && string[i].match(/^[a-zA-Z' ']+$/) != null) { //If both are letters or space
                                 if(convertLetterToNumber(string[i]) !== convertLetterToNumber(itemString[i])) {
-                                    if (convertLetterToNumber(string[i]) > convertLetterToNumber(itemString[i])) {
+                                    if(convertLetterToNumber(string[i]) > convertLetterToNumber(itemString[i])) {
                                         newArray.splice(j, 0, item)
                                         willBreak = true
                                         break
                                     }
-                                    if (convertLetterToNumber(string[i]) < convertLetterToNumber(itemString[i])) { //Move onto next item
+                                    else if(convertLetterToNumber(string[i]) < convertLetterToNumber(itemString[i])) { //Move onto next item
                                         break
                                     }
                                 }
                             }
                             else if(itemString[i].match(/^[0-9]+$/) != null && string[i].match(/^[0-9]+$/) != null) { //If both are numbers
-                                if(itemString[i] !== string[i]) {
+                                if(string[i] !== itemString[i]) {
                                     if(string[i] > itemString[i]) {
                                         newArray.splice(j, 0, item)
                                         willBreak = true
                                         break
                                     }
-                                    if (string[i] < itemString[i]) { //Move onto next item
+                                    else if (string[i] < itemString[i]) { //Move onto next item
                                         break
                                     }
                                 }
@@ -142,6 +168,9 @@
                             }
                             else if(itemString[i].match(/^[0-9]+$/) == null && string[i].match(/^[0-9]+$/) != null) { //If item is not a number and itemString is a number
                                 break
+                            }
+                            else {
+                                console.log('Can not sort')
                             }
                         }
                         if(willBreak) {
@@ -160,17 +189,3 @@
         </script>
     </body>
 </html>
-<!--
-myCards = [
-    1,
-    'Hello',
-    'Hello World',
-    'HelloWorld',
-    2,
-    'hi',
-    3,
-    'HI',
-    5,
-    'hello'
-]
--->
