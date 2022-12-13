@@ -4,7 +4,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
-        <title>T2A10: Translate</title>
+        <title>T2A10: Translate and Sound</title>
         <link rel="stylesheet" type="text/css" href="/gamedev2022/style.css">
         <link id="styleMode" rel="stylesheet" type="text/css">
         <script type="text/javascript" src="/gamedev2022/stylePref.js"></script>
@@ -54,28 +54,44 @@
                             //document.querySelectorAll('IFrame')[0].borderBottom = `0px black solid`
                         }
                     }
-                    if(document.querySelector('.goog-te-gadget-icon').style.backgroundImage != `url('te_ctrl3.png')`) {
-                        document.querySelector('.goog-te-gadget-icon').style.backgroundImage = `url('te_ctrl3.png')`
+                    if(document.querySelector('.goog-te-gadget-icon') !== null) {
+                        if(document.querySelector('.goog-te-gadget-icon').style.backgroundImage != `url('te_ctrl3.png')`) {
+                            document.querySelector('.goog-te-gadget-icon').style.backgroundImage = `url('te_ctrl3.png')`
+                        }
                     }
                 }, 250)
                 
             }
         </script>
+        <script> 
+            let mySound1 = new Audio('Yeh.m4a')
+        </script>
     </head>
     <body>
         <div id="back"><a href="/gamedev2022" class="link">← Back to index (Giorgio)</a></div>
-        <h1>T2A10: Translate</h1>
+        <h1>T2A10: Translate and Sound</h1>
 
+        <br>
+        <h2>Translate</h2>
         <div id="google_translate_element">Language select(If missing reload until it appears):</div><br>
-        <input type="text" value="This text is an input and won't translate."><br><br>
-        This text will translate.<br><br>
-        <div class="foreground1">This text is in a div and also will translate.</div><br><br>
+        
+        This text will translate.<br>
+        <div class="foreground1">This text is in a div and also will translate.</div><br>
+        <input type="text" style="width:35ch" value="This text is an input so it will not translate."><br>
+
+        <br>
+
+        <h2>Speak</h2>
+        <input id="spoken" type="text" value="This will be spoken"><br>
+        <input  type="button" value="Initilize Speak" onclick="
+            let myVoice = 'Russian Female'
+            responsiveVoice.speak(document.getElementById('spoken').value, myVoice, {pitch: 1, rate: 1, volume : 1})                                              
+        "><br><br>
         
 
-
-        <input  type="button" value="initilize speak" onclick="
-            let myVoice = 'Russian Female'
-            responsiveVoice.speak(document.getElementById('google_translate_element').innerText, myVoice, {pitch: 1, rate: 1, volume : 1})                                              
+        <h2>Play sound file</h2>
+        <input type="button" value='Play "Yeh.m4a"' onClick="
+            mySound1.play()
         "><br><br>
     </body>
 </html>
