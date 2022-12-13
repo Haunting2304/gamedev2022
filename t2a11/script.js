@@ -369,7 +369,7 @@ function loadLevel(id) {
             break
         case 2:
             createEntity('first', {
-                bulletTimerDefault : 80,
+                bulletTimerDefault : 60,
                 bulletTimer : 40,
                 bulletCount : 0,
                 health : 10,
@@ -379,21 +379,18 @@ function loadLevel(id) {
                 team : ['red'],
                 slowDown : 0,
                 update : function() {
-                    let xDiff = this.x + .5 * this.width - entities['player'].x - .5 * entities['player'].width
-                    let yDiff = this.y + .5 * this.height - entities['player'].y - .5 * entities['player'].height
-                    let angle = Math.atan2(xDiff, yDiff) / Math.PI
-                    //
+                    let thisCenterX = this.x + .5 * this.width
+                    let thisCenterY = this.y + .5 * this.height
+                    let xDiff = (entities['player'].x + .5 * entities['player'].width) - thisCenterX
+                    let yDiff = (entities['player'].y + .5 * entities['player'].height) - thisCenterY
                     if(this.bulletTimer <= 0) {
-                        let bulletXVelocity,
-                        bulletYVelocity
-                        let fullSpeed = 2000
-                        let ratio = Math.abs((angle * 2)) - 1
-                        bulletXVelocity = (1-Math.abs(ratio)) * fullSpeed
-                        if(this.x > entities['player'].x) {
-                            bulletXVelocity = -bulletXVelocity
-                        }
-                        bulletYVelocity = ratio * fullSpeed
-                        spawnBullet(`${this.object.id}Bullet${this.bulletCount}`, this.x + .5 * this.width, this.y + .5 * this.height, {team:['red'], xVelocity:bulletXVelocity, yVelocity:bulletYVelocity})
+                        let fullSpeed = 1500
+                        let ratioTotal = Math.abs(xDiff) + Math.abs(yDiff)
+                        let ratioX = xDiff / ratioTotal
+                        let ratioY = yDiff / ratioTotal
+                        let bulletXVelocity = fullSpeed * ratioX
+                        let bulletYVelocity = fullSpeed * ratioY
+                        spawnBullet(`${this.object.id}Bullet${this.bulletCount}`, thisCenterX, thisCenterY, {team:['red'], xVelocity:bulletXVelocity, yVelocity:bulletYVelocity})
                         this.bulletCount++
                         this.bulletTimer = this.bulletTimerDefault
                     }
