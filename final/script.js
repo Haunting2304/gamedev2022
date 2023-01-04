@@ -36,19 +36,19 @@ function deleteID(id) {
     }
 }
 function toCanvasX(input) {
-    return (input * drawWidth / 1000)
+    return (input * drawWidth / 1000 / aspectRatio)
 }
 function toCanvasY(input) { //Maybe flip so the internal coordinates work how I want
     return (input * drawHeight / 1000)
 }
 function toDrawX(input) {
-    return (input * drawWidth / 1000)+xOffset
+    return (input * drawWidth / 1000 / aspectRatio)+xOffset
 }
 function toDrawY(input) {
     return (input * drawHeight / 1000)+yOffset
 }
-function toInternalX(input) {
-    return (input-xOffset) / drawWidth * 1000
+function toInternalX(input) { //these functions suck to look at so probably do something about it
+    return (input-xOffset) / drawWidth * 1000 * aspectRatio
 }
 function toInternalY(input) {
     return (input-yOffset) / drawHeight * 1000
@@ -63,6 +63,9 @@ function updateDrawList() {
 }
 function drawCanvas() {
     canvasContext.clearRect(0, 0, canvasElement.width, canvasElement.height)
+    //Temp for testing
+    canvasContext.fillStyle = '#222'
+    canvasContext.fillRect(0, 0, canvasElement.width, canvasElement.height)
     for(let i=0; i<drawList.length; i++) {
         let property = drawList[i].id
         let item = itemsList[property]
@@ -177,7 +180,7 @@ createItem({
     color:'#f00',
     lineWidth:'5'
 })
-itemsList[createID()] = {
+createItem({
     type:'line',
     x:10,
     y:10,
@@ -187,7 +190,7 @@ itemsList[createID()] = {
     },
     z:-1,
     lineWidth:'10'
-}
+})
 // itemsList[createID()] = {
 //     type:'rect',
 //     x:10,
@@ -234,15 +237,19 @@ function createImage(input) {
     }
     return img
 }
-itemsList[createID()] = {
+createItem({
     type:'image',
     image:createImage({src:'TestImage.png'}),
     x:100,
     y:100,
-    width:100,
-    height:100,
-    z:-5
-}
+    z:-5,
+    onSpawn:function(){
+        let image = createImage({src:'TestImage.png'}) //eg. code
+        let ratio = image.naturalWidth/image.naturalHeight
+        this.width = 500
+        this.height = 500
+    }
+})
 function getAvgFPS() {
     let total = 0
     let now = Date.now()
@@ -263,6 +270,10 @@ function frameUpdate() {
     FPSCounter[FPSCounter.length] = {delay:1000/elapsed, time:now}
     disp1 = `Avg FPS: ${Math.floor(getAvgFPS())}`
     for(let i in itemsList) {
+        if(itemsList[i].onSpawn !== undefined) {
+            itemsList[i].onSpawn()
+            delete itemsList[i].onSpawn
+        }
         if(itemsList[i].update !== undefined) {
             itemsList[i].update()
         }
