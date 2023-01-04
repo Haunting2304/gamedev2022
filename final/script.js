@@ -4,7 +4,6 @@ var disp3 = ''
 var FPSCounter = []
 var then = Date.now()
 var now = then
-var fps = 60
 var aspectRatio = 16/9
 var canvasAspectRatio
 var drawWidth
@@ -13,7 +12,7 @@ var xOffset
 var yOffset
 var canvasElement = document.querySelector('canvas');
 var canvasContext = canvasElement.getContext('2d');
-canvasContext.lineCap = 'round'
+// canvasContext.lineCap = 'round' //Doesn't work for some reason
 var mouse = {
     x:0,
     y:0
@@ -37,9 +36,15 @@ function deleteID(id) {
     }
 }
 function toCanvasX(input) {
+    return (input * drawWidth / 1000)
+}
+function toCanvasY(input) { //Maybe flip so the internal coordinates work how I want
+    return (input * drawHeight / 1000)
+}
+function toDrawX(input) {
     return (input * drawWidth / 1000)+xOffset
 }
-function toCanvasY(input) {
+function toDrawY(input) {
     return (input * drawHeight / 1000)+yOffset
 }
 function toInternalX(input) {
@@ -63,38 +68,56 @@ function drawCanvas() {
         let item = itemsList[property]
         canvasContext.lineWidth = item.lineWidth !== undefined ? item.lineWidth : 1
         canvasContext.strokeStyle = item.color !== undefined ? item.color : '#000'
+        canvasContext.fillStyle = item.fillColor !== undefined ? item.fillColor : canvasContext.strokeStyle
         switch(item.type) {
             case 'rect':
                 canvasContext.beginPath()
-                canvasContext.rect(toCanvasX(item.x), toCanvasY(item.y), toCanvasX(item.width), toCanvasY(item.height))
+                canvasContext.rect(toDrawX(item.x), toDrawY(item.y), toCanvasX(item.width), toCanvasY(item.height))
                 canvasContext.stroke()
+                break
+            case 'fillRect':
+                canvasContext.fillRect(toDrawX(item.x), toDrawY(item.y), toCanvasX(item.width), toCanvasY(item.height))
                 break
             case 'line':
                 canvasContext.beginPath()
-                canvasContext.moveTo(toCanvasX(item.x), toCanvasY(item.y))
-                canvasContext.lineTo(toCanvasX(item.x2), toCanvasY(item.y2))
+                canvasContext.moveTo(toDrawX(item.x), toDrawY(item.y))
+                canvasContext.lineTo(toDrawX(item.x2), toDrawY(item.y2))
                 canvasContext.stroke()
                 break
             case 'image':
-                canvasContext.drawImage(item.image, toCanvasX(item.x), toCanvasY(item.y), toCanvasX(item.width), toCanvasY(item.height))
+                canvasContext.drawImage(item.image, toDrawX(item.x), toDrawY(item.y), toCanvasX(item.width), toCanvasY(item.height))
+                break
         }
+    }
+    //Draws black bars                    
+    canvasContext.lineWidth = 1
+    canvasContext.strokeStyle = '#000'
+    canvasContext.fillStyle = '#000'
+    if(xOffset>0) {
+        canvasContext.fillRect(0, 0, xOffset, canvasElement.height)
+        canvasContext.fillRect(xOffset+drawWidth, 0, canvasElement.width, canvasElement.height)
+    }
+    else {
+        canvasContext.fillRect(0, 0, canvasElement.width, yOffset)
+        canvasContext.fillRect(0, yOffset+drawHeight, canvasElement.width, canvasElement.height)
     }
 }
 function updateCanvasSize() {
     canvasElement.width = parseInt(getComputedStyle(canvasElement).width)
     canvasElement.height = parseInt(getComputedStyle(canvasElement).height)
     canvasAspectRatio = canvasElement.width/canvasElement.height
+    //Bigger aspect ratio means more width for each height
     if(canvasAspectRatio>aspectRatio) { //Bars on sides
-        drawHeight = canvasElement.height
         drawWidth = canvasElement.height * aspectRatio
+        drawHeight = canvasElement.height
         xOffset = (canvasElement.width - drawWidth)/2
         yOffset = 0
     }
-    else if(canvasAspectRatio<aspectRatio) { //Bars top and bottom
+    else if(canvasAspectRatio<aspectRatio) { //Bars on top and bottom
         drawWidth = canvasElement.width
         drawHeight = canvasElement.width / aspectRatio
-        yOffset = (canvasElement.height - drawHeight)/2
         xOffset = 0
+        yOffset = (canvasElement.height - drawHeight)/2
     }
     else { //No bars
         drawWidth = canvasElement.width
@@ -106,24 +129,54 @@ function updateCanvasSize() {
 }
 updateCanvasSize()
 window.addEventListener('resize', updateCanvasSize)
-document.querySelector('html').addEventListener('mousemove', (event)=>{
-    mouse.x = toInternalX(event.clientX / parseInt(getComputedStyle(canvasElement).width) * canvasElement.width)
-    mouse.y = toInternalY(event.clientY / parseInt(getComputedStyle(canvasElement).height) * canvasElement.height)
+window.addEventListener('mousemove', (event)=>{
+    if(event.clientX < xOffset) {
+        mouse.x = toInternalX(xOffset)
+    }
+    else if(event.clientX > drawWidth+xOffset) {
+        mouse.x = toInternalX(drawWidth+xOffset)
+    }
+    else {
+        mouse.x = toInternalX(event.clientX / parseInt(getComputedStyle(canvasElement).width) * canvasElement.width)
+    }
+    if(event.clientY < yOffset) {
+        mouse.y = toInternalY(yOffset)
+    }
+    else if(event.clientY > drawHeight+yOffset) {
+        mouse.y = toInternalY(drawHeight+yOffset)
+    }
+    else {
+        mouse.y = toInternalY(event.clientY / parseInt(getComputedStyle(canvasElement).height) * canvasElement.height)
+    }
 })
 
 
-
-itemsList[createID()] = {
+function createItem(arguments, bypass) {
+    let id = createID()
+    itemsList[id] = {}
+    for(let i in arguments) {
+        itemsList[id][i] = arguments[i]
+    }
+    updateDrawList() //May needlessly tank performance if making multiple new items in one frame because of excessive sorting
+}
+function removeItem(id) {
+    delete itemsList[id]
+    deleteID(id)
+    updateDrawList()
+}
+createItem({
     type:'rect',
     x:10,
     y:10,
     update:function(){
-        this.width = mouse.x - this.x
-        this.height = mouse.y - this.y
+        this.x2 = mouse.x
+        this.y2 = mouse.y
+        this.width = this.x2 - this.x
+        this.height = this.y2 - this.y
     },
     color:'#f00',
     lineWidth:'5'
-}
+})
 itemsList[createID()] = {
     type:'line',
     x:10,
@@ -135,45 +188,45 @@ itemsList[createID()] = {
     z:-1,
     lineWidth:'10'
 }
-itemsList[createID()] = {
-    type:'rect',
-    x:10,
-    y:1000,
-    width:20,
-    height:20,
-    yVelocity:0,
-    xVelocity:0,
-    color:'#f00',
-    update:function(){
-        // this.xVelocity += 1
-        // this.x += this.xVelocity
-        this.yVelocity -= 1
-        this.y += this.yVelocity
-        if(this.y < 0) {
-            this.y = 0
-            this.yVelocity = 0
-        }
-    },
-    z:-1,
-    lineWidth:'10'
-}
-itemsList[createID()] = {
-    type:'line',
-    x:10,
-    y:10,
-    yVelocity:0,
-    update:function(){
-        this.yVelocity += 1
-        this.y += this.yVelocity
-        this.x2 = this.x+100
-        this.y2 = mouse.y
-        if(this.y > 1000) {
-            this.y = 1000
-            this.yVelocity = 0
-        }
-    },
-    color:'#0f0'
-}
+// itemsList[createID()] = {
+//     type:'rect',
+//     x:10,
+//     y:1000,
+//     width:20,
+//     height:20,
+//     yVelocity:0,
+//     xVelocity:0,
+//     color:'#f00',
+//     update:function(){
+//         // this.xVelocity += 1
+//         // this.x += this.xVelocity
+//         this.yVelocity -= 1
+//         this.y += this.yVelocity
+//         if(this.y < 0) {
+//             this.y = 0
+//             this.yVelocity = 0
+//         }
+//     },
+//     z:-1,
+//     lineWidth:'10'
+// }
+// itemsList[createID()] = {
+//     type:'line',
+//     x:10,
+//     y:10,
+//     yVelocity:0,
+//     update:function(){
+//         this.yVelocity += 1
+//         this.y += this.yVelocity
+//         this.x2 = this.x+100
+//         this.y2 = mouse.y
+//         if(this.y > 1000) {
+//             this.y = 1000
+//             this.yVelocity = 0
+//         }
+//     },
+//     color:'#0f0'
+// }
 function createImage(input) {
     let img = new Image()
     for(let i in input) {
@@ -186,15 +239,10 @@ itemsList[createID()] = {
     image:createImage({src:'TestImage.png'}),
     x:100,
     y:100,
-    x2:200,
-    y2:200,
-    z:-5,
-    update:function(){
-        this.width = this.x2 - this.x
-        this.height = this.y2 - this.y
-    }
+    width:100,
+    height:100,
+    z:-5
 }
-updateDrawList()
 function getAvgFPS() {
     let total = 0
     let now = Date.now()
@@ -214,7 +262,6 @@ function frameUpdate() {
     let elapsed = now - then
     FPSCounter[FPSCounter.length] = {delay:1000/elapsed, time:now}
     disp1 = `Avg FPS: ${Math.floor(getAvgFPS())}`
-    window.requestAnimationFrame(frameUpdate)
     for(let i in itemsList) {
         if(itemsList[i].update !== undefined) {
             itemsList[i].update()
@@ -222,5 +269,6 @@ function frameUpdate() {
     }
     drawCanvas()
     then = now
+    window.requestAnimationFrame(frameUpdate)
 }
 frameUpdate()
