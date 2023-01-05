@@ -1,6 +1,7 @@
 var disp1 = ''
 var disp2 = ''
 var disp3 = ''
+var debug = false
 var FPSCounter = []
 var then = Date.now()
 var now = then
@@ -19,8 +20,8 @@ var canvasContext = canvasElement.getContext('2d');
 var mouse = {
     x:0,
     y:0,
-    internalX:function(){return toInternalX(this.x)},
-    internalY:function(){return toInternalY(this.y)}
+    internalX:function(){return drawToInternalX(this.x)},
+    internalY:function(){return drawToInternalY(this.y)}
 }
 var itemsList = {}
 var drawList = []
@@ -40,6 +41,16 @@ function deleteID(id) {
         idList.splice(idList.indexOf(id), 1)
     }
 }
+// function toCanvasX(input, arguments) {
+//     if(arguments === undefined) {
+//         arguments = {}
+//     }
+//     let work = input * drawWidth / 1000 / aspectRatio
+//     if(arguments.draw || undefined) {
+//         work = work + xOffset - toInternalnXold(cameraX, {draw:false})
+//     }
+//     return work
+// }
 function toCanvasX(input) {
     return (input * drawWidth / 1000 / aspectRatio)
 }
@@ -52,16 +63,16 @@ function toDrawX(input) {
 function toDrawY(input) {
     return (input * drawHeight / 1000)+yOffset-toCanvasY(cameraY)
 }
-function toInternalX(input) { //these functions suck to look at so probably do something about it //only use if input has the offset applied already
+function drawToInternalX(input) { //these functions suck to look at so probably do something about it //only use if input has the offset applied already
     return (input-xOffset+toCanvasX(cameraX)) / drawWidth * 1000 * aspectRatio
 }
-function toInternalY(input) {
+function drawToInternalY(input) {
     return (input-yOffset+toCanvasY(cameraY)) / drawHeight * 1000
 }
-function toInternalnX(input) { //these functions suck to look at so probably do something about it //only use if input has the offset applied already
+function toInternalX(input) { //these functions suck to look at so probably do something about it //only use if input has the offset applied already
     return (input) / drawWidth * 1000 * aspectRatio
 }
-function toInternalnY(input) {
+function toInternalY(input) {
     return (input) / drawHeight * 1000
 }
 function updateDrawList() {
@@ -127,6 +138,13 @@ function drawCanvas() {
     else {
         canvasContext.fillRect(0, 0, canvasElement.width, yOffset)
         canvasContext.fillRect(0, yOffset+drawHeight, canvasElement.width, canvasElement.height)
+    }
+    if(debug === true) {
+        canvasContext.fillStyle = '#fff'
+        canvasContext.font = `${toCanvasX(50)}px serif`
+        canvasContext.fillText(`FPS: ${Math.floor(getAvgFPS())}`, toCanvasX(10), toCanvasY(50))
+        canvasContext.fillText(`MouseX: ${Math.floor(mouse.internalX())}`, toCanvasX(10), toCanvasY(100))
+        canvasContext.fillText(`MouseY: ${Math.floor(mouse.internalY())}`, toCanvasX(10), toCanvasY(150))
     }
 }
 function updateCanvasSize() {
@@ -212,7 +230,7 @@ createItem({
     y2:0,
     lineDash:[15,5],
     z:-100,
-    lineWidth:'5',
+    lineWidth:'1',
     color:'#f00'
 })
 createItem({
@@ -223,7 +241,7 @@ createItem({
     y2:10000,
     lineDash:[15,5],
     z:-100,
-    lineWidth:'5',
+    lineWidth:'1',
     color:'#0f0'
 })
 // createItem({
@@ -263,6 +281,18 @@ createItem({
     fillColor:this.color,
     z:100
 })
+function setCameraPos(input) {
+    switch(input.mode) {
+        case 'center':
+            cameraX = input.x - toInternalX(drawWidth) / 2
+            cameraY = input.y - toInternalY(drawHeight) / 2
+            break
+        default:
+            cameraX = input.x
+            cameraY = input.y
+            break
+    }
+}
 createItem({
     type:'fillCircle',
     x:100,
@@ -280,8 +310,7 @@ createItem({
         if(keyPressed.KeyD) {
             this.x += 5
         }
-        cameraX = this.x - toInternalnX(canvasElement.width) / 2
-        cameraY = this.y - toInternalnY(canvasElement.height) / 2
+        setCameraPos({x:this.x, y:this.y, mode:'center'})
     },
     radius:15,
     startAngle:0,
@@ -336,7 +365,7 @@ function createImage(input) {
     }
     return img
 }
-createItem({
+createItem({ //image sometimes doesnt draw, really bad and idk why
     type:'image',
     image:createImage({src:'TestImage.png'}),
     x:100,
