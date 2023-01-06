@@ -1,6 +1,8 @@
 //disabling zoom didnt work
 //fix right click keyboard input issue
 //fix the issue with images needing to be cached first
+//everything is linked to framerate
+//maybe preload all images needed
 var disp1 = ''
 var disp2 = ''
 var disp3 = ''
@@ -20,8 +22,8 @@ var keyPressed = {}
 var itemsList = {}
 var drawList = []
 var idList = []
-var canvasElement = document.querySelector('canvas');
-var canvasContext = canvasElement.getContext('2d');
+var canvasElement = document.querySelector('canvas')
+var canvasContext = canvasElement.getContext('2d')
 // canvasContext.lineCap = 'round' //Doesn't work for some reason
 
 
@@ -254,7 +256,6 @@ function toInternalY(input) {
   * @return {undefined}
 **/
 function updateDrawList() {
-    console.log('Updated draw list')
     drawList = []
     for(let i in itemsList) {
         let index = itemsList[i].z !== undefined ? itemsList[i].z : 0
@@ -308,6 +309,7 @@ function drawCanvas() {
                 break
             case 'image':
                 canvasContext.drawImage(item.image, toDrawX(item.x), toDrawY(item.y), toCanvasX(item.width), toCanvasY(item.height))
+                console.log('draw')
                 break
         }
     }
@@ -319,7 +321,7 @@ function drawCanvas() {
         canvasContext.fillRect(0, 0, xOffset, canvasElement.height)
         canvasContext.fillRect(xOffset+drawWidth, 0, canvasElement.width, canvasElement.height)
     }
-    else {
+    if(yOffset>0) {
         canvasContext.fillRect(0, 0, canvasElement.width, yOffset)
         canvasContext.fillRect(0, yOffset+drawHeight, canvasElement.width, canvasElement.height)
     }
@@ -529,20 +531,23 @@ function createImage(input) {
     }
     return img
 }
-createItem({ //image sometimes doesnt draw, really bad and idk why
+createItem({
     type:'image',
     image:createImage({src:'TestImage.png'}),
     x:100,
     y:100,
-    z:-5,
+    width:500,
+    height:500,
+    z:5,
     onSpawn:function(){
         let image = createImage({src:'TestImage.png'}) //Idk why I can't use this.image instead //eg. code
-        let ratio = image.naturalWidth/image.naturalHeight
+        let ratio = image.naturalWidth/image.naturalHeight //Append the image first probably then get rid of it again
+        console.log(image.width)
         this.width = 500
         this.height = this.width * ratio
         this.width = this.height / ratio
     }
-})
+}, {id:'image'})
 function getAvgFPS() {
     let total = 0
     let now = Date.now()
@@ -559,22 +564,13 @@ function getAvgFPS() {
 }
 function frameUpdate() {
     now = Date.now()
-    //Object.keys(myObj).length
-    if(drawList.length !== itemsList.length) {
+    if(now - (then - 1000/1) < 1000/1) {
+        window.requestAnimationFrame(frameUpdate)
+        return
+    }
+    if(drawList.length !== Object.keys(itemsList).length) {
         updateDrawList()
     }
-    // if(keyPressed.KeyW) {
-    //     cameraY -= 5
-    // }
-    // if(keyPressed.KeyA) {
-    //     cameraX -= 5
-    // }
-    // if(keyPressed.KeyS) {
-    //     cameraY += 5
-    // }
-    // if(keyPressed.KeyD) {
-    //     cameraX += 5
-    // }
     let elapsed = now - then
     FPSCounter[FPSCounter.length] = {delay:1000/elapsed, time:now}
     disp1 = `Avg FPS: ${Math.floor(getAvgFPS())}`
@@ -592,3 +588,36 @@ function frameUpdate() {
     window.requestAnimationFrame(frameUpdate)
 }
 frameUpdate()
+
+
+
+
+
+
+
+
+
+// /**
+//  * Returns image dimensions for specified URL.
+//  */
+// export const getImageDimensions = (url: string): Promise<{width: number, height: number}> => {
+//     return new Promise((resolve, reject) => {
+//       const img = new Image();
+//       img.onload = () => resolve({
+//         width: img.width,
+//         height: img.height,
+//       });
+//       img.onerror = (error) => reject(error);
+//       img.src = url;
+//     });
+//   };
+
+
+
+// function getMeta(url){   
+//     var img = new Image();
+//     img.onload = function(){
+//         alert( this.width+' '+ this.height );
+//     };
+//     img.src = url;
+// }
