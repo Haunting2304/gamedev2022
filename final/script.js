@@ -1,11 +1,10 @@
-//<meta meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+//disabling zoom didnt work
 //fix right click keyboard input issue
 //fix the issue with images needing to be cached first
-//increase the fps counter time
 var disp1 = ''
 var disp2 = ''
 var disp3 = ''
-var debug = false
+var debug = true
 var FPSCounter = []
 var then = Date.now()
 var now = then
@@ -18,18 +17,63 @@ var yOffset
 var cameraX = 0
 var cameraY = 0
 var keyPressed = {}
+var itemsList = {}
+var drawList = []
+var idList = []
 var canvasElement = document.querySelector('canvas');
 var canvasContext = canvasElement.getContext('2d');
 // canvasContext.lineCap = 'round' //Doesn't work for some reason
+
+
+//Handles mouse position
 var mouse = {
     x:0,
     y:0,
     internalX:function(){return drawToInternalX(this.x)},
     internalY:function(){return drawToInternalY(this.y)}
 }
-var itemsList = {}
-var drawList = []
-var idList = []
+window.addEventListener('mousemove', (event)=>{
+    if(event.clientX < xOffset) { //Bounds for mouse position
+        mouse.x = xOffset
+    }
+    else if(event.clientX > drawWidth+xOffset) {
+        mouse.x = drawWidth+xOffset
+    }
+    else {
+        mouse.x = event.clientX / parseInt(getComputedStyle(canvasElement).width) * canvasElement.width
+    }
+    if(event.clientY < yOffset) {
+        mouse.y = yOffset
+    }
+    else if(event.clientY > drawHeight+yOffset) {
+        mouse.y = drawHeight+yOffset
+    }
+    else {
+        mouse.y = event.clientY / parseInt(getComputedStyle(canvasElement).height) * canvasElement.height
+    }
+})
+
+//Handles input detection
+document.addEventListener("keydown", (e)=>{
+    e = e || window.event;
+    keyPressed[e.code] = true
+});
+
+document.addEventListener("keyup", (e)=>{
+    e = e || window.event;
+    delete keyPressed[e.code]
+});
+
+window.addEventListener("blur", ()=>{
+    keyPressed = {}
+});
+
+
+/**
+  * Creates a locally unique ID based off of the time.
+  *
+  * @return {number} Numeric ID
+**/
 function createID() {
     let i=0
     while(true) {
@@ -40,11 +84,80 @@ function createID() {
         i++
     }
 }
+/**
+  * Removes an ID from the list of used IDs.
+  *
+  * @param {number} id Numeric ID to remove
+  * @return {undefined} 
+**/
 function deleteID(id) {
     if(idList.indexOf(id) !== -1) {
         idList.splice(idList.indexOf(id), 1)
     }
 }
+
+
+/**
+  * Checks for collisions between two items. Must have an x2 and y2, width and height, or radius. Radius collisions assume the item is a circle.
+  *
+  * @param {object} in1 An object from itemslist
+  * @param {object} in2 An object from itemslist
+  * @return {boolean} true if they are colliding, false otherwise
+**/
+function collisionCheck(in1,in2){
+    let left1 = in1.x
+    let top1 = in1.y
+    let right1
+    let bottom1
+    if(in1.x2 !== undefined && in1.y2 !== undefined) {
+        right1  = in1.x2
+        bottom1 = in1.y2
+    }
+    else if(in1.width !== undefined && in1.height !== undefined) {
+        right1  = left1 + in1.width
+        bottom1 = top1 + in1.height
+    }
+    else if(in1.radius !== undefined) {
+        right1  = left1 + in1.radius*2
+        bottom1 = top1 + in1.radius*2
+    }
+    let left2   = in2.x
+    let top2 = in2.y
+    let right2
+    let bottom2
+    if(in2.x2 !== undefined && in2.y2 !== undefined) {
+        right2  = in2.x2
+        bottom2 = in2.y2
+    }
+    else if(in2.width !== undefined && in2.height !== undefined) {
+        right2  = left2 + in2.width
+        bottom2 = top2 + in2.height
+    }
+    else if(in2.radius !== undefined) {
+        right2  = left2 + in2.radius*2
+        bottom2 = top2 + in2.radius*2
+    }
+    // console.log(left1)
+    // console.log(right1)
+    // console.log(top1)
+    // console.log(bottom1)
+    // console.log(left2)
+    // console.log(right2)
+    // console.log(top2)
+    // console.log(bottom2)
+    if ((right1  >=  left2  ) &&
+        (bottom1 >=  top2   ) &&
+        (left1   <=  right2 ) &&
+        (top1    <=  bottom2)){
+        return true
+    }
+    else {
+        return false
+    }
+}
+
+
+// Attempt at making these functions less messy, I gave up
 // function toCanvasX(input, arguments) {
 //     if(arguments === undefined) {
 //         arguments = {}
@@ -55,31 +168,93 @@ function deleteID(id) {
 //     }
 //     return work
 // }
+/**
+  * Converts an internal size on the x axis to a size on the canvas. Used for things like an items width.
+  *
+  * @param {number} input Internal size in pixels
+  * @return {number} Canvas size in pixels
+**/
 function toCanvasX(input) {
     return (input * drawWidth / 1000 / aspectRatio)
 }
-function toCanvasY(input) { //Maybe flip the sign so the internal coordinates work how I want
+
+/**
+  * Converts an internal size on the y axis to a size on the canvas. Used for things like an items height.
+  *
+  * @param {number} input Internal size in pixels
+  * @return {number} Canvas size in pixels
+**/
+function toCanvasY(input) {
     return (input * drawHeight / 1000)
 }
+
+/**
+  * Converts an internal position on the x axis to a position on the canvas. Used for things like an x position.
+  *
+  * @param {number} input Internal position in pixels
+  * @return {number} Canvas position in pixels
+**/
 function toDrawX(input) {
     return (input * drawWidth / 1000 / aspectRatio)+xOffset-toCanvasX(cameraX)
 }
+
+/**
+  * Converts an internal position on the y axis to a position on the canvas. Used for things like an y position.
+  *
+  * @param {number} input Internal position in pixels
+  * @return {number} Canvas position in pixels
+**/
 function toDrawY(input) {
     return (input * drawHeight / 1000)+yOffset-toCanvasY(cameraY)
 }
-function drawToInternalX(input) { //these functions suck to look at so probably do something about it //only use if input has the offset applied already
+
+/**
+  * Converts a canvas position on the x axis to an internal position. Used for things like an x position.
+  *
+  * @param {number} input Canvas position in pixels
+  * @return {number} Internal position in pixels
+**/
+function drawToInternalX(input) { //only use drawtointernal if input has offsets applied already
     return (input-xOffset+toCanvasX(cameraX)) / drawWidth * 1000 * aspectRatio
 }
+
+/**
+  * Converts a canvas position on the y axis to an internal position. Used for things like an y position.
+  *
+  * @param {number} input Canvas position in pixels
+  * @return {number} Internal position in pixels
+**/
 function drawToInternalY(input) {
     return (input-yOffset+toCanvasY(cameraY)) / drawHeight * 1000
 }
-function toInternalX(input) { //these functions suck to look at so probably do something about it //only use if input has the offset applied already
+
+/**
+  * Converts a canvas size on the x axis to an internal size. Used for things like an items width.
+  *
+  * @param {number} input Canvas size in pixels
+  * @return {number} Internal size in pixels
+**/
+function toInternalX(input) {
     return (input) / drawWidth * 1000 * aspectRatio
 }
+
+/**
+  * Converts a canvas size on the y axis to an internal size. Used for things like an items height.
+  *
+  * @param {number} input Canvas size in pixels
+  * @return {number} Internal size in pixels
+**/
 function toInternalY(input) {
     return (input) / drawHeight * 1000
 }
+
+/**
+  * Sorts all objects in itemsList into drawList, based on z position.
+  *
+  * @return {undefined}
+**/
 function updateDrawList() {
+    console.log('Updated draw list')
     drawList = []
     for(let i in itemsList) {
         let index = itemsList[i].z !== undefined ? itemsList[i].z : 0
@@ -87,9 +262,14 @@ function updateDrawList() {
     }
     drawList.sort((a,b)=>{return a.z-b.z})
 }
+
+/**
+  * Draws all items in drawList onto the canvas.
+  *
+  * @return {undefined}
+**/
 function drawCanvas() {
     // canvasContext.clearRect(0, 0, canvasElement.width, canvasElement.height)
-    //Temp for testing
     canvasContext.lineWidth = 1
     canvasContext.strokeStyle = '#222'
     canvasContext.fillStyle = '#222'
@@ -147,10 +327,18 @@ function drawCanvas() {
         canvasContext.fillStyle = '#fff'
         canvasContext.font = `${toCanvasX(50)}px serif`
         canvasContext.fillText(`FPS: ${Math.floor(getAvgFPS())}`, toCanvasX(10), toCanvasY(50))
-        canvasContext.fillText(`MouseX: ${Math.floor(mouse.internalX())}`, toCanvasX(10), toCanvasY(100))
-        canvasContext.fillText(`MouseY: ${Math.floor(mouse.internalY())}`, toCanvasX(10), toCanvasY(150))
+        canvasContext.fillText(`mouseX: ${Math.floor(mouse.internalX())}`, toCanvasX(10), toCanvasY(100))
+        canvasContext.fillText(`mouseY: ${Math.floor(mouse.internalY())}`, toCanvasX(10), toCanvasY(150))
+        canvasContext.fillText(`cameraX: ${Math.floor(cameraX)}`, toCanvasX(10), toCanvasY(200))
+        canvasContext.fillText(`cameraY: ${Math.floor(cameraY)}`, toCanvasX(10), toCanvasY(250))
     }
 }
+
+/**
+  * Sets canvas to display at screen resolution. Also sets the drawHeight, drawWidth, xOffset, and yOffset
+  *
+  * @return {undefined}
+**/
 function updateCanvasSize() {
     canvasElement.width = parseInt(getComputedStyle(canvasElement).width)
     canvasElement.height = parseInt(getComputedStyle(canvasElement).height)
@@ -176,56 +364,28 @@ function updateCanvasSize() {
     }
     drawCanvas()
 }
-updateCanvasSize()
-window.addEventListener('resize', updateCanvasSize)
-window.addEventListener('mousemove', (event)=>{
-    if(event.clientX < xOffset) { //Bounds for mouse position
-        mouse.x = xOffset
-    }
-    else if(event.clientX > drawWidth+xOffset) {
-        mouse.x = drawWidth+xOffset
-    }
-    else {
-        mouse.x = event.clientX / parseInt(getComputedStyle(canvasElement).width) * canvasElement.width
-    }
-    if(event.clientY < yOffset) {
-        mouse.y = yOffset
-    }
-    else if(event.clientY > drawHeight+yOffset) {
-        mouse.y = drawHeight+yOffset
-    }
-    else {
-        mouse.y = event.clientY / parseInt(getComputedStyle(canvasElement).height) * canvasElement.height
-    }
-})
 
-document.addEventListener("keydown", (e)=>{
-    e = e || window.event;
-    keyPressed[e.code] = true
-});
-
-document.addEventListener("keyup", (e)=>{
-    e = e || window.event;
-    delete keyPressed[e.code]
-});
-
-window.addEventListener("blur", ()=>{
-    keyPressed = {}
-});
-
-function createItem(arguments) {
-    let id = createID()
+//these functions arent very useful
+function createItem(arguments, arguments2) {
+    if(arguments2 === undefined) {
+        arguments2 = {}
+    }
+    let id = arguments2.id !== undefined ? arguments2.id : createID()
     itemsList[id] = {}
     for(let i in arguments) {
         itemsList[id][i] = arguments[i]
     }
-    updateDrawList() //May needlessly tank performance if making many new items in one frame because of excessive sorting
+    // updateDrawList() //May needlessly tank performance if making many new items in one frame because of pointless sorting
 }
 function removeItem(id) {
     delete itemsList[id]
     deleteID(id)
-    updateDrawList()
+    // updateDrawList()
 }
+
+updateCanvasSize()
+window.addEventListener('resize', updateCanvasSize)
+
 createItem({
     type:'line',
     x:-10000,
@@ -284,7 +444,7 @@ createItem({
     color:'#f00',
     fillColor:this.color,
     z:100
-})
+}, {id:'pointer'})
 function setCameraPos(input) {
     switch(input.mode) {
         case 'center':
@@ -322,7 +482,7 @@ createItem({
     color:'#f00',
     fillColor:this.color,
     z:100
-})
+}, {id:'player'})
 // itemsList[createID()] = {
 //     type:'rect',
 //     x:10,
@@ -387,7 +547,7 @@ function getAvgFPS() {
     let total = 0
     let now = Date.now()
     for(let i=0; i<FPSCounter.length; i++) {
-        if(now - FPSCounter[i].time > 1000) {
+        if(now - FPSCounter[i].time > 2000) {
             FPSCounter.splice(i, 1)
             i--
         }
@@ -399,6 +559,10 @@ function getAvgFPS() {
 }
 function frameUpdate() {
     now = Date.now()
+    //Object.keys(myObj).length
+    if(drawList.length !== itemsList.length) {
+        updateDrawList()
+    }
     // if(keyPressed.KeyW) {
     //     cameraY -= 5
     // }
