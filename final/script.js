@@ -1,3 +1,7 @@
+//<meta meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+//fix right click keyboard input issue
+//fix the issue with images needing to be cached first
+//increase the fps counter time
 var disp1 = ''
 var disp2 = ''
 var disp3 = ''
