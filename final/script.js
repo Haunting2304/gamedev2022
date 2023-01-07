@@ -5,7 +5,7 @@
 //maybe preload all images needed
 var disp1 = ''
 var disp2 = ''
-var disp3 = ''
+var disp3 = 's'
 var debug = true
 var FPSCounter = []
 var then = Date.now()
