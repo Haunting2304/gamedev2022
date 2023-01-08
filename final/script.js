@@ -679,5 +679,5 @@ frameUpdate()
 
 
 
-
+//a
 //Collision relsolver that will do stuff depending if they are static, or not static
