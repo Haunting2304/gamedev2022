@@ -1,12 +1,13 @@
+//tabbing in should reset frame timer to stop intentional tunneling
 //disabling zoom didnt work
 //fix right click keyboard input issue
-//fix the issue with images needing to be cached first
-//everything is linked to framerate
 //maybe preload all images needed
 var disp1 = ''
 var disp2 = ''
-var disp3 = 's'
-var debug = true
+var disp3 = ''
+var disp4 = ''
+var disp5 = ''
+var debug = false
 var FPSCounter = []
 var then = Date.now()
 var now = then
@@ -18,6 +19,7 @@ var xOffset
 var yOffset
 var cameraX = 0
 var cameraY = 0
+var cameraZoom = 2
 var keyPressed = {}
 var itemsList = {}
 var drawList = []
@@ -100,61 +102,64 @@ function deleteID(id) {
 
 
 /**
-  * Checks for collisions between two items. Must have an x2 and y2, width and height, or radius. Radius collisions assume the item is a circle.
+  * Checks for collisions between two items. Must be able to have a bounding box made.
   *
-  * @param {object} in1 An object from itemslist
-  * @param {object} in2 An object from itemslist
+  * @param {object} item1 An object from itemslist
+  * @param {object} item2 An object from itemslist
   * @return {boolean} true if they are colliding, false otherwise
 **/
-function collisionCheck(in1,in2){
-    let left1 = in1.x
-    let top1 = in1.y
-    let right1
-    let bottom1
-    if(in1.x2 !== undefined && in1.y2 !== undefined) {
-        right1  = in1.x2
-        bottom1 = in1.y2
-    }
-    else if(in1.width !== undefined && in1.height !== undefined) {
-        right1  = left1 + in1.width
-        bottom1 = top1 + in1.height
-    }
-    else if(in1.radius !== undefined) {
-        right1  = left1 + in1.radius*2
-        bottom1 = top1 + in1.radius*2
-    }
-    let left2   = in2.x
-    let top2 = in2.y
-    let right2
-    let bottom2
-    if(in2.x2 !== undefined && in2.y2 !== undefined) {
-        right2  = in2.x2
-        bottom2 = in2.y2
-    }
-    else if(in2.width !== undefined && in2.height !== undefined) {
-        right2  = left2 + in2.width
-        bottom2 = top2 + in2.height
-    }
-    else if(in2.radius !== undefined) {
-        right2  = left2 + in2.radius*2
-        bottom2 = top2 + in2.radius*2
-    }
-    // console.log(left1)
-    // console.log(right1)
-    // console.log(top1)
-    // console.log(bottom1)
-    // console.log(left2)
-    // console.log(right2)
-    // console.log(top2)
-    // console.log(bottom2)
-    if ((right1  >=  left2  ) &&
-        (bottom1 >=  top2   ) &&
-        (left1   <=  right2 ) &&
-        (top1    <=  bottom2)){
+function collisionCheck(item1, item2){
+    let box1 = findBoundingBox(item1)
+    let box2 = findBoundingBox(item2)
+    if ((box1.right  >  box2.left  ) &&
+        (box1.bottom >  box2.top   ) &&
+        (box1.left   <  box2.right ) &&
+        (box1.top    <  box2.bottom)){
         return true
     }
     else {
         return false
+    }
+}
+//Radius collisions assume the item is a circle.
+function findBoundingBox(item) {
+    let box = {}
+    if(item.x2 !== undefined && item.y2 !== undefined) {
+        box.left   = item.x
+        box.top    = item.y
+        box.right  = item.x2
+        box.bottom = item.y2
+    }
+    else if(item.width !== undefined && item.height !== undefined) {
+        box.left   = item.x
+        box.top    = item.y
+        box.right  = box.left + item.width
+        box.bottom = box.top + item.height
+    }
+    else if(item.radius !== undefined) {
+        box.left   = item.x - item.radius
+        box.top    = item.y - item.radius
+        box.right  = box.left + item.radius*2
+        box.bottom = box.top + item.radius*2
+    }
+    return box
+}
+function calcMinTranslation(box1, box2) {
+    leftDiff   =  box2.left   - box1.right
+    rightDiff  =  box2.right  - box1.left
+    topDiff    =  box2.top    - box1.bottom
+    bottomDiff =  box2.bottom - box1.top
+    if(Math.abs(leftDiff) <= Math.min(Math.abs(rightDiff), Math.abs(topDiff), Math.abs(bottomDiff))) {
+        return {axis:'x', magnitude:leftDiff}
+    }
+    if(Math.abs(rightDiff) <= Math.min(Math.abs(leftDiff), Math.abs(topDiff), Math.abs(bottomDiff))) {
+        return {axis:'x', magnitude:rightDiff}
+    }
+    if(Math.abs(topDiff) <= Math.min(Math.abs(rightDiff), Math.abs(leftDiff), Math.abs(bottomDiff))) {
+        return {axis:'y', magnitude:topDiff}
+    }
+    if(Math.abs(bottomDiff) <= Math.min(Math.abs(rightDiff), Math.abs(topDiff), Math.abs(leftDiff))) {
+        return {axis:'y', magnitude:bottomDiff}
     }
 }
 
@@ -177,7 +182,7 @@ function collisionCheck(in1,in2){
   * @return {number} Canvas size in pixels
 **/
 function toCanvasX(input) {
-    return (input * drawWidth / 1000 / aspectRatio)
+    return input * drawWidth / 1000 / aspectRatio * cameraZoom
 }
 
 /**
@@ -187,7 +192,7 @@ function toCanvasX(input) {
   * @return {number} Canvas size in pixels
 **/
 function toCanvasY(input) {
-    return (input * drawHeight / 1000)
+    return input * drawHeight / 1000 * cameraZoom
 }
 
 /**
@@ -197,7 +202,7 @@ function toCanvasY(input) {
   * @return {number} Canvas position in pixels
 **/
 function toDrawX(input) {
-    return (input * drawWidth / 1000 / aspectRatio)+xOffset-toCanvasX(cameraX)
+    return toCanvasX(input) + xOffset-toCanvasX(cameraX)
 }
 
 /**
@@ -207,7 +212,7 @@ function toDrawX(input) {
   * @return {number} Canvas position in pixels
 **/
 function toDrawY(input) {
-    return (input * drawHeight / 1000)+yOffset-toCanvasY(cameraY)
+    return toCanvasY(input) + yOffset-toCanvasY(cameraY)
 }
 
 /**
@@ -217,7 +222,7 @@ function toDrawY(input) {
   * @return {number} Internal position in pixels
 **/
 function drawToInternalX(input) { //only use drawtointernal if input has offsets applied already
-    return (input-xOffset+toCanvasX(cameraX)) / drawWidth * 1000 * aspectRatio
+    return toInternalX(input - xOffset+toCanvasX(cameraX))
 }
 
 /**
@@ -227,7 +232,7 @@ function drawToInternalX(input) { //only use drawtointernal if input has offsets
   * @return {number} Internal position in pixels
 **/
 function drawToInternalY(input) {
-    return (input-yOffset+toCanvasY(cameraY)) / drawHeight * 1000
+    return toInternalX(input - yOffset+toCanvasY(cameraY))
 }
 
 /**
@@ -237,7 +242,7 @@ function drawToInternalY(input) {
   * @return {number} Internal size in pixels
 **/
 function toInternalX(input) {
-    return (input) / drawWidth * 1000 * aspectRatio
+    return (input) / drawWidth * 1000 * aspectRatio / cameraZoom
 }
 
 /**
@@ -247,7 +252,7 @@ function toInternalX(input) {
   * @return {number} Internal size in pixels
 **/
 function toInternalY(input) {
-    return (input) / drawHeight * 1000
+    return (input) / drawHeight * 1000 / cameraZoom
 }
 
 /**
@@ -278,7 +283,7 @@ function drawCanvas() {
     for(let i=0; i<drawList.length; i++) {
         let property = drawList[i].id
         let item = itemsList[property]
-        canvasContext.lineWidth = item.lineWidth !== undefined ? item.lineWidth : 1
+        canvasContext.lineWidth = item.lineWidth !== undefined ? toCanvasX(item.lineWidth) : 1
         canvasContext.strokeStyle = item.color !== undefined ? item.color : '#000'
         canvasContext.fillStyle = item.fillColor !== undefined ? item.fillColor : canvasContext.strokeStyle
         canvasContext.setLineDash(item.lineDash !== undefined ? item.lineDash : [])
@@ -309,7 +314,6 @@ function drawCanvas() {
                 break
             case 'image':
                 canvasContext.drawImage(item.image, toDrawX(item.x), toDrawY(item.y), toCanvasX(item.width), toCanvasY(item.height))
-                console.log('draw')
                 break
         }
     }
@@ -329,10 +333,24 @@ function drawCanvas() {
         canvasContext.fillStyle = '#fff'
         canvasContext.font = `${toCanvasX(50)}px serif`
         canvasContext.fillText(`FPS: ${Math.floor(getAvgFPS())}`, toCanvasX(10), toCanvasY(50))
-        canvasContext.fillText(`mouseX: ${Math.floor(mouse.internalX())}`, toCanvasX(10), toCanvasY(100))
-        canvasContext.fillText(`mouseY: ${Math.floor(mouse.internalY())}`, toCanvasX(10), toCanvasY(150))
-        canvasContext.fillText(`cameraX: ${Math.floor(cameraX)}`, toCanvasX(10), toCanvasY(200))
-        canvasContext.fillText(`cameraY: ${Math.floor(cameraY)}`, toCanvasX(10), toCanvasY(250))
+        canvasContext.fillText(`playerX: ${Math.floor(itemsList.player.x)}`, toCanvasX(10), toCanvasY(100))
+        canvasContext.fillText(`playerY: ${Math.floor(itemsList.player.y)}`, toCanvasX(10), toCanvasY(150))
+        canvasContext.fillText(`playerXVelocity: ${Math.floor(itemsList.player.xVelocity)}`, toCanvasX(10), toCanvasY(200))
+        canvasContext.fillText(`playerYVelocity: ${Math.floor(itemsList.player.yVelocity)}`, toCanvasX(10), toCanvasY(250))
+        // let key = ''
+        // let multiIter = false
+        // for(let i in keyPressed) {
+        //     if(multiIter) {
+        //         key += ', '
+        //     }
+        //     multiIter = true
+        //     key += i
+        // }
+        // canvasContext.fillText(`Keys: ${key}`, toCanvasX(10), toCanvasY(300))
+        // canvasContext.fillText(`mouseX: ${Math.floor(mouse.internalX())}`, toCanvasX(10), toCanvasY(100))
+        // canvasContext.fillText(`mouseY: ${Math.floor(mouse.internalY())}`, toCanvasX(10), toCanvasY(150))
+        // canvasContext.fillText(`cameraX: ${Math.floor(cameraX)}`, toCanvasX(10), toCanvasY(200))
+        // canvasContext.fillText(`cameraY: ${Math.floor(cameraY)}`, toCanvasX(10), toCanvasY(250))
     }
 }
 
@@ -367,187 +385,11 @@ function updateCanvasSize() {
     drawCanvas()
 }
 
-//these functions arent very useful
-function createItem(arguments, arguments2) {
-    if(arguments2 === undefined) {
-        arguments2 = {}
-    }
-    let id = arguments2.id !== undefined ? arguments2.id : createID()
-    itemsList[id] = {}
-    for(let i in arguments) {
-        itemsList[id][i] = arguments[i]
-    }
-    // updateDrawList() //May needlessly tank performance if making many new items in one frame because of pointless sorting
-}
-function removeItem(id) {
-    delete itemsList[id]
-    deleteID(id)
-    // updateDrawList()
-}
-
-updateCanvasSize()
-window.addEventListener('resize', updateCanvasSize)
-
-createItem({
-    type:'line',
-    x:-10000,
-    y:0,
-    x2:10000,
-    y2:0,
-    lineDash:[15,5],
-    z:-100,
-    lineWidth:'1',
-    color:'#f00'
-})
-createItem({
-    type:'line',
-    x:0,
-    y:-10000,
-    x2:0,
-    y2:10000,
-    lineDash:[15,5],
-    z:-100,
-    lineWidth:'1',
-    color:'#0f0'
-})
-// createItem({
-//     type:'rect',
-//     x:10,
-//     y:10,
-//     update:function(){
-//         this.x2 = mouse.internalX()
-//         this.y2 = mouse.internalY()
-//         this.width = this.x2 - this.x
-//         this.height = this.y2 - this.y
-//     },
-//     color:'#f00',
-//     lineWidth:'5'
-// })
-// createItem({
-//     type:'line',
-//     x:10,
-//     y:10,
-//     update:function(){
-//         this.x2 = mouse.internalX()
-//         this.y2 = mouse.internalY()
-//     },
-//     z:-1,
-//     lineWidth:'10',
-// })
-createItem({
-    type:'fillCircle',
-    update:function(){
-        this.x = mouse.internalX()
-        this.y = mouse.internalY()
-    },
-    radius:5,
-    startAngle:0,
-    endAngle:2*Math.PI,
-    color:'#f00',
-    fillColor:this.color,
-    z:100
-}, {id:'pointer'})
-function setCameraPos(input) {
-    switch(input.mode) {
-        case 'center':
-            cameraX = input.x - toInternalX(drawWidth) / 2
-            cameraY = input.y - toInternalY(drawHeight) / 2
-            break
-        default:
-            cameraX = input.x
-            cameraY = input.y
-            break
-    }
-}
-createItem({
-    type:'fillCircle',
-    x:100,
-    y:100,
-    update:function(){
-        if(keyPressed.KeyW) {
-            this.y -= 5
-        }
-        if(keyPressed.KeyA) {
-            this.x -= 5
-        }
-        if(keyPressed.KeyS) {
-            this.y += 5
-        }
-        if(keyPressed.KeyD) {
-            this.x += 5
-        }
-        setCameraPos({x:this.x, y:this.y, mode:'center'})
-    },
-    radius:15,
-    startAngle:0,
-    endAngle:2*Math.PI,
-    color:'#f00',
-    fillColor:this.color,
-    z:100
-}, {id:'player'})
-// itemsList[createID()] = {
-//     type:'rect',
-//     x:10,
-//     y:1000,
-//     width:20,
-//     height:20,
-//     yVelocity:0,
-//     xVelocity:0,
-//     color:'#f00',
-//     update:function(){
-//         // this.xVelocity += 1
-//         // this.x += this.xVelocity
-//         this.yVelocity -= 1
-//         this.y += this.yVelocity
-//         if(this.y < 0) {
-//             this.y = 0
-//             this.yVelocity = 0
-//         }
-//     },
-//     z:-1,
-//     lineWidth:'10'
-// }
-// itemsList[createID()] = {
-//     type:'line',
-//     x:10,
-//     y:10,
-//     yVelocity:0,
-//     update:function(){
-//         this.yVelocity += 1
-//         this.y += this.yVelocity
-//         this.x2 = this.x+100
-//         this.y2 = mouse.y
-//         if(this.y > 1000) {
-//             this.y = 1000
-//             this.yVelocity = 0
-//         }
-//     },
-//     color:'#0f0'
-// }
-function createImage(input) {
-    let img = new Image()
-    for(let i in input) {
-        img[i] = input[i]
-    }
-    return img
-}
-createItem({
-    type:'image',
-    image:createImage({src:'TestImage.png'}),
-    x:100,
-    y:100,
-    width:500,
-    height:500,
-    z:5,
-    onSpawn:function(){
-        let image = createImage({src:'TestImage.png'}) //Idk why I can't use this.image instead //eg. code
-        let ratio = image.naturalWidth/image.naturalHeight //Append the image first probably then get rid of it again
-        console.log(image.width)
-        this.width = 500
-        this.height = this.width * ratio
-        this.width = this.height / ratio
-    }
-}, {id:'image'})
+/**
+  * Returns the average fps over the last 2 seconds
+  *
+  * @return {number} Average FPS
+**/
 function getAvgFPS() {
     let total = 0
     let now = Date.now()
@@ -562,16 +404,22 @@ function getAvgFPS() {
     }
     return total / FPSCounter.length
 }
+
+/**
+  * Runs FPS times per second
+  *
+  * @return {undefined}
+**/
 function frameUpdate() {
     now = Date.now()
-    if(now - (then - 1000/1) < 1000/1) {
-        window.requestAnimationFrame(frameUpdate)
-        return
-    }
+    let elapsed = now - then
+    // if(elapsed < (1000/1)-5) { //Works, just not the way I want. Also idk why I even need this
+    //     window.requestAnimationFrame(frameUpdate)
+    //     return
+    // }
     if(drawList.length !== Object.keys(itemsList).length) {
         updateDrawList()
     }
-    let elapsed = now - then
     FPSCounter[FPSCounter.length] = {delay:1000/elapsed, time:now}
     disp1 = `Avg FPS: ${Math.floor(getAvgFPS())}`
     for(let i in itemsList) {
@@ -580,44 +428,256 @@ function frameUpdate() {
             delete itemsList[i].onSpawn
         }
         if(itemsList[i].update !== undefined) {
-            itemsList[i].update()
+            itemsList[i].update(elapsed)
+        }
+    }
+    for(let i=0; i<drawList.length-1; i++) {
+        let item = itemsList[drawList[i].id]
+        for(let j=i+1; j<drawList.length; j++) {
+            let item2 = itemsList[drawList[j].id]
+            if(collisionCheck(item, item2)) {
+                if(itemsList[drawList[i].id].collision !== undefined) {
+                    itemsList[drawList[i].id].collision(drawList[j].id)
+                }
+                if(itemsList[drawList[j].id].collision !== undefined) {
+                    itemsList[drawList[j].id].collision(drawList[i].id)
+                }
+            }
         }
     }
     drawCanvas()
     then = now
     window.requestAnimationFrame(frameUpdate)
 }
+
+function setCameraPos(input) {
+    switch(input.mode) {
+        case 'center':
+            cameraX = input.x - toInternalX(drawWidth) / 2
+            cameraY = input.y - toInternalY(drawHeight) / 2
+            break
+        default:
+            cameraX = input.x
+            cameraY = input.y
+            break
+    }
+}
+
+function createImage(input) {
+    let img = new Image()
+    for(let i in input) {
+        img[i] = input[i]
+    }
+    return img
+}
+function getImageDimensions(url) {
+    return new Promise((resolve, reject) => {
+        const img = new Image()
+        img.onload = () => resolve({
+            width: img.width,
+            height: img.height,
+        })
+        img.onerror = (error) => reject(error)
+        img.src = url
+    })
+}
+function createItem(id, arguments) {
+    itemsList[id] = {}
+    for(let i in arguments) {
+        itemsList[id][i] = arguments[i]
+    }
+}
+function removeItem(id) {
+    delete itemsList[id]
+    deleteID(id)
+}
+
+// createItem('xLine', {
+//     type:'line',
+//     x:-10000,
+//     y:0,
+//     x2:10000,
+//     y2:0,
+//     lineDash:[15,5],
+//     z:-100,
+//     lineWidth:'2',
+//     color:'#f00'
+// })
+// createItem('yLine', {
+//     type:'line',
+//     x:0,
+//     y:-10000,
+//     x2:0,
+//     y2:10000,
+//     lineDash:[15,5],
+//     z:-100,
+//     lineWidth:'2',
+//     color:'#0f0'
+// })
+// createItem('pointer', {
+//     type:'fillCircle',
+//     update:function(){
+//         this.x = mouse.internalX()
+//         this.y = mouse.internalY()
+//     },
+//     radius:5,
+//     startAngle:0,
+//     endAngle:2*Math.PI,
+//     color:'#f00',
+//     fillColor:this.color,
+//     z:100
+// })
+createItem('player', {
+    type:'fillCircle',
+    x:0,
+    y:0,
+    xVelocity:0,
+    yVelocity:0,
+    update:function(elapsed){
+        elapsed = elapsed/10
+        if(keyPressed.KeyW) {
+            this.yVelocity -= 1 * elapsed
+        }
+        if(keyPressed.KeyA) {
+            this.xVelocity -= 1 * elapsed
+        }
+        if(keyPressed.KeyS) {
+            this.yVelocity += 1 * elapsed
+        }
+        if(keyPressed.KeyD) {
+            this.xVelocity += 1 * elapsed
+        }
+        let prevXVelocity = this.xVelocity
+        if(this.xVelocity > 0) {
+            this.xVelocity -= .5 * elapsed
+        }
+        else if(this.xVelocity < 0) {
+            this.xVelocity += .5 * elapsed
+        }
+        if((this.xVelocity > 0 && prevXVelocity < 0) || (this.xVelocity < 0 && prevXVelocity > 0)) {
+            this.xVelocity = 0
+        }
+        let prevYVelocity = this.yVelocity
+        if(this.yVelocity > 0) {
+            this.yVelocity -= .3 * elapsed
+        }
+        else if(this.yVelocity < 0) {
+            this.yVelocity += .3 * elapsed
+        }
+        if((this.yVelocity > 0 && prevYVelocity < 0) || (this.yVelocity < 0 && prevYVelocity > 0)) {
+            this.yVelocity = 0
+        }
+        this.yVelocity += .5*elapsed
+        this.xVelocity = Math.max(Math.min(this.xVelocity, 15), -15)
+        this.yVelocity = Math.max(Math.min(this.yVelocity, 15), -15)
+        this.x += this.xVelocity * elapsed / 10
+        this.y += this.yVelocity * elapsed / 10
+        setCameraPos({x:this.x, y:this.y, mode:'center'})
+    },
+    collision:function(collider) {
+        let minTrans = calcMinTranslation(findBoundingBox(this), findBoundingBox(itemsList[collider]))
+        if(minTrans.axis === 'x') {
+            this.x += minTrans.magnitude
+            this.xVelocity = 0
+        }
+        else if(minTrans.axis === 'y') {
+            this.y += minTrans.magnitude
+            this.yVelocity = 0
+        }
+        // console.log(`Player collided with ${collider}`)
+        //maybe shoot raycasts or smth idk. like to tell where to pop out from
+        // this.x += 5
+        // this.y += 5
+        // if(collisionCheck(this, itemsList[collider])) {
+        //     this.collision(collider)
+        // }
+    },
+    radius:15,
+    startAngle:0,
+    endAngle:2*Math.PI,
+    color:'#f00',
+    fillColor:this.color,
+    z:100
+})
+createItem(createID(), {
+    type:'fillRect',
+    x:-200,
+    y:10,
+    width:400,
+    height:400,
+    color:'#181',
+    fillColor:this.color
+})
+createItem(createID(), {
+    type:'fillRect',
+    x:-200,
+    y:-1000,
+    width:100,
+    height:1100,
+    color:'#181',
+    fillColor:this.color
+})
+createItem(createID(), {
+    type:'fillRect',
+    x:190,
+    y:210,
+    width:320,
+    height:200,
+    color:'#181',
+    fillColor:this.color
+})
+createItem(createID(), {
+    type:'fillRect',
+    x:312.5,
+    y:10,
+    width:75,
+    height:20,
+    color:'#181',
+    fillColor:this.color
+})
+createItem(createID(), {
+    type:'fillRect',
+    x:500,
+    y:10,
+    width:600,
+    height:400,
+    color:'#181',
+    fillColor:this.color
+})
+// createItem('image', {
+//     type:'image',
+//     image:createImage({src:'TestImage.png'}),
+//     z:105,
+//     onSpawn:async function() {
+//         getImageDimensions('TestImage.png').then((value) => {
+//             let ratio = value.width/value.height
+//             // this.width = 500
+//             // this.height = this.width / ratio
+//             this.height = 400
+//             this.width = this.height * ratio
+//             this.x = -.5 * this.width
+//             this.y = itemsList.player.radius
+//         })
+//     }
+// })
+// for(let i=0; i<500; i++) {
+//     createItem(createID(), {
+//         type:'fillCircle',
+//         z:105,
+//         x:(Math.random()*2000)-1000,
+//         y:(Math.random()*2000)-1000,
+//         radius:5,
+//         startAngle:0,
+//         endAngle:2*Math.PI
+//     }) 
+// }
+
+updateCanvasSize()
+window.addEventListener('resize', updateCanvasSize)
 frameUpdate()
 
 
 
 
 
-
-
-
-
-// /**
-//  * Returns image dimensions for specified URL.
-//  */
-// export const getImageDimensions = (url: string): Promise<{width: number, height: number}> => {
-//     return new Promise((resolve, reject) => {
-//       const img = new Image();
-//       img.onload = () => resolve({
-//         width: img.width,
-//         height: img.height,
-//       });
-//       img.onerror = (error) => reject(error);
-//       img.src = url;
-//     });
-//   };
-
-
-
-// function getMeta(url){   
-//     var img = new Image();
-//     img.onload = function(){
-//         alert( this.width+' '+ this.height );
-//     };
-//     img.src = url;
-// }
+//Collision relsolver that will do stuff depending if they are static, or not static
