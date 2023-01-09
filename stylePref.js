@@ -9,20 +9,24 @@ function stringToBool(x) {
         return undefined
     }
 }
-var light
-var dark
-if(document.getElementById("customTheme") != undefined) {
-    light = document.getElementById("customThemeLight").innerHTML
-    dark = document.getElementById("customThemeDark").innerHTML
+var light = "/gamedev2022/styleLight.css"
+var dark = "/gamedev2022/styleDark.css"
+var darkMode
+if(localStorage.getItem('darkModePref') == undefined) {
+    if (window.matchMedia) {
+        if(window.matchMedia('(prefers-color-scheme: dark)').matches){
+            darkMode = true
+        } else {
+            darkMode = false
+        }
+      } else {
+        darkMode = true
+      }
+    
 }
 else {
-    light = "/gamedev2022/styleLight.css"
-    dark = "/gamedev2022/styleDark.css"
+    darkMode = stringToBool(localStorage.getItem('darkModePref'))
 }
-if(localStorage.getItem('darkModePref') == undefined) {
-    localStorage.setItem('darkModePref', true);
-}
-var darkMode = stringToBool(localStorage.getItem('darkModePref'))
 getThemeSheet()
 function updateTheme() {
     darkMode = document.getElementById("darkModeButton").checked
@@ -31,7 +35,7 @@ function updateTheme() {
 }
 function getThemeSheet() {
     if(darkMode) {
-    document.getElementById("styleMode").href = dark;
+        document.getElementById("styleMode").href = dark;
     }
     else {
         document.getElementById("styleMode").href = light;
@@ -39,6 +43,6 @@ function getThemeSheet() {
 }
 function onPageLoad() {
     if(document.getElementById("darkModeButton") != undefined) {
-    document.getElementById("darkModeButton").checked = darkMode
+        document.getElementById("darkModeButton").checked = darkMode
     }
 }
