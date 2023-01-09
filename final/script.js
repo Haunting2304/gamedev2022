@@ -1,3 +1,4 @@
+//draw vectors?
 //tabbing in should reset frame timer to stop intentional tunneling
 //disabling zoom didnt work
 //fix right click keyboard input issue
@@ -100,6 +101,58 @@ function deleteID(id) {
     }
 }
 
+function rotateQuad(quad, angle, rotationCenter) {
+    let centerX
+    let centerY
+    if (rotationCenter === 'center') {
+        let right = Math.max(quad.x, quad.x2, quad.x3, quad.x4)
+        let left = Math.min(quad.x, quad.x2, quad.x3, quad.x4)
+        let bottom = Math.max(quad.y, quad.y2, quad.y3, quad.y4)
+        let top = Math.min(quad.y, quad.y2, quad.y3, quad.y4)
+        centerX = left + (.5 * (right - left))
+        centerY = top + (.5 * (bottom - top))
+    }
+    else if(rotationCenter === 'leftcenter') {
+        let left = Math.min(quad.x, quad.x2, quad.x3, quad.x4)
+        let bottom = Math.max(quad.y, quad.y2, quad.y3, quad.y4)
+        let top = Math.min(quad.y, quad.y2, quad.y3, quad.y4)
+        centerX = left
+        centerY = top + (.5 * (bottom - top))
+    }
+    else if (rotationCenter === 'rightcenter') {
+        let right = Math.max(quad.x, quad.x2, quad.x3, quad.x4)
+        let bottom = Math.max(quad.y, quad.y2, quad.y3, quad.y4)
+        let top = Math.min(quad.y, quad.y2, quad.y3, quad.y4)
+        centerX = right
+        centerY = top + (.5 * (bottom - top))
+    }
+    
+    let max
+    if(quad.type === 'quad') {
+        max = 5
+    }
+    else if(quad.type === 'tri') {
+        max = 4
+    }
+    for(let i=1; i<max; i++) {
+        if(i === 1) {
+            i = ''
+        }
+        let radians = (Math.PI / 180) * angle
+        let x = quad[`x${i}`]
+        let y = quad[`y${i}`]
+        let cos = Math.cos(radians)
+        let sin = Math.sin(radians)
+        let nx = (cos * (x - centerX)) + (sin * (y - centerY)) + centerX
+        let ny = (cos * (y - centerY)) - (sin * (x - centerX)) + centerY
+        quad[`x${i}`] = nx
+        quad[`y${i}`] = ny
+        if(i === '') {
+            i = 1
+        }
+    }
+    return quad
+}
 
 /**
   * Checks for collisions between two items. Must be able to have a bounding box made.
@@ -110,45 +163,194 @@ function deleteID(id) {
 **/
 function collisionCheck(item1, item2){
     let box1 = findBoundingBox(item1)
+    let box1OriginalType = box1.type
+    if(box1.type === 'OBB'){
+        box1 = OBBToAABB(box1)
+    }
     let box2 = findBoundingBox(item2)
-    if ((box1.right  >  box2.left  ) &&
-        (box1.bottom >  box2.top   ) &&
-        (box1.left   <  box2.right ) &&
-        (box1.top    <  box2.bottom)){
-        return true
+    let box2OriginalType = box2.type
+    if(box2.type === 'OBB'){
+        box2 = OBBToAABB(box2)
+    }
+    if((box1.xMax > box2.xMin && box1.xMin < box2.xMax) && (box1.yMax > box2.yMin && box1.yMin < box2.yMax)) {
+        let result = true
+        if(box1OriginalType === 'OBB' || box2OriginalType === 'OBB') {
+            result = collisionCheckSAT(item1, item2)
+        }
+        return result
     }
     else {
         return false
     }
 }
+
+//Assumes the OBB is a quad
+function OBBToAABB(box) {
+    output = {}
+    output.type = 'AABB'
+    output.xMin = Math.min(box.x, box.x2, box.x3, box.x4)
+    output.xMax = Math.max(box.x, box.x2, box.x3, box.x4)
+    output.yMin = Math.min(box.y, box.y2, box.y3, box.y4)
+    output.yMax = Math.max(box.y, box.y2, box.y3, box.y4)
+    return output
+}
+
+function AABBToOBB(box) {
+    output = {}
+    output.type = 'OBB'
+    output.x = box.xMin
+    output.y = box.yMin
+    output.x2 = box.xMax
+    output.y2 = box.yMin
+    output.x3 = box.xMax
+    output.y3 = box.yMax
+    output.x4 = box.xMin
+    output.y4 = box.yMax
+    return output
+}
+
+//Assumes the OBB is a quad
+// if one of them is an AABB, then why not just check if any of the points in the OBB are colliding with the AABB
+function collisionCheckSAT(item1, item2) {
+    let box1 = findBoundingBox(item1)
+    if(box1.type === 'AABB'){box1 = AABBToOBB(box1)}
+    let box2 = findBoundingBox(item2)
+    if(box2.type === 'AABB'){box2 = AABBToOBB(box2)}
+    let point1 = [box1.x, box1.y]
+    let point2 = [box1.x2, box1.y2]
+    let point3 = [box1.x3, box1.y3]
+    let point4 = [box1.x4, box1.y4]
+    let points = [point1, point2, point3, point4]
+    let vector1 = [box1.x-box1.x4, box1.y-box1.y4]
+    let vector2 = [box1.x2-box1.x, box1.y2-box1.y]
+    let vector3 = [box1.x3-box1.x2, box1.y3-box1.y2]
+    let vector4 = [box1.x4-box1.x3, box1.y4-box1.y3]
+    let vectorPerp1 = [-vector1[1], vector1[0]]
+    let vectorPerp2 = [-vector2[1], vector2[0]]
+    let vectorPerp3 = [-vector3[1], vector3[0]]
+    let vectorPerp4 = [-vector4[1], vector4[0]]
+    let pointB1 = [box2.x, box2.y]
+    let pointB2 = [box2.x2, box2.y2]
+    let pointB3 = [box2.x3, box2.y3]
+    let pointB4 = [box2.x4, box2.y4]
+    let pointsB = [pointB1, pointB2, pointB3, pointB4]
+    let vectorB1 = [box2.x-box2.x4, box2.y-box2.y4]
+    let vectorB2 = [box2.x2-box2.x, box2.y2-box2.y]
+    let vectorB3 = [box2.x3-box2.x2, box2.y3-box2.y2]
+    let vectorB4 = [box2.x4-box2.x3, box2.y4-box2.y3]
+    let vectorPerpB1 = [-vectorB1[1], vectorB1[0]]
+    let vectorPerpB2 = [-vectorB2[1], vectorB2[0]]
+    let vectorPerpB3 = [-vectorB3[1], vectorB3[0]]
+    let vectorPerpB4 = [-vectorB4[1], vectorB4[0]]
+    let AMin
+    let AMax
+    let BMin
+    let BMax
+    let checkVectors = [vectorPerp1,vectorPerp2,vectorPerp3,vectorPerp4,vectorPerpB1,vectorPerpB2,vectorPerpB3,vectorPerpB4]
+    let dotProduct = []
+    let dotProductB = []
+    for(let i=0; i<checkVectors.length; i++) {
+        for(let j=0; j<4; j++) {
+            dotProduct[j] = dot(points[j], checkVectors[i])
+            dotProductB[j] = dot(pointsB[j], checkVectors[i])
+        }
+        AMin = Math.min(dotProduct[0],dotProduct[1],dotProduct[2],dotProduct[3])
+        AMax = Math.max(dotProduct[0],dotProduct[1],dotProduct[2],dotProduct[3])
+        BMin = Math.min(dotProductB[0],dotProductB[1],dotProductB[2],dotProductB[3])
+        BMax = Math.max(dotProductB[0],dotProductB[1],dotProductB[2],dotProductB[3])
+        if(!(AMax > BMin && AMin < BMax)) {
+            return false
+        }
+        // var vecX = Math.cos(axisAngle) * deepness
+        // var vecY = Math.sin(axisAngle) * deepness
+        // var sumX = vec1X + vec2X + ...
+        // var sumY = vec1Y + vec2Y + ...
+        // deepness is AMax - BMin assuming AMin < BMax
+        // if AMin > BMax then deepness is *probably* BMin - AMax
+        // alternatively just use absolute value?
+        // idk what axis angle is
+        // deepness = sqrt(x * x +  y * y)  apparently
+    }
+    return true
+}
+
+//fix?
+dot = (a, b) => a.map((x, i) => a[i] * b[i]).reduce((m, n) => m + n);
+
 //Radius collisions assume the item is a circle.
 function findBoundingBox(item) {
     let box = {}
-    if(item.x2 !== undefined && item.y2 !== undefined) {
-        box.left   = item.x
-        box.top    = item.y
-        box.right  = item.x2
-        box.bottom = item.y2
-    }
-    else if(item.width !== undefined && item.height !== undefined) {
-        box.left   = item.x
-        box.top    = item.y
-        box.right  = box.left + item.width
-        box.bottom = box.top + item.height
-    }
-    else if(item.radius !== undefined) {
-        box.left   = item.x - item.radius
-        box.top    = item.y - item.radius
-        box.right  = box.left + item.radius*2
-        box.bottom = box.top + item.radius*2
+    switch(item.type) {
+        case 'line': //make this better
+            box.type = 'OBB'
+            let dx = item.x2 - item.x
+            let dy = item.y - item.y2
+            let slope = dy/dx
+            let angle = Math.atan(slope)/Math.PI*180
+            let length = Math.sqrt((item.x2 - item.x)**2 + (item.y2 - item.y)**2)
+            let rotationCenter = 'leftcenter'
+            if(dx < 0) {
+                length = length * -1
+                rotationCenter = 'rightcenter'
+            }
+            let quad = {
+                type:'quad',
+                x:item.x,
+                y:item.y+.5*item.lineWidth,
+                x2:item.x+length,
+                y2:item.y+.5*item.lineWidth,
+                x3:item.x+length,
+                y3:item.y-.5*item.lineWidth,
+                x4:item.x,
+                y4:item.y-.5*item.lineWidth
+            }
+            quad = rotateQuad(quad, angle, rotationCenter)
+            // console.log(`x2: ${Math.floor(item.x2)}\ny2: ${Math.floor(item.y2)}`)
+            box = quad
+            box.type = 'OBB'
+            // console.log(`dx = ${dx}\ndy = ${dy}\nslope = ${slope}\nangle = ${angle}\nlength = ${length}`)
+            break
+        case 'quad':
+        case 'tri':
+            box.type = 'OBB'
+            let vertexCount
+            if(item.type === 'tri'){vertexCount=3}
+            if(['quad'].indexOf(item.type) !== -1){vertexCount=4}
+            for(let i=1; i<vertexCount+1; i++) {
+                if(i===1){i=''}
+                box[`x${i}`] = item[`x${i}`]
+                box[`y${i}`] = item[`y${i}`]
+                if(i===''){i=1}
+            }
+            break
+        case 'rect':
+        case 'fillRect':
+        case 'image':
+            box.type = 'AABB'
+            box.xMin = item.x
+            box.yMin = item.y
+            box.xMax = box.xMin + item.width
+            box.yMax = box.yMin + item.height
+            break
+        case 'circle':
+        case 'fillCircle':
+            box.type = 'AABB'
+            box.xMin = item.x - item.radius
+            box.yMin = item.y - item.radius
+            box.xMax = box.xMin + item.radius*2
+            box.yMax = box.yMin + item.radius*2
+            break
+
     }
     return box
 }
 function calcMinTranslation(box1, box2) {
-    leftDiff   =  box2.left   - box1.right
-    rightDiff  =  box2.right  - box1.left
-    topDiff    =  box2.top    - box1.bottom
-    bottomDiff =  box2.bottom - box1.top
+    if(box1.type === 'OBB'){box1 = OBBToAABB(box1)}
+    if(box2.type === 'OBB'){box2 = OBBToAABB(box2)}
+    leftDiff   =  box2.xMin - box1.xMax
+    rightDiff  =  box2.xMax - box1.xMin
+    topDiff    =  box2.yMin - box1.yMax
+    bottomDiff =  box2.yMax - box1.yMin
     if(Math.abs(leftDiff) <= Math.min(Math.abs(rightDiff), Math.abs(topDiff), Math.abs(bottomDiff))) {
         return {axis:'x', magnitude:leftDiff}
     }
@@ -341,21 +543,33 @@ function drawCanvas() {
     canvasContext.lineWidth = 1
     canvasContext.strokeStyle = '#f00'
     for(let i=0; i<drawList.length; i++) {
-        let box = findBoundingBox(itemsList[drawList[i].id])
-        let quad = {
-            type:'quad',
-            linewidth:1,
-            color:'#f00',
-            x:box.left,
-            y:box.top,
-            x2:box.right,
-            y2:box.top,
-            x3:box.right,
-            y3:box.bottom,
-            x4:box.left,
-            y4:box.bottom
+        item = itemsList[drawList[i].id]
+        let box = findBoundingBox(item)
+        let quad
+        if(box.type === 'AABB') {
+            quad = {
+                type:'quad',
+                linewidth:1,
+                color:'#f00',
+                x:box.xMin,
+                y:box.yMin,
+                x2:box.xMax,
+                y2:box.yMin,
+                x3:box.xMax,
+                y3:box.yMax,
+                x4:box.xMin,
+                y4:box.yMax
+            }
         }
+        else if(box.type === 'OBB') {
+            quad = box
+            quad.type = 'quad'
+            quad.lineWidth = 1
+            quad.color = '#00f'
+        }
+        
         drawItem(quad)
+        
     }
     //Draws black bars                    
     canvasContext.lineWidth = 1
@@ -392,40 +606,6 @@ function drawCanvas() {
         // canvasContext.fillText(`cameraX: ${Math.floor(cameraX)}`, toCanvasX(10), toCanvasY(200))
         // canvasContext.fillText(`cameraY: ${Math.floor(cameraY)}`, toCanvasX(10), toCanvasY(250))
     }
-}
-
-function rotateQuad(quad) {
-    let right = Math.max(quad.x, quad.x2, quad.x3, quad.x4)
-    let left = Math.min(quad.x, quad.x2, quad.x3, quad.x4)
-    let bottom = Math.max(quad.y, quad.y2, quad.y3, quad.y4)
-    let top = Math.min(quad.y, quad.y2, quad.y3, quad.y4)
-    let centerX = left + (.5 * (right - left))
-    let centerY = top + (.5 * (bottom - top))
-    let max
-    if(quad.type === 'quad') {
-        max = 5
-    }
-    if(quad.type === 'tri') {
-        max = 4
-    }
-    for(let i=1; i<max; i++) {
-        if(i === 1) {
-            i = ''
-        }
-        let radians = (Math.PI / 180) * 45
-        let x = quad[`x${i}`]
-        let y = quad[`y${i}`]
-        let cos = Math.cos(radians)
-        let sin = Math.sin(radians)
-        let nx = (cos * (x - centerX)) + (sin * (y - centerY)) + centerX
-        let ny = (cos * (y - centerY)) - (sin * (x - centerX)) + centerY
-        quad[`x${i}`] = nx
-        quad[`y${i}`] = ny
-        if(i === '') {
-            i = 1
-        }
-    }
-    return quad
 }
 
 /**
@@ -631,19 +811,19 @@ createItem('player', {
         if((this.xVelocity > 0 && prevXVelocity < 0) || (this.xVelocity < 0 && prevXVelocity > 0)) {
             this.xVelocity = 0
         }
-        let prevYVelocity = this.yVelocity
-        if(this.yVelocity > 0) {
-            this.yVelocity -= .3 * elapsed
-        }
-        else if(this.yVelocity < 0) {
-            this.yVelocity += .3 * elapsed
-        }
-        if((this.yVelocity > 0 && prevYVelocity < 0) || (this.yVelocity < 0 && prevYVelocity > 0)) {
-            this.yVelocity = 0
-        }
+        // let prevYVelocity = this.yVelocity
+        // if(this.yVelocity > 0) {
+        //     this.yVelocity -= .3 * elapsed
+        // }
+        // else if(this.yVelocity < 0) {
+        //     this.yVelocity += .3 * elapsed
+        // }
+        // if((this.yVelocity > 0 && prevYVelocity < 0) || (this.yVelocity < 0 && prevYVelocity > 0)) {
+        //     this.yVelocity = 0
+        // }
         this.yVelocity += .5*elapsed
         this.xVelocity = Math.max(Math.min(this.xVelocity, 15), -15)
-        this.yVelocity = Math.max(Math.min(this.yVelocity, 15), -15)
+        this.yVelocity = Math.max(Math.min(this.yVelocity, 100), -15)
         this.x += this.xVelocity * elapsed / 10
         this.y += this.yVelocity * elapsed / 10
         setCameraPos({x:this.x, y:this.y, mode:'center'})
@@ -717,6 +897,17 @@ createItem(createID(), {
     height:400,
     color:'#181',
     fillColor:this.color
+})
+createItem('theline', {
+    type:'line',
+    x:100,
+    y:-100,
+    update:function(){
+        this.x2 = mouse.internalX()
+        this.y2 = mouse.internalY()
+    },
+    color:'#fff',
+    lineWidth: 5
 })
 // createItem('image', {
 //     type:'image',
