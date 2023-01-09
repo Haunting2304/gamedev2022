@@ -269,6 +269,58 @@ function updateDrawList() {
     drawList.sort((a,b)=>{return a.z-b.z})
 }
 
+function drawItem(item) {
+    canvasContext.lineWidth = item.lineWidth !== undefined ? toCanvasX(item.lineWidth) : 1
+    canvasContext.strokeStyle = item.color !== undefined ? item.color : '#000'
+    canvasContext.fillStyle = item.fillColor !== undefined ? item.fillColor : canvasContext.strokeStyle
+    canvasContext.setLineDash(item.lineDash !== undefined ? item.lineDash : [])
+    switch(item.type) {
+        case 'rect':
+            canvasContext.beginPath()
+            canvasContext.rect(toDrawX(item.x), toDrawY(item.y), toCanvasX(item.width), toCanvasY(item.height))
+            canvasContext.stroke()
+            break
+        case 'fillRect':
+            canvasContext.fillRect(toDrawX(item.x), toDrawY(item.y), toCanvasX(item.width), toCanvasY(item.height))
+            break
+        case 'line':
+            canvasContext.beginPath()
+            canvasContext.moveTo(toDrawX(item.x), toDrawY(item.y))
+            canvasContext.lineTo(toDrawX(item.x2), toDrawY(item.y2))
+            canvasContext.stroke()
+            break
+        case 'circle':
+            canvasContext.beginPath()
+            canvasContext.arc(toDrawX(item.x), toDrawY(item.y), toCanvasX(item.radius), item.startAngle, item.endAngle)
+            canvasContext.stroke()
+            break
+        case 'fillCircle':
+            canvasContext.beginPath()
+            canvasContext.arc(toDrawX(item.x), toDrawY(item.y), toCanvasX(item.radius), item.startAngle, item.endAngle)
+            canvasContext.fill()
+            break
+        case 'image':
+            canvasContext.drawImage(item.image, toDrawX(item.x), toDrawY(item.y), toCanvasX(item.width), toCanvasY(item.height))
+            break
+        case 'quad':
+            canvasContext.beginPath()
+            canvasContext.moveTo(toDrawX(item.x), toDrawY(item.y))
+            canvasContext.lineTo(toDrawX(item.x2), toDrawY(item.y2))
+            canvasContext.lineTo(toDrawX(item.x3), toDrawY(item.y3))
+            canvasContext.lineTo(toDrawX(item.x4), toDrawY(item.y4))
+            canvasContext.lineTo(toDrawX(item.x), toDrawY(item.y))
+            canvasContext.stroke()
+            break
+        case 'tri':
+            canvasContext.beginPath()
+            canvasContext.moveTo(toDrawX(item.x), toDrawY(item.y))
+            canvasContext.lineTo(toDrawX(item.x2), toDrawY(item.y2))
+            canvasContext.lineTo(toDrawX(item.x3), toDrawY(item.y3))
+            canvasContext.lineTo(toDrawX(item.x), toDrawY(item.y))
+            canvasContext.stroke()
+            break
+    }
+}
 /**
   * Draws all items in drawList onto the canvas.
   *
@@ -283,39 +335,27 @@ function drawCanvas() {
     for(let i=0; i<drawList.length; i++) {
         let property = drawList[i].id
         let item = itemsList[property]
-        canvasContext.lineWidth = item.lineWidth !== undefined ? toCanvasX(item.lineWidth) : 1
-        canvasContext.strokeStyle = item.color !== undefined ? item.color : '#000'
-        canvasContext.fillStyle = item.fillColor !== undefined ? item.fillColor : canvasContext.strokeStyle
-        canvasContext.setLineDash(item.lineDash !== undefined ? item.lineDash : [])
-        switch(item.type) {
-            case 'rect':
-                canvasContext.beginPath()
-                canvasContext.rect(toDrawX(item.x), toDrawY(item.y), toCanvasX(item.width), toCanvasY(item.height))
-                canvasContext.stroke()
-                break
-            case 'fillRect':
-                canvasContext.fillRect(toDrawX(item.x), toDrawY(item.y), toCanvasX(item.width), toCanvasY(item.height))
-                break
-            case 'line':
-                canvasContext.beginPath()
-                canvasContext.moveTo(toDrawX(item.x), toDrawY(item.y))
-                canvasContext.lineTo(toDrawX(item.x2), toDrawY(item.y2))
-                canvasContext.stroke()
-                break
-            case 'circle':
-                canvasContext.beginPath()
-                canvasContext.arc(toDrawX(item.x), toDrawY(item.y), toCanvasX(item.radius), item.startAngle, item.endAngle)
-                canvasContext.stroke()
-                break
-            case 'fillCircle':
-                canvasContext.beginPath()
-                canvasContext.arc(toDrawX(item.x), toDrawY(item.y), toCanvasX(item.radius), item.startAngle, item.endAngle)
-                canvasContext.fill()
-                break
-            case 'image':
-                canvasContext.drawImage(item.image, toDrawX(item.x), toDrawY(item.y), toCanvasX(item.width), toCanvasY(item.height))
-                break
+        drawItem(item)
+    }
+    //Draws bounding boxes
+    canvasContext.lineWidth = 1
+    canvasContext.strokeStyle = '#f00'
+    for(let i=0; i<drawList.length; i++) {
+        let box = findBoundingBox(itemsList[drawList[i].id])
+        let quad = {
+            type:'quad',
+            linewidth:1,
+            color:'#f00',
+            x:box.left,
+            y:box.top,
+            x2:box.right,
+            y2:box.top,
+            x3:box.right,
+            y3:box.bottom,
+            x4:box.left,
+            y4:box.bottom
         }
+        drawItem(quad)
     }
     //Draws black bars                    
     canvasContext.lineWidth = 1
@@ -352,6 +392,40 @@ function drawCanvas() {
         // canvasContext.fillText(`cameraX: ${Math.floor(cameraX)}`, toCanvasX(10), toCanvasY(200))
         // canvasContext.fillText(`cameraY: ${Math.floor(cameraY)}`, toCanvasX(10), toCanvasY(250))
     }
+}
+
+function rotateQuad(quad) {
+    let right = Math.max(quad.x, quad.x2, quad.x3, quad.x4)
+    let left = Math.min(quad.x, quad.x2, quad.x3, quad.x4)
+    let bottom = Math.max(quad.y, quad.y2, quad.y3, quad.y4)
+    let top = Math.min(quad.y, quad.y2, quad.y3, quad.y4)
+    let centerX = left + (.5 * (right - left))
+    let centerY = top + (.5 * (bottom - top))
+    let max
+    if(quad.type === 'quad') {
+        max = 5
+    }
+    if(quad.type === 'tri') {
+        max = 4
+    }
+    for(let i=1; i<max; i++) {
+        if(i === 1) {
+            i = ''
+        }
+        let radians = (Math.PI / 180) * 45
+        let x = quad[`x${i}`]
+        let y = quad[`y${i}`]
+        let cos = Math.cos(radians)
+        let sin = Math.sin(radians)
+        let nx = (cos * (x - centerX)) + (sin * (y - centerY)) + centerX
+        let ny = (cos * (y - centerY)) - (sin * (x - centerX)) + centerY
+        quad[`x${i}`] = nx
+        quad[`y${i}`] = ny
+        if(i === '') {
+            i = 1
+        }
+    }
+    return quad
 }
 
 /**
@@ -678,6 +752,17 @@ frameUpdate()
 
 
 
-
-//asa
 //Collision relsolver that will do stuff depending if they are static, or not static
+
+
+
+
+// function roundedRect(ctx, x, y, width, height, radius) {
+//     ctx.beginPath();
+//     ctx.moveTo(x, y + radius);
+//     ctx.arcTo(x, y + height, x + radius, y + height, radius);
+//     ctx.arcTo(x + width, y + height, x + width, y + height - radius, radius);
+//     ctx.arcTo(x + width, y, x + width - radius, y, radius);
+//     ctx.arcTo(x, y, x, y + radius, radius);
+//     ctx.stroke();
+//   }
