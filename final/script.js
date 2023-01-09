@@ -246,13 +246,18 @@ function collisionCheckSAT(item1, item2) {
     let AMax
     let BMin
     let BMax
-    let checkVectors = [vectorPerp1,vectorPerp2,vectorPerp3,vectorPerp4,vectorPerpB1,vectorPerpB2,vectorPerpB3,vectorPerpB4]
+    let axes = [vectorPerp1,vectorPerp2,vectorPerp3,vectorPerp4,vectorPerpB1,vectorPerpB2,vectorPerpB3,vectorPerpB4]
+    let axesAbs = []
     let dotProduct = []
     let dotProductB = []
-    for(let i=0; i<checkVectors.length; i++) {
-        for(let j=0; j<4; j++) {
-            dotProduct[j] = dot(points[j], checkVectors[i])
-            dotProductB[j] = dot(pointsB[j], checkVectors[i])
+    let MTVX = []
+    let MTVY = []
+    for(let i=0; i<axes.length; i++) {
+        for(let j=0; j<points.length; j++) {
+            dotProduct[j] = dot(points[j], axes[i])
+        }
+        for(let j=0; j<pointsB.length; j++) {
+            dotProductB[j] = dot(pointsB[j], axes[i])
         }
         AMin = Math.min(dotProduct[0],dotProduct[1],dotProduct[2],dotProduct[3])
         AMax = Math.max(dotProduct[0],dotProduct[1],dotProduct[2],dotProduct[3])
@@ -261,6 +266,25 @@ function collisionCheckSAT(item1, item2) {
         if(!(AMax > BMin && AMin < BMax)) {
             return false
         }
+        axesAbs = Math.sqrt((Math.abs(axes[i][0]) ** 2) + (Math.abs(axes[i][1]) ** 2))
+        // xAbs = Math.sqrt((Math.abs(1) ** 2) + (Math.abs(0) ** 2)) //Is 1
+        axisAngle = Math.acos(dot(axes[i], [1, 0]) / (axesAbs * 1))
+        // to degrees : * (180 / Math.PI)
+        // console.log(`axis angle ${axisAngle}`)
+        let deepness
+        if(AMin < BMax) {
+            deepness = AMax - BMin
+        }
+        else if(AMin > BMax) {
+            deepness = BMin - AMax
+        }
+        //https://stackoverflow.com/questions/40255953/finding-the-mtv-minimal-translation-vector-using-separating-axis-theorem
+        //https://www.cuemath.com/geometry/angle-between-vectors/ (Finding angle)
+        //Amax < bmin means no collision
+        // console.log(deepness)
+        MTVX[i] = Math.cos(axisAngle) * deepness
+        MTVY[i] = Math.sin(axisAngle) * deepness
+        // console.log(MTVX[i])
         // var vecX = Math.cos(axisAngle) * deepness
         // var vecY = Math.sin(axisAngle) * deepness
         // var sumX = vec1X + vec2X + ...
@@ -271,6 +295,16 @@ function collisionCheckSAT(item1, item2) {
         // idk what axis angle is
         // deepness = sqrt(x * x +  y * y)  apparently
     }
+    let MTVXSum = 0
+    let MTVYSum = 0
+    for(let i=0; i<MTVX.length; i++) {
+        MTVXSum += MTVX[i]
+    }
+    for(let i=0; i<MTVY.length; i++) {
+        MTVYSum += MTVY[i]
+    }
+    let MTV = [MTVXSum, MTVYSum]
+    console.log(`MTV = ${MTV}`)
     return true
 }
 
@@ -352,15 +386,19 @@ function calcMinTranslation(box1, box2) {
     topDiff    =  box2.yMin - box1.yMax
     bottomDiff =  box2.yMax - box1.yMin
     if(Math.abs(leftDiff) <= Math.min(Math.abs(rightDiff), Math.abs(topDiff), Math.abs(bottomDiff))) {
+        // console.log({axis:'x', magnitude:leftDiff})
         return {axis:'x', magnitude:leftDiff}
     }
     if(Math.abs(rightDiff) <= Math.min(Math.abs(leftDiff), Math.abs(topDiff), Math.abs(bottomDiff))) {
+        // console.log({axis:'x', magnitude:rightDiff})
         return {axis:'x', magnitude:rightDiff}
     }
     if(Math.abs(topDiff) <= Math.min(Math.abs(rightDiff), Math.abs(leftDiff), Math.abs(bottomDiff))) {
+        // console.log({axis:'y', magnitude:topDiff})
         return {axis:'y', magnitude:topDiff}
     }
     if(Math.abs(bottomDiff) <= Math.min(Math.abs(rightDiff), Math.abs(topDiff), Math.abs(leftDiff))) {
+        // console.log({axis:'y', magnitude:bottomDiff})
         return {axis:'y', magnitude:bottomDiff}
     }
 }
@@ -903,8 +941,8 @@ createItem('theline', {
     x:100,
     y:-100,
     update:function(){
-        this.x2 = mouse.internalX()
-        this.y2 = mouse.internalY()
+        this.x2 = 0
+        this.y2 = 0
     },
     color:'#fff',
     lineWidth: 5
