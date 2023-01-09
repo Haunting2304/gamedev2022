@@ -173,14 +173,18 @@ function collisionCheck(item1, item2){
         box2 = OBBToAABB(box2)
     }
     if((box1.xMax > box2.xMin && box1.xMin < box2.xMax) && (box1.yMax > box2.yMin && box1.yMin < box2.yMax)) {
-        let result = true
+        let result = {}
         if(box1OriginalType === 'OBB' || box2OriginalType === 'OBB') {
             result = collisionCheckSAT(item1, item2)
+        }
+        else {
+            result.result = true
+            result.MTV = calcMinTranslation(box1, box2)
         }
         return result
     }
     else {
-        return false
+        return {result:false}
     }
 }
 
@@ -246,6 +250,7 @@ function collisionCheckSAT(item1, item2) {
     let AMax
     let BMin
     let BMax
+    // let axes = [vector1,vector2,vector3,vector4,vectorB1,vectorB2,vectorB3,vectorB4]
     let axes = [vectorPerp1,vectorPerp2,vectorPerp3,vectorPerp4,vectorPerpB1,vectorPerpB2,vectorPerpB3,vectorPerpB4]
     let axesAbs = []
     let dotProduct = []
@@ -264,25 +269,33 @@ function collisionCheckSAT(item1, item2) {
         BMin = Math.min(dotProductB[0],dotProductB[1],dotProductB[2],dotProductB[3])
         BMax = Math.max(dotProductB[0],dotProductB[1],dotProductB[2],dotProductB[3])
         if(!(AMax > BMin && AMin < BMax)) {
-            return false
+            return {result:false, MTV:[0,0]}
         }
+        
         axesAbs = Math.sqrt((Math.abs(axes[i][0]) ** 2) + (Math.abs(axes[i][1]) ** 2))
         // xAbs = Math.sqrt((Math.abs(1) ** 2) + (Math.abs(0) ** 2)) //Is 1
         axisAngle = Math.acos(dot(axes[i], [1, 0]) / (axesAbs * 1))
         // to degrees : * (180 / Math.PI)
-        // console.log(`axis angle ${axisAngle}`)
-        let deepness
-        if(AMin < BMax) {
-            deepness = AMax - BMin
+        console.log(`Axis Vector: ${axes[i]}\n Axis Angle(Rad) ${axisAngle}\n Axis Angle(Deg) ${axisAngle * (180 / Math.PI)}`)
+        console.log(`axis angle ${axisAngle}`)
+        // remember: AMin < BMax
+        // console.log('aaaaa')
+        let span = BMax - AMin
+        let deepness = 1
+        if(AMax > BMax) {
+            deepness = BMax/span - AMin/span
         }
-        else if(AMin > BMax) {
-            deepness = BMin - AMax
+        else if (BMax > AMax) {
+            deepness = BMax/span - AMin/span
         }
+        // console.log(`AMin ${AMin}\n BMax${BMax}`)
+        console.log(`Deepness ${deepness}`)
         //https://stackoverflow.com/questions/40255953/finding-the-mtv-minimal-translation-vector-using-separating-axis-theorem
         //https://www.cuemath.com/geometry/angle-between-vectors/ (Finding angle)
         //Amax < bmin means no collision
         // console.log(deepness)
         MTVX[i] = Math.cos(axisAngle) * deepness
+        // console.log(MTVX[i])
         MTVY[i] = Math.sin(axisAngle) * deepness
         // console.log(MTVX[i])
         // var vecX = Math.cos(axisAngle) * deepness
@@ -303,9 +316,11 @@ function collisionCheckSAT(item1, item2) {
     for(let i=0; i<MTVY.length; i++) {
         MTVYSum += MTVY[i]
     }
+    // console.log(MTVX)
+    // console.log(MTVY)
     let MTV = [MTVXSum, MTVYSum]
-    console.log(`MTV = ${MTV}`)
-    return true
+    // console.log(`MTV = ${MTV}`)
+    return {result:true, MTV:MTV}
 }
 
 //fix?
@@ -386,20 +401,20 @@ function calcMinTranslation(box1, box2) {
     topDiff    =  box2.yMin - box1.yMax
     bottomDiff =  box2.yMax - box1.yMin
     if(Math.abs(leftDiff) <= Math.min(Math.abs(rightDiff), Math.abs(topDiff), Math.abs(bottomDiff))) {
-        // console.log({axis:'x', magnitude:leftDiff})
-        return {axis:'x', magnitude:leftDiff}
+        // console.log([leftDiff, 0])
+        return [-leftDiff, 0]
     }
     if(Math.abs(rightDiff) <= Math.min(Math.abs(leftDiff), Math.abs(topDiff), Math.abs(bottomDiff))) {
-        // console.log({axis:'x', magnitude:rightDiff})
-        return {axis:'x', magnitude:rightDiff}
+        // console.log([rightDiff, 0])
+        return [-rightDiff, 0]
     }
     if(Math.abs(topDiff) <= Math.min(Math.abs(rightDiff), Math.abs(leftDiff), Math.abs(bottomDiff))) {
-        // console.log({axis:'y', magnitude:topDiff})
-        return {axis:'y', magnitude:topDiff}
+        // console.log([0, topDiff])
+        return [0, -topDiff]
     }
     if(Math.abs(bottomDiff) <= Math.min(Math.abs(rightDiff), Math.abs(topDiff), Math.abs(leftDiff))) {
-        // console.log({axis:'y', magnitude:bottomDiff})
-        return {axis:'y', magnitude:bottomDiff}
+        // console.log([0, bottomDiff])
+        return [0, -bottomDiff]
     }
 }
 
@@ -727,12 +742,13 @@ function frameUpdate() {
         let item = itemsList[drawList[i].id]
         for(let j=i+1; j<drawList.length; j++) {
             let item2 = itemsList[drawList[j].id]
-            if(collisionCheck(item, item2)) {
+            let collisionCheckResult = collisionCheck(item, item2)
+            if(collisionCheckResult.result) {
                 if(itemsList[drawList[i].id].collision !== undefined) {
-                    itemsList[drawList[i].id].collision(drawList[j].id)
+                    itemsList[drawList[i].id].collision(drawList[j].id, collisionCheckResult.MTV)
                 }
                 if(itemsList[drawList[j].id].collision !== undefined) {
-                    itemsList[drawList[j].id].collision(drawList[i].id)
+                    itemsList[drawList[j].id].collision(drawList[i].id, collisionCheckResult.MTV)
                 }
             }
         }
@@ -822,7 +838,7 @@ function removeItem(id) {
 createItem('player', {
     type:'fillCircle',
     x:0,
-    y:0,
+    y:-100,
     xVelocity:0,
     yVelocity:0,
     update:function(elapsed){
@@ -866,14 +882,15 @@ createItem('player', {
         this.y += this.yVelocity * elapsed / 10
         setCameraPos({x:this.x, y:this.y, mode:'center'})
     },
-    collision:function(collider) {
-        let minTrans = calcMinTranslation(findBoundingBox(this), findBoundingBox(itemsList[collider]))
-        if(minTrans.axis === 'x') {
-            this.x += minTrans.magnitude
+    collision:function(collider, MTV) {
+        // let minTrans = calcMinTranslation(findBoundingBox(this), findBoundingBox(itemsList[collider]))
+        if(itemsList[collider].type === 'line'){console.log(MTV)}
+        this.x += MTV[0]
+        this.y += MTV[1]
+        if(MTV[0] !== 0) {
             this.xVelocity = 0
         }
-        else if(minTrans.axis === 'y') {
-            this.y += minTrans.magnitude
+        if(MTV[1] !== 0) {
             this.yVelocity = 0
         }
         // console.log(`Player collided with ${collider}`)
@@ -938,11 +955,11 @@ createItem(createID(), {
 })
 createItem('theline', {
     type:'line',
-    x:100,
-    y:-100,
+    x:200,
+    y:0,
     update:function(){
-        this.x2 = 0
-        this.y2 = 0
+        this.x2 = 100
+        this.y2 = -100
     },
     color:'#fff',
     lineWidth: 5
