@@ -255,8 +255,9 @@ function collisionCheckSAT(item1, item2) {
     let axesAbs = []
     let dotProduct = []
     let dotProductB = []
-    let MTVX = []
-    let MTVY = []
+    // let MTVX = []
+    // let MTVY = []
+    let deepnessTotal = []
     for(let i=0; i<axes.length; i++) {
         for(let j=0; j<points.length; j++) {
             dotProduct[j] = dot(points[j], axes[i])
@@ -271,31 +272,34 @@ function collisionCheckSAT(item1, item2) {
         if(!(AMax > BMin && AMin < BMax)) {
             return {result:false, MTV:[0,0]}
         }
-        if(AMin < BMin) {
-            AMin = AMin - AMin
-            AMax = AMax - AMin
-            BMin = BMin - AMin
-            BMax = BMax - AMin
-        }
-        else if (BMin < AMin) {
-            AMin = AMin - BMin
-            AMax = AMax - BMin
-            BMin = BMin - BMin
-            BMax = BMax - BMin 
-        }
+        // if(AMin < BMin) {
+        //     AMin = AMin - AMin
+        //     AMax = AMax - AMin
+        //     BMin = BMin - AMin
+        //     BMax = BMax - AMin
+        // }
+        // else if (BMin < AMin) {
+        //     AMin = AMin - BMin
+        //     AMax = AMax - BMin
+        //     BMin = BMin - BMin
+        //     BMax = BMax - BMin 
+        // }
         let axesAbs = Math.sqrt((axes[i][0] * axes[i][0]) + (axes[i][1] * axes[i][1]))
         
         // let xAbs = Math.sqrt((Math.abs(1) ** 2) + (Math.abs(0) ** 2)) //Is 1
-        axisAngle = Math.acos(dot(axes[i], [1, 0]) / (axesAbs * 1))
+        let axisAngle = Math.acos(dot(axes[i], [1, 0]) / (axesAbs * 1))
         // to degrees : * (180 / Math.PI)
         // console.log(`Axis Vector: ${axes[i]}\n Axis Angle(Rad) ${axisAngle}\n Axis Angle(Deg) ${axisAngle * (180 / Math.PI)}`)
         // remember: AMin < BMax
         // console.log('aaaaa')
         // let span = BMax - AMin
+        // let deepness = AMax/axesAbs - BMin/axesAbs
         let deepness = BMax/axesAbs - AMin/axesAbs
+        deepnessTotal[i] = {deepness:deepness, angle:axisAngle}
+
         // let deepness = Math.sqrt((Math.abs(axes[i][0]) ** 2) + (Math.abs(axes[i][1]) ** 2))
         // console.log(`AMin ${AMin}\n BMax${BMax}`)
-        console.log(`Deepness ${deepness}`)
+        // console.log(`Deepness ${deepness}`)
         //https://stackoverflow.com/questions/40255953/finding-the-mtv-minimal-translation-vector-using-separating-axis-theorem
         //https://www.cuemath.com/geometry/angle-between-vectors/ (Finding angle)
         //Amax < bmin means no collision
@@ -310,11 +314,7 @@ function collisionCheckSAT(item1, item2) {
         // while(axisAngle < 0) {
         //     axisAngle += Math.PI
         // }
-        console.log(`axis angle ${axisAngle / Math.PI * 180}`)
-
-        if(axisAngle >= Math.PI) {
-            console.log('a')
-        }
+        // console.log(`axis angle ${axisAngle / Math.PI * 180}`)
 
 
 
@@ -323,8 +323,8 @@ function collisionCheckSAT(item1, item2) {
 
 
         // MTVX[i] = (1 - Math.sin(axisAngle)) * deepness
-        MTVX[i] = Math.cos(axisAngle) * deepness
-        MTVY[i] = Math.sin(axisAngle) * deepness
+        // MTVX[i] = Math.cos(axisAngle) * deepness
+        // MTVY[i] = Math.sin(axisAngle) * deepness
         // var vecX = Math.cos(axisAngle) * deepness
         // var vecY = Math.sin(axisAngle) * deepness
         // var sumX = vec1X + vec2X + ...
@@ -335,13 +335,19 @@ function collisionCheckSAT(item1, item2) {
         // idk what axis angle is
         // deepness = sqrt(x * x +  y * y)  apparently
     }
-    let MTVXSum = 0
-    let MTVYSum = 0
-    for(let i=0; i<MTVX.length; i++) {
-        MTVXSum += MTVX[i]
-    }
-    for(let i=0; i<MTVY.length; i++) {
-        MTVYSum += MTVY[i]
+    // let MTVXSum = 0
+    // let MTVYSum = 0
+    // for(let i=0; i<MTVX.length; i++) {
+    //     MTVXSum += MTVX[i]
+    // }
+    // for(let i=0; i<MTVY.length; i++) {
+    //     MTVYSum += MTVY[i]
+    // }
+    let deepnessTotalMin = deepnessTotal[0]
+    for(let i=1; i<deepnessTotal.length; i++) {
+        if(Math.abs(deepnessTotalMin.deepness) > Math.abs(deepnessTotal[i].deepness)) {
+            deepnessTotalMin = deepnessTotal[i]
+        }
     }
     // let MTVXF = MTVX[0]
     // let MTVYF = MTVY[0]
@@ -351,11 +357,14 @@ function collisionCheckSAT(item1, item2) {
     // for(let i=1; i<MTVY.length; i++) {
     //     MTVYF = Math.min(Math.abs(MTVYF), Math.abs(MTVY[i]))
     // }
-    console.log(MTVX)
-    console.log(MTVY)
-    let MTV = [MTVXSum, MTVYSum]
-    console.log(`MTV = ${MTV}`)
-    return {result:true, MTV:MTV}
+    // console.log(MTVX)
+    // console.log(MTVY)
+    // let MTV = [MTVXSum, MTVYSum]
+    let deepX = Math.cos(deepnessTotalMin.angle) * deepnessTotalMin.deepness
+    let deepY = Math.sin(deepnessTotalMin.angle) * deepnessTotalMin.deepness
+    // console.log(`deepX: ${deepX}\ndeepY: ${deepY}`)
+    // console.log(`MTV = ${MTV}`)
+    return {result:true, MTV:[-deepX, -deepY]}
 }
 
 //fix?
@@ -365,6 +374,9 @@ dot = (a, b) => a.map((x, i) => a[i] * b[i]).reduce((m, n) => m + n);
 function findBoundingBox(item) {
     let box = {}
     switch(item.type) {
+        case 'point':
+            return {type:'AABB'}//aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa for grounded checks
+            break
         case 'line': //make this better
             box.type = 'OBB'
             let dx = item.x2 - item.x
@@ -395,14 +407,10 @@ function findBoundingBox(item) {
             // console.log(`dx = ${dx}\ndy = ${dy}\nslope = ${slope}\nangle = ${angle}\nlength = ${length}`)
             break
         case 'quad':
-        case 'tri':
             box.type = 'OBB'
-            let vertexCount
-            if(item.type === 'tri'){vertexCount=3}
-            if(['quad'].indexOf(item.type) !== -1){vertexCount=4}
-            for(let i=1; i<vertexCount+1; i++) {
+            for(let i=1; i<5; i++) {
                 if(i===1){i=''}
-                box[`x${i}`] = item[`x${i}`]
+                box[`x${i}}`] = item[`x${i}`]
                 box[`y${i}`] = item[`y${i}`]
                 if(i===''){i=1}
             }
@@ -598,14 +606,6 @@ function drawItem(item) {
             canvasContext.lineTo(toDrawX(item.x2), toDrawY(item.y2))
             canvasContext.lineTo(toDrawX(item.x3), toDrawY(item.y3))
             canvasContext.lineTo(toDrawX(item.x4), toDrawY(item.y4))
-            canvasContext.lineTo(toDrawX(item.x), toDrawY(item.y))
-            canvasContext.stroke()
-            break
-        case 'tri':
-            canvasContext.beginPath()
-            canvasContext.moveTo(toDrawX(item.x), toDrawY(item.y))
-            canvasContext.lineTo(toDrawX(item.x2), toDrawY(item.y2))
-            canvasContext.lineTo(toDrawX(item.x3), toDrawY(item.y3))
             canvasContext.lineTo(toDrawX(item.x), toDrawY(item.y))
             canvasContext.stroke()
             break
@@ -993,8 +993,8 @@ createItem('theline', {
     x:200,
     y:-100,
     update:function(){
-        this.x2 = 100
-        this.y2 = -200
+        this.x2 = mouse.internalX()
+        this.y2 = mouse.internalY()
     },
     color:'#fff',
     lineWidth: 5
