@@ -3,6 +3,7 @@
 //disabling zoom didnt work
 //fix right click keyboard input issue
 //maybe preload all images needed
+//if it lags with lots of objects then you can just cull the offcamera ones by checking if they collide with the camera
 var disp1 = ''
 var disp2 = ''
 var disp3 = ''
@@ -252,11 +253,8 @@ function collisionCheckSAT(item1, item2) {
     let BMax
     // let axes = [vector1,vector2,vector3,vector4,vectorB1,vectorB2,vectorB3,vectorB4]
     let axes = [vectorPerp1,vectorPerp2,vectorPerp3,vectorPerp4,vectorPerpB1,vectorPerpB2,vectorPerpB3,vectorPerpB4]
-    let axesAbs = []
     let dotProduct = []
     let dotProductB = []
-    // let MTVX = []
-    // let MTVY = []
     let deepnessTotal = []
     for(let i=0; i<axes.length; i++) {
         for(let j=0; j<points.length; j++) {
@@ -272,18 +270,6 @@ function collisionCheckSAT(item1, item2) {
         if(!(AMax > BMin && AMin < BMax)) {
             return {result:false, MTV:[0,0]}
         }
-        // if(AMin < BMin) {
-        //     AMin = AMin - AMin
-        //     AMax = AMax - AMin
-        //     BMin = BMin - AMin
-        //     BMax = BMax - AMin
-        // }
-        // else if (BMin < AMin) {
-        //     AMin = AMin - BMin
-        //     AMax = AMax - BMin
-        //     BMin = BMin - BMin
-        //     BMax = BMax - BMin 
-        // }
         let axesAbs = Math.sqrt((axes[i][0] * axes[i][0]) + (axes[i][1] * axes[i][1]))
         
         // let xAbs = Math.sqrt((Math.abs(1) ** 2) + (Math.abs(0) ** 2)) //Is 1
@@ -291,23 +277,14 @@ function collisionCheckSAT(item1, item2) {
         // to degrees : * (180 / Math.PI)
         // console.log(`Axis Vector: ${axes[i]}\n Axis Angle(Rad) ${axisAngle}\n Axis Angle(Deg) ${axisAngle * (180 / Math.PI)}`)
         // remember: AMin < BMax
-        // console.log('aaaaa')
-        // let span = BMax - AMin
-        // let deepness = AMax/axesAbs - BMin/axesAbs
         let deepness = BMax/axesAbs - AMin/axesAbs
         deepnessTotal[i] = {deepness:deepness, angle:axisAngle}
-
         // let deepness = Math.sqrt((Math.abs(axes[i][0]) ** 2) + (Math.abs(axes[i][1]) ** 2))
         // console.log(`AMin ${AMin}\n BMax${BMax}`)
         // console.log(`Deepness ${deepness}`)
         //https://stackoverflow.com/questions/40255953/finding-the-mtv-minimal-translation-vector-using-separating-axis-theorem
         //https://www.cuemath.com/geometry/angle-between-vectors/ (Finding angle)
         //Amax < bmin means no collision
-        // console.log(deepness)
-        // MTVX[i] = deepness
-        // console.log(MTVX[i])
-        // MTVY[i] = deepness
-        // console.log(MTVY[i])
         // while(axisAngle >= Math.PI) {
         //     axisAngle -= Math.PI
         // }
@@ -315,55 +292,16 @@ function collisionCheckSAT(item1, item2) {
         //     axisAngle += Math.PI
         // }
         // console.log(`axis angle ${axisAngle / Math.PI * 180}`)
-
-
-
         //use this!!!!!!!   https://www.metanetsoftware.com/technique/tutorialA.html
-
-
-
-        // MTVX[i] = (1 - Math.sin(axisAngle)) * deepness
-        // MTVX[i] = Math.cos(axisAngle) * deepness
-        // MTVY[i] = Math.sin(axisAngle) * deepness
-        // var vecX = Math.cos(axisAngle) * deepness
-        // var vecY = Math.sin(axisAngle) * deepness
-        // var sumX = vec1X + vec2X + ...
-        // var sumY = vec1Y + vec2Y + ...
-        // deepness is AMax - BMin assuming AMin < BMax
-        // if AMin > BMax then deepness is *probably* BMin - AMax
-        // alternatively just use absolute value?
-        // idk what axis angle is
-        // deepness = sqrt(x * x +  y * y)  apparently
     }
-    // let MTVXSum = 0
-    // let MTVYSum = 0
-    // for(let i=0; i<MTVX.length; i++) {
-    //     MTVXSum += MTVX[i]
-    // }
-    // for(let i=0; i<MTVY.length; i++) {
-    //     MTVYSum += MTVY[i]
-    // }
     let deepnessTotalMin = deepnessTotal[0]
     for(let i=1; i<deepnessTotal.length; i++) {
         if(Math.abs(deepnessTotalMin.deepness) > Math.abs(deepnessTotal[i].deepness)) {
             deepnessTotalMin = deepnessTotal[i]
         }
     }
-    // let MTVXF = MTVX[0]
-    // let MTVYF = MTVY[0]
-    // for(let i=1; i<MTVX.length; i++) {
-    //     MTVXF = Math.min(Math.abs(MTVXF), Math.abs(MTVX[i]))
-    // }
-    // for(let i=1; i<MTVY.length; i++) {
-    //     MTVYF = Math.min(Math.abs(MTVYF), Math.abs(MTVY[i]))
-    // }
-    // console.log(MTVX)
-    // console.log(MTVY)
-    // let MTV = [MTVXSum, MTVYSum]
     let deepX = Math.cos(deepnessTotalMin.angle) * deepnessTotalMin.deepness
     let deepY = Math.sin(deepnessTotalMin.angle) * deepnessTotalMin.deepness
-    // console.log(`deepX: ${deepX}\ndeepY: ${deepY}`)
-    // console.log(`MTV = ${MTV}`)
     return {result:true, MTV:[-deepX, -deepY]}
 }
 
@@ -375,7 +313,11 @@ function findBoundingBox(item) {
     let box = {}
     switch(item.type) {
         case 'point':
-            return {type:'AABB'}//aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa for grounded checks
+            box.type = 'AABB'
+            box.xMin = item.x
+            box.yMin = item.y
+            box.xMax = item.x
+            box.yMax = item.y
             break
         case 'line': //make this better
             box.type = 'OBB'
@@ -429,8 +371,8 @@ function findBoundingBox(item) {
             box.type = 'AABB'
             box.xMin = item.x - item.radius
             box.yMin = item.y - item.radius
-            box.xMax = box.xMin + item.radius*2
-            box.yMax = box.yMin + item.radius*2
+            box.xMax = item.x + item.radius
+            box.yMax = item.y + item.radius
             break
 
     }
@@ -439,25 +381,25 @@ function findBoundingBox(item) {
 function calcMinTranslation(box1, box2) {
     if(box1.type === 'OBB'){box1 = OBBToAABB(box1)}
     if(box2.type === 'OBB'){box2 = OBBToAABB(box2)}
-    leftDiff   =  box2.xMin - box1.xMax
-    rightDiff  =  box2.xMax - box1.xMin
-    topDiff    =  box2.yMin - box1.yMax
-    bottomDiff =  box2.yMax - box1.yMin
+    rightDiff   = box1.xMax - box2.xMin
+    leftDiff  = box1.xMin - box2.xMax
+    bottomDiff    = box1.yMax - box2.yMin
+    topDiff = box1.yMin - box2.yMax
     if(Math.abs(leftDiff) <= Math.min(Math.abs(rightDiff), Math.abs(topDiff), Math.abs(bottomDiff))) {
         // console.log([leftDiff, 0])
-        return [-leftDiff, 0]
+        return [leftDiff, 0]
     }
     if(Math.abs(rightDiff) <= Math.min(Math.abs(leftDiff), Math.abs(topDiff), Math.abs(bottomDiff))) {
         // console.log([rightDiff, 0])
-        return [-rightDiff, 0]
+        return [rightDiff, 0]
     }
     if(Math.abs(topDiff) <= Math.min(Math.abs(rightDiff), Math.abs(leftDiff), Math.abs(bottomDiff))) {
         // console.log([0, topDiff])
-        return [0, -topDiff]
+        return [0, topDiff]
     }
     if(Math.abs(bottomDiff) <= Math.min(Math.abs(rightDiff), Math.abs(topDiff), Math.abs(leftDiff))) {
         // console.log([0, bottomDiff])
-        return [0, -bottomDiff]
+        return [0, bottomDiff]
     }
 }
 
@@ -878,50 +820,65 @@ createItem('player', {
     yVelocity:0,
     update:function(elapsed){
         elapsed = elapsed/10
-        if(keyPressed.KeyW) {
-            this.yVelocity -= 1 * elapsed
+        let multiplier = 1
+        if(keyPressed.ShiftLeft || keyPressed.ShiftRight) {
+            multiplier = 1.5
         }
-        if(keyPressed.KeyA) {
-            this.xVelocity -= 1 * elapsed
+        if(keyPressed.KeyA && keyPressed.KeyD) {
+
         }
-        if(keyPressed.KeyS) {
-            this.yVelocity += 1 * elapsed
+        else if(keyPressed.KeyA) {
+            this.xVelocity -= 1 * elapsed * multiplier
+            if(this.xVelocity < -20 * multiplier) {
+                this.xVelocity = -20 * multiplier
+            }
         }
-        if(keyPressed.KeyD) {
-            this.xVelocity += 1 * elapsed
+        else if(keyPressed.KeyD) {
+            this.xVelocity += 1 * elapsed * multiplier
+            if(this.xVelocity > 20 * multiplier) {
+                this.xVelocity = 20 * multiplier
+            }
         }
-        let prevXVelocity = this.xVelocity
-        if(this.xVelocity > 0) {
-            this.xVelocity -= .5 * elapsed
+        else {
+            let prevXVelocity = this.xVelocity
+            if(this.xVelocity > 0) {
+                this.xVelocity -= .5 * elapsed
+            }
+            else if(this.xVelocity < 0) {
+                this.xVelocity += .5 * elapsed
+            }
+            if((this.xVelocity > 0 && prevXVelocity < 0) || (this.xVelocity < 0 && prevXVelocity > 0)) {
+                this.xVelocity = 0
+            }
         }
-        else if(this.xVelocity < 0) {
-            this.xVelocity += .5 * elapsed
+        if(this.isGrounded()) {
+            if(keyPressed.KeyW || keyPressed.Space) {
+                this.yVelocity -= 40
+            }
         }
-        if((this.xVelocity > 0 && prevXVelocity < 0) || (this.xVelocity < 0 && prevXVelocity > 0)) {
-            this.xVelocity = 0
+        else {
+            this.yVelocity += 1*elapsed
         }
-        // let prevYVelocity = this.yVelocity
-        // if(this.yVelocity > 0) {
-        //     this.yVelocity -= .3 * elapsed
-        // }
-        // else if(this.yVelocity < 0) {
-        //     this.yVelocity += .3 * elapsed
-        // }
-        // if((this.yVelocity > 0 && prevYVelocity < 0) || (this.yVelocity < 0 && prevYVelocity > 0)) {
-        //     this.yVelocity = 0
-        // }
-        this.yVelocity += .5*elapsed
-        this.xVelocity = Math.max(Math.min(this.xVelocity, 15), -15)
-        this.yVelocity = Math.max(Math.min(this.yVelocity, 100), -15)
+        this.xVelocity = Math.max(Math.min(this.xVelocity, 100), -100)
+        this.yVelocity = Math.max(Math.min(this.yVelocity, 100), -100)
         this.x += this.xVelocity * elapsed / 10
         this.y += this.yVelocity * elapsed / 10
         setCameraPos({x:this.x, y:this.y, mode:'center'})
     },
     collision:function(collider, MTV) {
         // let minTrans = calcMinTranslation(findBoundingBox(this), findBoundingBox(itemsList[collider]))
-        if(itemsList[collider].type === 'line'){console.log(MTV)}
-        this.x += MTV[0]
-        this.y += MTV[1]
+        let colliderZ = itemsList[collider].z
+        if(itemsList[collider].z === undefined) {
+            colliderZ = 0
+        }
+        if(this.z > colliderZ) {
+            this.x += MTV[0]
+            this.y += MTV[1]
+        }
+        else {
+            this.x -= MTV[0]
+            this.y -= MTV[1]
+        }
         if(MTV[0] !== 0) {
             this.xVelocity = 0
         }
@@ -930,11 +887,21 @@ createItem('player', {
         }
         // console.log(`Player collided with ${collider}`)
         //maybe shoot raycasts or smth idk. like to tell where to pop out from
-        // this.x += 5
-        // this.y += 5
+        //better you just need to find the what face it was moving towards
         // if(collisionCheck(this, itemsList[collider])) {
         //     this.collision(collider)
         // }
+    },
+    isGrounded:function() {
+        for(let i=0; i<drawList.length; i++) {
+            if(drawList[i].id === 'player') {
+
+            }
+            else if((collisionCheck(itemsList[drawList[i].id], {type:'rect', x:this.x-this.radius, y:(this.y+this.radius)+.001, width:this.radius*2, height:0})).result) {
+                return true
+            }
+        }
+        return false
     },
     radius:15,
     startAngle:0,
@@ -999,22 +966,22 @@ createItem('theline', {
     color:'#fff',
     lineWidth: 5
 })
-// createItem('image', {
-//     type:'image',
-//     image:createImage({src:'TestImage.png'}),
-//     z:105,
-//     onSpawn:async function() {
-//         getImageDimensions('TestImage.png').then((value) => {
-//             let ratio = value.width/value.height
-//             // this.width = 500
-//             // this.height = this.width / ratio
-//             this.height = 400
-//             this.width = this.height * ratio
-//             this.x = -.5 * this.width
-//             this.y = itemsList.player.radius
-//         })
-//     }
-// })
+createItem('image', {
+    type:'image',
+    image:createImage({src:'TestImage.png'}),
+    x:200,
+    y:-200,
+    z:105,
+    onSpawn:async function() {
+        getImageDimensions('TestImage.png').then((value) => {
+            let ratio = value.width/value.height
+            // this.width = 500
+            // this.height = this.width / ratio
+            this.height = 100
+            this.width = this.height * ratio
+        })
+    }
+})
 // for(let i=0; i<500; i++) {
 //     createItem(createID(), {
 //         type:'fillCircle',
@@ -1026,7 +993,11 @@ createItem('theline', {
 //         endAngle:2*Math.PI
 //     }) 
 // }
-
+document.addEventListener("visibilitychange", () => {
+    if(document.visibilityState === 'visible') {
+        then = Date.now()
+    }
+})
 updateCanvasSize()
 window.addEventListener('resize', updateCanvasSize)
 frameUpdate()
@@ -1049,3 +1020,11 @@ frameUpdate()
 //   }
 
 //context.transform(1, 0, 0, -1, 0, canvas.height)
+
+
+
+//makes images for level
+//need way to load the level
+//moving platforms (inherit momentum?)
+//spinning platforms
+//cant jump off OBB
