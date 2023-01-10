@@ -271,33 +271,60 @@ function collisionCheckSAT(item1, item2) {
         if(!(AMax > BMin && AMin < BMax)) {
             return {result:false, MTV:[0,0]}
         }
+        if(AMin < BMin) {
+            AMin = AMin - AMin
+            AMax = AMax - AMin
+            BMin = BMin - AMin
+            BMax = BMax - AMin
+        }
+        else if (BMin < AMin) {
+            AMin = AMin - BMin
+            AMax = AMax - BMin
+            BMin = BMin - BMin
+            BMax = BMax - BMin 
+        }
+        let axesAbs = Math.sqrt((axes[i][0] * axes[i][0]) + (axes[i][1] * axes[i][1]))
         
-        axesAbs = Math.sqrt((Math.abs(axes[i][0]) ** 2) + (Math.abs(axes[i][1]) ** 2))
-        // xAbs = Math.sqrt((Math.abs(1) ** 2) + (Math.abs(0) ** 2)) //Is 1
+        // let xAbs = Math.sqrt((Math.abs(1) ** 2) + (Math.abs(0) ** 2)) //Is 1
         axisAngle = Math.acos(dot(axes[i], [1, 0]) / (axesAbs * 1))
         // to degrees : * (180 / Math.PI)
-        console.log(`Axis Vector: ${axes[i]}\n Axis Angle(Rad) ${axisAngle}\n Axis Angle(Deg) ${axisAngle * (180 / Math.PI)}`)
-        console.log(`axis angle ${axisAngle}`)
+        // console.log(`Axis Vector: ${axes[i]}\n Axis Angle(Rad) ${axisAngle}\n Axis Angle(Deg) ${axisAngle * (180 / Math.PI)}`)
         // remember: AMin < BMax
         // console.log('aaaaa')
-        let span = BMax - AMin
-        let deepness = 1
-        if(AMax > BMax) {
-            deepness = BMax/span - AMin/span
-        }
-        else if (BMax > AMax) {
-            deepness = BMax/span - AMin/span
-        }
+        // let span = BMax - AMin
+        let deepness = BMax/axesAbs - AMin/axesAbs
+        // let deepness = Math.sqrt((Math.abs(axes[i][0]) ** 2) + (Math.abs(axes[i][1]) ** 2))
         // console.log(`AMin ${AMin}\n BMax${BMax}`)
         console.log(`Deepness ${deepness}`)
         //https://stackoverflow.com/questions/40255953/finding-the-mtv-minimal-translation-vector-using-separating-axis-theorem
         //https://www.cuemath.com/geometry/angle-between-vectors/ (Finding angle)
         //Amax < bmin means no collision
         // console.log(deepness)
+        // MTVX[i] = deepness
+        // console.log(MTVX[i])
+        // MTVY[i] = deepness
+        // console.log(MTVY[i])
+        // while(axisAngle >= Math.PI) {
+        //     axisAngle -= Math.PI
+        // }
+        // while(axisAngle < 0) {
+        //     axisAngle += Math.PI
+        // }
+        console.log(`axis angle ${axisAngle / Math.PI * 180}`)
+
+        if(axisAngle >= Math.PI) {
+            console.log('a')
+        }
+
+
+
+        //use this!!!!!!!   https://www.metanetsoftware.com/technique/tutorialA.html
+
+
+
+        // MTVX[i] = (1 - Math.sin(axisAngle)) * deepness
         MTVX[i] = Math.cos(axisAngle) * deepness
-        // console.log(MTVX[i])
         MTVY[i] = Math.sin(axisAngle) * deepness
-        // console.log(MTVX[i])
         // var vecX = Math.cos(axisAngle) * deepness
         // var vecY = Math.sin(axisAngle) * deepness
         // var sumX = vec1X + vec2X + ...
@@ -316,10 +343,18 @@ function collisionCheckSAT(item1, item2) {
     for(let i=0; i<MTVY.length; i++) {
         MTVYSum += MTVY[i]
     }
-    // console.log(MTVX)
-    // console.log(MTVY)
+    // let MTVXF = MTVX[0]
+    // let MTVYF = MTVY[0]
+    // for(let i=1; i<MTVX.length; i++) {
+    //     MTVXF = Math.min(Math.abs(MTVXF), Math.abs(MTVX[i]))
+    // }
+    // for(let i=1; i<MTVY.length; i++) {
+    //     MTVYF = Math.min(Math.abs(MTVYF), Math.abs(MTVY[i]))
+    // }
+    console.log(MTVX)
+    console.log(MTVY)
     let MTV = [MTVXSum, MTVYSum]
-    // console.log(`MTV = ${MTV}`)
+    console.log(`MTV = ${MTV}`)
     return {result:true, MTV:MTV}
 }
 
@@ -956,10 +991,10 @@ createItem(createID(), {
 createItem('theline', {
     type:'line',
     x:200,
-    y:0,
+    y:-100,
     update:function(){
         this.x2 = 100
-        this.y2 = -100
+        this.y2 = -200
     },
     color:'#fff',
     lineWidth: 5
@@ -1012,3 +1047,5 @@ frameUpdate()
 //     ctx.arcTo(x, y, x, y + radius, radius);
 //     ctx.stroke();
 //   }
+
+//context.transform(1, 0, 0, -1, 0, canvas.height)
